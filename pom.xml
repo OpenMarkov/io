@@ -12,11 +12,11 @@
     <version>${openmarkov.version}</version>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.openmarkov</groupId>-->
-            <!--<artifactId>org.openmarkov.io.elvira</artifactId>-->
-            <!--<version>${openmarkov.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.openmarkov</groupId>
+            <artifactId>org.openmarkov.io.elvira</artifactId>
+            <version>${openmarkov.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.openmarkov</groupId>
             <artifactId>org.openmarkov.io.probmodelxml</artifactId>
