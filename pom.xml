@@ -6,6 +6,7 @@
         <artifactId>org.openmarkov</artifactId>
         <groupId>org.openmarkov</groupId>
         <version>0.3.0-SNAPSHOT</version>
+        <relativePath>../org.openmarkov</relativePath>
     </parent>
 
     <artifactId>org.openmarkov.io</artifactId>
