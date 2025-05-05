@@ -1,5 +1,18 @@
 module org.openmarkov.io {
-	requires org.openmarkov.io.xmlbif;
-	requires org.openmarkov.io.elvira;
-
+	requires org.openmarkov.core;
+	
+	requires org.jdom2;
+	requires org.apache.commons.io;
+	requires java.desktop;
+	
+	uses javax.swing.event.UndoableEditListener;
+	uses org.xml.sax.InputSource;
+	
+	exports org.openmarkov.io.probmodel.exception;
+	exports org.openmarkov.io.probmodel.reader;
+	exports org.openmarkov.io.probmodel.writer;
+	exports org.openmarkov.io.probmodel.strings;
+	
+	exports org.openmarkov.io.xmlbif.strings;
+	exports org.openmarkov.io.xmlbif;
 }

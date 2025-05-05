@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) CISIAD, UNED, Spain,  2018. Licensed under the GPLv3 licence
+ * Unless required by applicable law or agreed to in writing,
+ * this code is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OF ANY KIND.
+ */
+
+package org.openmarkov.io.xmlbif;
+
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.File;
+import java.net.URL;
+
+import org.openmarkov.core.model.network.ProbNet;
+// TODO: Use the ProbNetTest class from the openmarkov.core tests
+//import org.openmarkov.core.model.network.ProbNetTest;
+
+
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+public class XMLBIFReaderTest {
+	   private String rootPath;
+	    private XMLBIFReader reader;
+	    
+		private String networkTestName = "netAB.xml";
+
+		@BeforeEach
+	    public void setUp() throws Exception {
+	    	URL url = getClass().getClassLoader ().getResource (networkTestName);
+			File file = new File(url.getPath());
+			String absolutePath = file.getAbsolutePath();
+			rootPath = absolutePath.substring(0, absolutePath.length() - networkTestName.length());
+			reader = new XMLBIFReader();
+	    }
+		@Disabled
+		@Test
+		public void readNetworkTest() { 
+			ProbNet probNet1;
+			try {
+				String pathAndName = rootPath + networkTestName;
+				probNet1 = reader.loadProbNet(pathAndName);
+				assertNotNull(probNet1);
+				// TODO: Once the ProbNetTest class is available, remove the next line
+				//ProbNetTest.compareNetworks(probNet1,BNFactory.createBN_XY("class","Symptom",0.34375,0.75,0.681818181818));
+			} catch (Exception e) {
+				fail("Exception: " + e.getLocalizedMessage());
+			}  
+		}
+}

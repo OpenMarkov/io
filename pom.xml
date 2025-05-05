@@ -15,17 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>org.openmarkov</groupId>
-            <artifactId>org.openmarkov.io.elvira</artifactId>
-            <version>0.3.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openmarkov</groupId>
-            <artifactId>org.openmarkov.io.probmodelxml</artifactId>
-            <version>0.3.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openmarkov</groupId>
-            <artifactId>org.openmarkov.io.xmlbif</artifactId>
+            <artifactId>org.openmarkov.core</artifactId>
             <version>0.3.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
