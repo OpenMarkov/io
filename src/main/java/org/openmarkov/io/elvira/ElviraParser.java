@@ -250,10 +250,10 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			} else {
 				throw new ParserException("ProbNet type not recognized.");
 			}
-		} catch (ConstraintViolationException e) {
-			throw new ParserException("ProbNet violates exception " + e.toString());
-		}
-	}
+		} catch (org.openmarkov.core.exception.InvalidNetworkTypeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	/**
 	 * Gets some general information of the probNet and puts it in
