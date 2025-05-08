@@ -14,6 +14,7 @@ import java.net.URL;
 import org.junit.jupiter.api.*;
 import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.model.network.ProbNet;
+import org.openmarkov.core.test.TestSpeed;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraNameAndTitleTest {
@@ -27,7 +28,8 @@ public class ElviraNameAndTitleTest {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		probNet = new ElviraParser().loadProbNet(url.getFile());
 	}
-
+	
+	@Tag(TestSpeed.MEDIUM)
 	@Test public void testTitleAndName() throws NodeNotFoundException {
 		assertNotNull(probNet.getVariable("Primary infiltrating tumor on nasopharyngeal anterior wall"));
 	}

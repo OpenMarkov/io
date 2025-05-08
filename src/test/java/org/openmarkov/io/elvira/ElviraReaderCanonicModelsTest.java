@@ -27,6 +27,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.canonical.ICIFamily;
 import org.openmarkov.core.model.network.potential.canonical.ICIModelType;
 import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
+import org.openmarkov.core.test.TestSpeed;
 
 /**
  * @author marias
@@ -59,7 +60,8 @@ public class ElviraReaderCanonicModelsTest {
 	@BeforeEach public void setUp() throws Exception {
 		elviraParser = new ElviraParser();
 	}
-
+	
+	@Tag(TestSpeed.SLOW)
 	@Test public void testLoadElviraOr() throws Exception {
 		String testFile = "puerta-or.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);

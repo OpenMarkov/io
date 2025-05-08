@@ -13,6 +13,7 @@ import java.net.URL;
 import org.junit.jupiter.api.*;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.model.network.ProbNet;
+import org.openmarkov.core.test.TestSpeed;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraReaderTest {
@@ -47,7 +48,8 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(7, probNet.getNumNodes());
 		Assertions.assertEquals(9, probNet.getLinks().size());
 	}
-
+	
+	@Tag(TestSpeed.MEDIUM)
 	@Test public void testBarley() throws ParserException {
 		URL url = this.getClass().getClassLoader().getResource("Barley.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
@@ -87,7 +89,8 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(18, probNet.getNumNodes());
 		Assertions.assertEquals(17, probNet.getLinks().size());
 	}
-
+	
+	@Tag(TestSpeed.MEDIUM)
 	@Test public void testDiabetes() throws ParserException {
 		URL url = this.getClass().getClassLoader().getResource("Diabetes.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
@@ -159,7 +162,8 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(8, probNet.getNumNodes());
 		Assertions.assertEquals(10, probNet.getLinks().size());
 	}
-
+	
+	@Tag(TestSpeed.MEDIUM)
 	@Test public void testLink() throws ParserException {
 		URL url = this.getClass().getClassLoader().getResource("Link.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
@@ -175,7 +179,8 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(15, probNet.getNumNodes());
 		Assertions.assertEquals(28, probNet.getLinks().size());
 	}
-
+	
+	@Tag(TestSpeed.MEDIUM)
 	@Test public void testMildew() throws ParserException {
 		URL url = this.getClass().getClassLoader().getResource("Mildew.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());

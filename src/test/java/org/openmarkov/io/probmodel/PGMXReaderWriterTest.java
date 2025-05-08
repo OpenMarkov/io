@@ -31,6 +31,7 @@ import org.openmarkov.core.model.network.potential.TablePotential;
 import org.openmarkov.core.model.network.potential.canonical.MaxPotential;
 import org.openmarkov.core.model.network.potential.canonical.TuningPotential;
 import org.openmarkov.core.model.network.type.DecisionAnalysisNetworkType;
+import org.openmarkov.core.test.TestSpeed;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.probmodel.writer.PGMXWriter_0_2;
 
@@ -105,6 +106,7 @@ public class PGMXReaderWriterTest {
 		}
 	}*/
 	
+	@Tag(TestSpeed.MEDIUM)
 	@Test
     public void iciPotentialsReadingTest() throws NodeNotFoundException {
         

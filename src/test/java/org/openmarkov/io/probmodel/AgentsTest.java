@@ -19,6 +19,7 @@ import java.util.List;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.StringWithProperties;
+import org.openmarkov.core.test.TestSpeed;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -40,7 +41,8 @@ public class AgentsTest {
 		String absolutePath = file.getAbsolutePath();
 		rootPath = absolutePath.substring(0, absolutePath.length() - probNetManualName.length());
 	}
-
+	
+	@Tag(TestSpeed.MEDIUM)
 	@Test
 	public void testAgentsNumber() throws ParserException {
 		manualProbNet = new PGMXReader_0_2().loadProbNet(rootPath + probNetManualName);
