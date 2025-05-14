@@ -80,6 +80,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
 		try {
 			writeXMLProbNet(probNet, root);
 			writeInferenceOptions(probNet, root);
+			writePolicies(probNet, root);
 			writeEvidence(probNet, evidences, root);
 			Document document = new Document(root);
 			XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -161,7 +162,28 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
 	}
 
 
-
+	protected void writePolicies(ProbNet probNet, Element root) {
+		Element policiesElement = new Element(XMLTags.POLICIES.toString());
+		boolean existsAtLeastOnePolicy = false;
+		List<Variable> decisionVariables = probNet.getVariables(NodeType.DECISION);
+		for (Variable variable : decisionVariables) {
+			Node node = probNet.getNode(variable);
+			if (node.hasPolicy()) {
+				existsAtLeastOnePolicy = true;
+				List<Potential> decisionPotentials = node.getPotentials();
+				for (Potential decisionPotential : decisionPotentials) {
+					Element potentialElement = new Element(XMLTags.POTENTIAL.toString());
+					getPotential(probNet, decisionPotential, potentialElement);
+					potentialElement.setAttribute(XMLAttributes.ROLE.toString(),
+							decisionPotential.getPotentialRole().toString());
+					policiesElement.addContent(potentialElement);
+				}
+			}
+		}
+		if (existsAtLeastOnePolicy) {
+			root.addContent(policiesElement);
+		}
+	}
 	/**
 	 * Writes evidence nodes into XML format
 	 *
