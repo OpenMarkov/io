@@ -34,7 +34,7 @@ public class ElviraWriterCanonicModelsTest {
 
 	// Methods
 	@BeforeEach
-	/** Creates a small ProbNet */ public void setUp() {
+	/** Creates a small ProbNet */ public void setUp() throws NodeNotFoundException {
 		//probNet small					
 		//Variables
 		String y = new String("Y");
@@ -114,16 +114,8 @@ public class ElviraWriterCanonicModelsTest {
 		miniICI.addNode(variableX2, nodeType);
 
 		// Links throws NodeNotFoundException
-		try {
 			miniICI.addLink(variableX1, variableY, true);
-		} catch (NodeNotFoundException e) {
-			fail("Can not create network adding link X1->Y.");
-		}
-		try {
 			miniICI.addLink(variableX2, variableY, true);
-		} catch (NodeNotFoundException e) {
-			fail("Can not create network adding link X2->Y.");
-		}
 
 		// Potentials
 		miniICI.addPotential(X1Potential);
@@ -132,7 +124,7 @@ public class ElviraWriterCanonicModelsTest {
 
 	}
 
-	@Test public final void testWriteProbNet() {
+	@Test public final void testWriteProbNet() throws FileNotFoundException, WriterException, ParserException {
 		URL url = this.getClass().getClassLoader().getResource("trivial3jensen.elv");
 		String rootPath = url.getPath();
 		File file = new File(rootPath);
@@ -142,22 +134,8 @@ public class ElviraWriterCanonicModelsTest {
 
 		String fullNetworkName = rootPath + "MiniICI.elv";
 		System.out.println(fullNetworkName);
-		try {
 			new ElviraWriter().writeProbNet(fullNetworkName, miniICI);
-		} catch (WriterException e) {
-			System.err.println(e.getMessage());
-			fail("Can not write network: " + fullNetworkName);
-		}
-		try {
 			new ElviraParser().loadProbNet(fullNetworkName);
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
-			fail("Can not read network: " + fullNetworkName);
-		} catch (ParserException e) {
-			System.err.println(e.getMessage());
-			fail("Problem reading network: " + fullNetworkName);
-		}
-
 	}
 
 }

@@ -35,13 +35,10 @@ public class ElviraScannerTest {
 
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws Exception {
-		try {
 			elviraScanner = ElviraScanner.getUniqueInstance();
 			URL url = this.getClass().getClassLoader().getResource(testFile);
 			elviraScanner.initializeScanner(url.getFile());
-		} catch (FileNotFoundException e) {
-			fail("ElviraScannerTest: File " + testFile + " not found");
-		}
+
 	}
 
 	@Test public void testGetNextToken() throws Exception {

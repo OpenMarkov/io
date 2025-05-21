@@ -32,17 +32,9 @@ public class SuperValueTest {
 
 	private ProbNet probNet;
 
-	@Test public void test1() throws NodeNotFoundException {
-		try {
+	@Test public void test1() throws NodeNotFoundException, FileNotFoundException, ParserException {
 			URL url = this.getClass().getClassLoader().getResource("IDE4-decide-test.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		} catch (ParserException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
 		Node node = probNet.getNode("Global utility", NodeType.UTILITY);
 		assertNotNull(node);
 		List<Potential> potentials = node.getPotentials();
@@ -52,31 +44,15 @@ public class SuperValueTest {
 
 	}
 
-	@Test public void test2() {
-		try {
+	@Test public void test2() throws FileNotFoundException, ParserException {
 			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		} catch (ParserException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
 		assertNotNull(probNet);
 	}
 
-	@Test public void test3() {
-		try {
+	@Test public void test3() throws FileNotFoundException, ParserException {
 			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		} catch (ParserException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
 		assertNotNull(probNet);
 	}
 }

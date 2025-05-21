@@ -22,6 +22,7 @@ import org.openmarkov.core.model.network.State;
 import org.openmarkov.core.model.network.Variable;
 import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
+import org.openmarkov.core.test.TestSpeed;
 
 /**
  * @author marias
@@ -56,7 +57,7 @@ public class ElviraParserSVTest {
 		assertTrue(defaultNodeStates[0].getName().contentEquals("absent"));
 		assertTrue(defaultNodeStates[1].getName().contentEquals("present"));
 	}
-
+	
 	@Test public void getNodes() throws Exception {
 		assertEquals(8, probNet.getNumNodes()); // Test number of nodes
 		// Test some attributes of one random node
