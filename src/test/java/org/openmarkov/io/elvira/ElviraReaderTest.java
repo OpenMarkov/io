@@ -49,7 +49,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(9, probNet.getLinks().size());
 	}
 	
-	@Tag(TestSpeed.MEDIUM)
+	@Tag(TestSpeed.SLOW)
 	@Test public void testBarley() throws ParserException {
 		URL url = this.getClass().getClassLoader().getResource("Barley.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
@@ -90,7 +90,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(17, probNet.getLinks().size());
 	}
 	
-	@Tag(TestSpeed.MEDIUM)
+	@Tag(TestSpeed.SLOW)
 	@Test public void testDiabetes() throws ParserException {
 		URL url = this.getClass().getClassLoader().getResource("Diabetes.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());

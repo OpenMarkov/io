@@ -39,17 +39,9 @@ public class Cromosomopatia2Test {
 	private ProbNet probNet;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() {
-		try {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws FileNotFoundException, ParserException {
 			URL url = this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		} catch (ParserException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
 	}
 
 	@Test public void testCromosopatia() throws NodeNotFoundException {

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.File;
 import java.net.URL;
 
+import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.model.network.ProbNet;
 // TODO: Use the ProbNetTest class from the openmarkov.core tests
 //import org.openmarkov.core.model.network.ProbNetTest;
@@ -37,16 +38,13 @@ public class XMLBIFReaderTest {
 	    }
 		@Disabled
 		@Test
-		public void readNetworkTest() { 
+		public void readNetworkTest() throws ParserException {
 			ProbNet probNet1;
-			try {
 				String pathAndName = rootPath + networkTestName;
 				probNet1 = reader.loadProbNet(pathAndName);
 				assertNotNull(probNet1);
 				// TODO: Once the ProbNetTest class is available, remove the next line
 				//ProbNetTest.compareNetworks(probNet1,BNFactory.createBN_XY("class","Symptom",0.34375,0.75,0.681818181818));
-			} catch (Exception e) {
-				fail("Exception: " + e.getLocalizedMessage());
-			}  
+
 		}
 }
