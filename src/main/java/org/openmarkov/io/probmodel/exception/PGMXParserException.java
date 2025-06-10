@@ -23,7 +23,8 @@ public class PGMXParserException extends ParserException {
 
 	@Override
 	public String getMessage() {
-		StringBuilder sb = new StringBuilder(super.getMessage());
+		StringBuilder sb = new StringBuilder();
+		sb.append(super.getMessage());
 		if (element instanceof LocatedElement)
 		{
 			LocatedElement locatedElement = (LocatedElement) element;
