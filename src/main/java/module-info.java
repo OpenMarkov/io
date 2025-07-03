@@ -1,4 +1,4 @@
-module org.openmarkov.io {
+open module org.openmarkov.io {
 	requires org.openmarkov.core;
 	
 	requires org.jdom2;
