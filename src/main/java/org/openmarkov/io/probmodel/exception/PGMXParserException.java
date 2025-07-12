@@ -14,7 +14,7 @@ import org.openmarkov.core.exception.ParserException;
 @SuppressWarnings("serial")
 public class PGMXParserException extends ParserException {
 
-	private Element element;
+	private final Element element;
 	
 	public PGMXParserException(String message, Element element) {
 		super(message);

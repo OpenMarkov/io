@@ -820,22 +820,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
             }
             else
             {
-                // Common part to CONTINUOUS and DISCRETIZED
-                try
+                if ( variableType == VariableType.NUMERIC )
                 {
-                    if ( variableType == VariableType.NUMERIC )
-                    {
-                        variable = getXMLContinuousVariable( variableElement, variableName );
-                    }
-                    else
-                    { // DISCRETIZED variable. Read sub-intervals
-                        Element thresholdsElement = variableElement.getChild( XMLTags.THRESHOLDS.toString() );
-                        variable = getXMLDiscretizedVariable( thresholdsElement, states, variableName );
-                    }
+                    variable = getXMLContinuousVariable( variableElement, variableName );
                 }
-                catch ( DataConversionException e ) {
-                    throw new PGMXParserException( "Data conversion problem with variable " + variableName + ".",
-                            variableElement );
+                else
+                { // DISCRETIZED variable. Read sub-intervals
+                    Element thresholdsElement = variableElement.getChild( XMLTags.THRESHOLDS.toString() );
+                    variable = getXMLDiscretizedVariable( thresholdsElement, states, variableName );
                 }
             }
         }
@@ -1159,8 +1151,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     protected Variable getXMLContinuousVariable( 
     		Element variableElement, 
-    		String variableName )
-    				throws DataConversionException {
+    		String variableName ) {
     	
         boolean leftClosedDefined, leftClosed = false, rightClosedDefined = false, rightClosed = false;
         double min = Double.NEGATIVE_INFINITY;  // Default value
@@ -1206,13 +1197,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param variableElement . <code>Element</code>
      * @param variableName . <code>String</code>
      * @return A discretized continuous variable. <code>Variable</code>
-     * @throws DataConversionException
      */
     protected Variable getXMLDiscretizedVariable( 
     		Element variableElement, 
     		State[] states, 
-    		String variableName )
-    				throws DataConversionException {
+    		String variableName ) {
     	
     	Variable variable;
     	// Continuous part. Continuous interval information is inferred from sub-intervals in discretized part (further on)
@@ -2037,9 +2026,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
 
     protected Potential getConditionalGaussianPotential( Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                         List<Variable> variables )
-            throws PGMXParserException
-    {
+                                                         List<Variable> variables ) {
         // TODO - Descomentar
         return null;
         // ConditionalGaussianPotential potential = new ConditionalGaussianPotential(variables, xmlRole);
@@ -2057,9 +2044,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
 
     protected Potential getDiscretizedCauchyPotential( Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                       List<Variable> variables )
-            throws PGMXParserException
-    {
+                                                       List<Variable> variables ) {
         // TODO - Descomentar
         return null;
         // DiscretizedCauchyPotential potential = new DiscretizedCauchyPotential(variables, xmlRole);
