@@ -90,7 +90,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		decisionCriterion = new Criterion("Effectiveness", "Eff-Unit");
 	}
 
-	public ElviraParser() throws FileNotFoundException {
+	public ElviraParser() {
 		this(ElviraScanner.getUniqueInstance());
 	}
 
@@ -164,7 +164,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	@Override
-	public ProbNetInfo loadProbNetInfo(String netName, InputStream file) throws ParserException {
+	public ProbNetInfo loadProbNetInfo(String netName, InputStream file) {
 		return null;
 	}
 
@@ -196,8 +196,6 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			throw new ParserException("Error reading general information in : " + fileName + ": " + e.getMessage());
 		} catch (NodeNotFoundException e) {
 			throw new ParserException("Error reading:" + fileName + ": " + e.getMessage());
-		} catch (ConstraintViolationException e) {
-			throw new ParserException("Constraint violation exception. " + e.getLocalizedMessage());
 		} catch (Exception e) {
 			throw new ParserException(
 					"Error reading file :\n" + fileName + ": " + e.getLocalizedMessage() + ".\n line: " + scanner
@@ -212,7 +210,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 
 
-	@Override public ProbNet loadProbNet(String netName, InputStream file) throws ParserException {
+	@Override public ProbNet loadProbNet(String netName, InputStream file) {
 		return loadProbNetInfo(netName, file).getProbNet();
 	}
 
@@ -303,9 +301,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * @param token <code>ElviraToken</code>
 	 * @throws ParserException
 	 * @throws IOException
-	 * @throws ConstraintViolationException
 	 */
-	private ElviraToken getNodes(ElviraToken token) throws IOException, ParserException, ConstraintViolationException {
+	private ElviraToken getNodes(ElviraToken token) throws IOException, ParserException {
 		do {
 			token = getNode(token);
 		} while ((token.getReservedWord() != ReservedWord.LINK) && (token.getReservedWord() != ReservedWord.RELATION));
@@ -317,9 +314,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * @return token. <code>ElviraToken</code>
 	 * @throws ParserException
 	 * @throws IOException
-	 * @throws ConstraintViolationException
 	 */
-	private ElviraToken getNode(ElviraToken token) throws IOException, ParserException, ConstraintViolationException {
+	private ElviraToken getNode(ElviraToken token) throws IOException, ParserException {
 		Node node = null;
 		String variableName = token.getStringValue1();
 		NodeType nodeType = NodeType.CHANCE;

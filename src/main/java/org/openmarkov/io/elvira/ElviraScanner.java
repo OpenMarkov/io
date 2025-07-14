@@ -48,7 +48,7 @@ public class ElviraScanner {
 	}
 
 	// Methods
-	public static ElviraScanner getUniqueInstance() throws FileNotFoundException {
+	public static ElviraScanner getUniqueInstance() {
 		// Without worrying about whether there is a scanner, it creates a new
 		// one (slight modification of singleton pattern).
 		elviraScanner = new ElviraScanner();
