@@ -45,7 +45,7 @@ public class ElviraParserSVTest {
 	}
 
 	// Unit tests
-	@Test public void getGeneralInfo() throws Exception {
+	@Test public void getGeneralInfo() {
 		//String kindOfGraph = (String)probNet.properties.get("KindOfGraph");
 		//assertNotNull(kindOfGraph);
 		//assertTrue(kindOfGraph.contentEquals("directed"));
@@ -75,7 +75,7 @@ public class ElviraParserSVTest {
 		assertEquals(8, variables.size());
 	}
 
-	@Test public void getLinks() throws Exception {
+	@Test public void getLinks() {
 		// Test children of one random node
 		String nameOfVariable = "A";
 		Node node = probNet.getNode(nameOfVariable);
@@ -83,7 +83,7 @@ public class ElviraParserSVTest {
 		assertEquals(3, children.size());
 	}
 
-	@Test public void getPotentials() throws Exception {
+	@Test public void getPotentials() {
 		List<Potential> potentials = probNet.getPotentials();
 		assertEquals(7, potentials.size());
 		// Test a canonical potential

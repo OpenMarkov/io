@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.net.URL;
 
 import org.junit.jupiter.api.*;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.test.TestSpeed;
 
@@ -30,7 +29,7 @@ public class ElviraNameAndTitleTest {
 	}
 	
 	@Tag(TestSpeed.MEDIUM)
-	@Test public void testTitleAndName() throws NodeNotFoundException {
+	@Test public void testTitleAndName() {
 		assertNotNull(probNet.getVariable("Primary infiltrating tumor on nasopharyngeal anterior wall"));
 	}
 

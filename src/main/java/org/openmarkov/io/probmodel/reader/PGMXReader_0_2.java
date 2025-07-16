@@ -15,7 +15,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.located.LocatedJDOMFactory;
 import org.openmarkov.core.exception.InvalidStateException;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
 import org.openmarkov.core.inference.TransitionTime;
@@ -925,27 +924,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
     }
 
-    protected Variable getVariable( Element element, ProbNet probNet )
-            throws PGMXParserException {
+    protected Variable getVariable( Element element, ProbNet probNet ) {
         String variableName = getElementName( element );
         // strip the name from the time slice for backwards compatibility
         String timeSlice = element.getAttributeValue( XMLAttributes.TIMESLICE.toString() );
         variableName = variableName.replace( " [" + timeSlice + "]", "" );
         Variable variable = null;
-        try {
-            variable = ( timeSlice == null ) ? probNet.getVariable( variableName )
-                    : probNet.getVariable( variableName, Integer.parseInt( timeSlice ) );
-        }
-        catch ( NodeNotFoundException e )
-        {
-            StringBuilder errorMessage = new StringBuilder();
-            errorMessage.append( "Unknown variable name " );
-            errorMessage.append( variableName );
-            if ( timeSlice != null ) {
-                errorMessage.append( " [" + timeSlice + "]" );
-            }
-            throw new PGMXParserException( errorMessage.toString(), element );
-        }
+        variable = ( timeSlice == null ) ? probNet.getVariable( variableName )
+                : probNet.getVariable( variableName, Integer.parseInt( timeSlice ) );
         return variable;
     }
 
@@ -1282,10 +1268,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 {
                     throw new PGMXParserException( "Data conversion exception in PGMXReader.getLinks()", xmlLink );
                 }
-                catch ( NodeNotFoundException e )
-                {
-                    throw new PGMXParserException( "Node not found in PGMXReader.getLinks()", xmlLink );
-                }
             }
         }
     }
@@ -1364,9 +1346,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return root.getChild( XMLTags.POTENTIALS.toString() );
     }
 
-    protected List<Variable> getReferencedVariables( Element xmlPotential, ProbNet probNet )
-            throws PGMXParserException
-    {
+    protected List<Variable> getReferencedVariables( Element xmlPotential, ProbNet probNet ) {
         // get variables
         Element xmlRootVariables = getXMLPotentialVariables( xmlPotential );
         List<Variable> variables = new ArrayList<Variable>();
@@ -1812,12 +1792,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param xmlRole
      * @param variables
      * @return
-     * @throws PGMXParserException
      */
     protected Potential getICIPotential( Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                         List<Variable> variables )
-            throws PGMXParserException
-    {
+                                         List<Variable> variables ) {
         Element xmlModel = xmlPotential.getChild( XMLTags.MODEL.toString() );
         ICIPotential iciPotential = null;
         if ( xmlModel.getText().equals( MaxPotential.class.getAnnotation( PotentialType.class ).name() )
@@ -1858,28 +1835,17 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param xmlRole
      * @param variables
      * @return
-     * @throws PGMXParserException
      */
     protected Potential getWeibullPotential( Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                             List<Variable> variables )
-            throws PGMXParserException
-    {
+                                             List<Variable> variables ) {
         WeibullHazardPotential potential = new WeibullHazardPotential( variables, xmlRole );
         Element xmlTimeVariable = xmlPotential.getChild( XMLTags.TIME_VARIABLE.toString() );
         if ( xmlTimeVariable != null )
         {
             String variableName = getElementName( xmlTimeVariable );
             String timeSlice = xmlTimeVariable.getAttributeValue( XMLAttributes.TIMESLICE.toString() );
-            try
-            {
-                Variable timeVariable = probNet.getVariable( variableName, Integer.parseInt( timeSlice ) );
-                potential.setTimeVariable( timeVariable );
-            }
-            catch ( NodeNotFoundException e )
-            {
-                e.printStackTrace();
-                throw new PGMXParserException( e.getMessage(), xmlTimeVariable );
-            }
+            Variable timeVariable = probNet.getVariable( variableName, Integer.parseInt( timeSlice ) );
+            potential.setTimeVariable( timeVariable );
         }
         Element xmlLog = xmlPotential.getChild( XMLTags.LOG.toString() );
         potential.setLog( xmlLog == null || Boolean.parseBoolean( xmlLog.getValue() ) );
@@ -2198,14 +2164,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         // build this list from current node list and classNet
                         for ( Node node : classNet.getNodes() )
                         {
-                            try
-                            {
-                                instanceNodes.add( probNet.getNode( name + "." + node.getName() ) );
-                            }
-                            catch ( NodeNotFoundException e )
-                            {
-                                throw new PGMXParserException( e.getMessage(), xmlInstance );
-                            }
+                            instanceNodes.add( probNet.getNode( name + "." + node.getName() ) );
                         }
                         Instance instance = new Instance( name, classNet, instanceNodes, isInput );
                         try
@@ -2242,15 +2201,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
                             }
                             else if ( type.equalsIgnoreCase( "node" ) )
                             {
-                                try
-                                {
-                                    link =
-                                            new NodeReferenceLink( ooNet.getNode( source ), ooNet.getNode( destination ) );
-                                }
-                                catch ( NodeNotFoundException e )
-                                {
-                                    e.printStackTrace();
-                                }
+                                link =
+                                        new NodeReferenceLink( ooNet.getNode( source ), ooNet.getNode( destination ) );
                             }
                             ooNet.addReferenceLink( link );
                         }

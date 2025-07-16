@@ -13,12 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.model.network.NodeType;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Node;
@@ -32,7 +30,7 @@ public class SuperValueTest {
 
 	private ProbNet probNet;
 
-	@Test public void test1() throws NodeNotFoundException, FileNotFoundException, ParserException {
+	@Test public void test1() throws ParserException {
 			URL url = this.getClass().getClassLoader().getResource("IDE4-decide-test.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 		Node node = probNet.getNode("Global utility", NodeType.UTILITY);
@@ -44,13 +42,13 @@ public class SuperValueTest {
 
 	}
 
-	@Test public void test2() throws FileNotFoundException, ParserException {
+	@Test public void test2() throws ParserException {
 			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 		assertNotNull(probNet);
 	}
 
-	@Test public void test3() throws FileNotFoundException, ParserException {
+	@Test public void test3() throws ParserException {
 			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 		assertNotNull(probNet);

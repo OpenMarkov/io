@@ -9,11 +9,7 @@ package org.openmarkov.io.elvira;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.openmarkov.core.exception.NodeNotFoundException;
-import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.model.network.NodeType;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.State;
@@ -23,8 +19,6 @@ import org.openmarkov.core.model.network.potential.PotentialRole;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -55,7 +49,7 @@ public class ElviraWriterTest {
     
     // Methods
     @BeforeEach
-    /** Creates a small ProbNet */ public void setUp() throws IOException, NodeNotFoundException {
+    /** Creates a small ProbNet */ public void setUp() {
         //probNet small
         //Variables
         String a = new String("A");

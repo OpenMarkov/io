@@ -8,9 +8,7 @@
 package org.openmarkov.io.probmodel;
 
 import org.junit.jupiter.api.*;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.network.potential.PotentialRole;
@@ -37,7 +35,7 @@ public class PGMXReaderWriterTest {
     private String networkTestName = "HPV-model-0.2.0.pgmx";
     
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         URL url = getClass().getClassLoader().getResource(networkTestName);
         File file = new File(url.getPath());
         String absolutePath = file.getAbsolutePath();
@@ -82,7 +80,7 @@ public class PGMXReaderWriterTest {
     
     @Tag(TestSpeed.MEDIUM)
     @Test
-    public void iciPotentialsReadingTest() throws NodeNotFoundException, ParserException {
+    public void iciPotentialsReadingTest() throws ParserException {
         
         // Read test network
         String testNetworkName = rootPath + "/test-ici-reading.pgmx";
@@ -173,7 +171,7 @@ public class PGMXReaderWriterTest {
     }
     
     @Test
-    public void writeOrphanUtility() throws NodeNotFoundException {
+    public void writeOrphanUtility() {
         ProbNet probNet = Util.createTrivialID();
         probNet.removeNode(probNet.getNode("A"));
         probNet.removeNode(probNet.getNode("B"));
