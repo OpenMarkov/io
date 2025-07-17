@@ -21,7 +21,7 @@ public class ElviraReaderTest {
 	private ElviraParser elviraParser;
 
 	@BeforeEach
-	/** Creates a small ProbNet */ public void setUp() throws FileNotFoundException {
+	/** Creates a small ProbNet */ public void setUp() {
 		elviraParser = new ElviraParser();
 	}
 

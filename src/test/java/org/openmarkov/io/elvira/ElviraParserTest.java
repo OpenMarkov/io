@@ -49,11 +49,11 @@ public class ElviraParserTest {
 	}
 
 	// Unit tests
-	@Test public void getConstraints() throws ConstraintViolationException {
+	@Test public void getConstraints() {
 		assertEquals(BayesianNetworkType.class, probNet.getNetworkType().getClass());
 	}
 
-	@Test public void getGeneralInfo() throws Exception {
+	@Test public void getGeneralInfo() {
 		String kindOfGraph = (String) probNet.additionalProperties.get("KindOfGraph");
 		assertNotNull(kindOfGraph);
 		assertTrue(kindOfGraph.contentEquals("mixed"));
@@ -83,7 +83,7 @@ public class ElviraParserTest {
 		assertEquals(65, variables.size());
 	}
 
-	@Test public void getLinks() throws Exception {
+	@Test public void getLinks() {
 		// Test children of one random node
 		String nameOfVariable = "retinopatia_diabetic";
 		Node node = probNet.getNode(nameOfVariable);
@@ -91,7 +91,7 @@ public class ElviraParserTest {
 		assertEquals(6, children.size());
 	}
 
-	@Test public void getPotentials() throws Exception {
+	@Test public void getPotentials() {
 		List<Potential> potentials = probNet.getPotentials();
 		assertEquals(65, potentials.size());
 		// Test a canonical potential

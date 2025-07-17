@@ -16,12 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Node;
 import org.openmarkov.core.model.network.State;
@@ -39,12 +37,12 @@ public class Cromosomopatia2Test {
 	private ProbNet probNet;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws FileNotFoundException, ParserException {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws ParserException {
 			URL url = this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 	}
 
-	@Test public void testCromosopatia() throws NodeNotFoundException {
+	@Test public void testCromosopatia() {
 		// Variables exist
 		Variable diagnostico = probNet.getVariable("Diagnostico");
 		assertNotNull(diagnostico);

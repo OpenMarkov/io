@@ -10,12 +10,10 @@ package org.openmarkov.io.elvira;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.*;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.model.network.NodeType;
@@ -34,7 +32,7 @@ public class ElviraWriterCanonicModelsTest {
 
 	// Methods
 	@BeforeEach
-	/** Creates a small ProbNet */ public void setUp() throws NodeNotFoundException {
+	/** Creates a small ProbNet */ public void setUp() {
 		//probNet small					
 		//Variables
 		String y = new String("Y");
@@ -124,7 +122,7 @@ public class ElviraWriterCanonicModelsTest {
 
 	}
 
-	@Test public final void testWriteProbNet() throws FileNotFoundException, WriterException, ParserException {
+	@Test public final void testWriteProbNet() throws WriterException, ParserException {
 		URL url = this.getClass().getClassLoader().getResource("trivial3jensen.elv");
 		String rootPath = url.getPath();
 		File file = new File(rootPath);

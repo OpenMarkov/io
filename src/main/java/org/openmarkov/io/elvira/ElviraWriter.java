@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.openmarkov.core.exception.NonProjectablePotentialException;
 import org.openmarkov.core.exception.WriterException;
-import org.openmarkov.core.exception.WrongCriterionException;
 import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.network.EvidenceCase;
@@ -462,10 +461,6 @@ import org.openmarkov.core.model.network.type.NetworkType;
 				} catch (NonProjectablePotentialException e) {
 					throw new WriterException("Can not project potential type " + potential.getClass().toString()
 							+ " to a TablePotential in " + "ElviraWriter.");
-				} catch (WrongCriterionException e) {
-					throw new WriterException(
-							"Exception writing potential type " + potential.getClass().toString() + ": " + e
-									.getMessage());
 				}
 				writeElviraTable(out, openMarkov2ElviraPotential(elviraPotential));
 			}

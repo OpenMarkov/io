@@ -29,7 +29,7 @@ public class XMLBIFReaderTest {
 		private String networkTestName = "netAB.xml";
 
 		@BeforeEach
-	    public void setUp() throws Exception {
+	    public void setUp() {
 	    	URL url = getClass().getClassLoader ().getResource (networkTestName);
 			File file = new File(url.getPath());
 			String absolutePath = file.getAbsolutePath();

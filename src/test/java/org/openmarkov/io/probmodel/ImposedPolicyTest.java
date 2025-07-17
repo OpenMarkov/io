@@ -31,7 +31,7 @@ public class ImposedPolicyTest {
 	private PGMXReader_0_2 reader;
 	
 	@BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     	URL url = getClass().getClassLoader ().getResource (networkTestName);
 		File file = new File(url.getPath());
 		absolutePath = file.getAbsolutePath();

@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openmarkov.core.exception.ConstraintViolationException;
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.io.ProbNetInfo;
 import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatType;
@@ -194,8 +192,6 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 		} catch (IOException e) {
 			throw new ParserException("Error reading general information in : " + fileName + ": " + e.getMessage());
-		} catch (NodeNotFoundException e) {
-			throw new ParserException("Error reading:" + fileName + ": " + e.getMessage());
 		} catch (Exception e) {
 			throw new ParserException(
 					"Error reading file :\n" + fileName + ": " + e.getLocalizedMessage() + ".\n line: " + scanner
@@ -438,9 +434,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * @return token. <code>ElviraToken</code>
 	 * @throws IOException
 	 * @throws ParserException
-	 * @throws NodeNotFoundException
 	 */
-	private ElviraToken getLinks(ElviraToken token) throws IOException, ParserException, NodeNotFoundException {
+	private ElviraToken getLinks(ElviraToken token) throws IOException, ParserException {
 		do {
 			String variable1Name = token.getStringValue1();
 			String variable2Name = token.getStringValue2();
@@ -474,9 +469,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * @param token <code>ElviraToken</code>
 	 * @throws ParserException
 	 * @throws IOException
-	 * @throws NodeNotFoundException
 	 */
-	private void getPotentials(ElviraToken token) throws IOException, ParserException, NodeNotFoundException {
+	private void getPotentials(ElviraToken token) throws IOException, ParserException {
 		do {
 			// Gets relation variables
 			String[] variablesListNames = token.getStringListValue();

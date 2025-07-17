@@ -12,14 +12,10 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import org.openmarkov.core.exception.ConstraintViolationException;
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.NodeNotFoundException;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Node;
 import org.openmarkov.core.model.network.Variable;
@@ -57,7 +53,7 @@ public class ElviraReaderCanonicModelsTest {
 			"deslu_post", "fv_global_post", "fv_global_pre", "catarata_contral",
 			"deslu_global_pre", "deslu_global_post"}; */
 
-	@BeforeEach public void setUp() throws Exception {
+	@BeforeEach public void setUp() {
 		elviraParser = new ElviraParser();
 	}
 	
@@ -105,13 +101,9 @@ public class ElviraReaderCanonicModelsTest {
 	 * Reads a big probabilistic network with canonical models.
 	 *
 	 * @throws ParserException
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * @throws ConstraintViolationException
 	 * @throws Exception
 	 */
-	@Test public void testNaN() throws NodeNotFoundException, FileNotFoundException, IOException, ParserException,
-			ConstraintViolationException {
+	@Test public void testNaN() throws ParserException {
 		String testFile = "cataratas-NaN.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		String file = url.getFile();

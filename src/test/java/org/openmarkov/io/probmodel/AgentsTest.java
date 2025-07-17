@@ -32,10 +32,9 @@ public class AgentsTest {
 	private static ProbNet manualProbNet;
 	
 	/**
-	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		URL url = getClass().getClassLoader ().getResource (probNetManualName);
 		File file = new File(url.getPath());
 		String absolutePath = file.getAbsolutePath();
