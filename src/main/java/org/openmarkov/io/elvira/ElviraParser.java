@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
+import org.openmarkov.core.exception.UnreacheableException;
 import org.openmarkov.core.io.ProbNetInfo;
 import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatType;
@@ -245,7 +246,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				throw new ParserException("ProbNet type not recognized.");
 			}
 		} catch (org.openmarkov.core.exception.InvalidNetworkTypeException e) {
-            throw new RuntimeException(e);
+            throw new UnreacheableException(e);
         }
     }
 
