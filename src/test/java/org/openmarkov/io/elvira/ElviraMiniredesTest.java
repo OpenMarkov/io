@@ -54,7 +54,7 @@ public class ElviraMiniredesTest {
 	private List<Potential> potentialsWithC;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws Exception {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		probNet = new ElviraParser().loadProbNet(url.getFile());
 		nodeA = probNet.getNode("A");

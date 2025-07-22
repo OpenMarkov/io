@@ -23,7 +23,7 @@ public class ElviraIDsTest {
 	private ProbNet probNet;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws Exception {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		System.out.println(testFile);
 		System.out.println("-------------------------------------");

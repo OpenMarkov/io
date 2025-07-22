@@ -41,7 +41,7 @@ public class ElviraParserTest {
 	private ElviraParser elviraParser;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws Exception {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();
 		probNet = elviraParser.loadProbNet(url.getFile());
@@ -128,7 +128,7 @@ public class ElviraParserTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test public void loadANodeThreeState() throws Exception {
+	@Test public void loadANodeThreeState() throws org.openmarkov.core.exception.ParserException {
 		String testFile = "UnNodoTresEstados.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();
