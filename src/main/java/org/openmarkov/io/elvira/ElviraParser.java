@@ -171,7 +171,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *  associate that constraint to <code>probNet</code> 
 	 * @throws ParserException */
 
-	public ProbNetInfo loadProbNetInfo(String fileName) throws ParserException {
+	@Override public ProbNetInfo loadProbNetInfo(String fileName) throws ParserException {
 		this.fileName = fileName;
 		try {
 			scanner.initializeScanner(fileName);

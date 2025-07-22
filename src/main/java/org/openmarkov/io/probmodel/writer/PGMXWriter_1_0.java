@@ -34,7 +34,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param netName = path + network name + extension
 	 * @param probNet
 	 */
-	public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
 		formatVersion= "1.0.0";
 		super.writeProbNet(netName, probNet);
 	}
@@ -44,7 +44,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param probNet
 	 * @param evidences list of evidence cases
 	 */
-	public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException {
 		formatVersion= "1.0.0";
 		super.writeProbNet(netName, probNet, evidences);
 	}
@@ -55,7 +55,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param probNetElement
 	 *            . <code>Element</code>
 	 */
-	protected void getProbNetChildren(ProbNet probNet, Element probNetElement) {
+	@Override protected void getProbNetChildren(ProbNet probNet, Element probNetElement) {
 		getAdditionalConstraints(probNet, probNetElement, new Element(XMLTags.ADDITIONAL_CONSTRAINTS.toString()));
 		getProbNetComment(probNet, probNetElement, new Element(XMLTags.COMMENT.toString()));
 		getDecisionCriteria(probNet, probNetElement, new Element(XMLTags.DECISION_CRITERIA.toString()));
@@ -86,7 +86,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param properties
 	 * @return Element
 	 */
-	protected Element getPropertiesElement(Properties properties) {
+	@Override protected Element getPropertiesElement(Properties properties) {
 		Element additionalPropertiesElement = new Element(XMLTags.ADDITIONAL_PROPERTIES.toString());
 		for (String propertyName : properties.getKeySet()) {
 			Element propertyElement = new Element(XMLTags.PROPERTY.toString());
@@ -105,7 +105,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param link
 	 * @param linkElement
 	 */
-	protected void getLinkRestriction(Link<Node> link, Element linkElement) {
+	@Override protected void getLinkRestriction(Link<Node> link, Element linkElement) {
 		double[] table = ((TablePotential) link.getRestrictionsPotential()).values;
 
 		boolean hasRestriction = false;
@@ -139,7 +139,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param probNetElement
 	 * @param potentialsElement
 	 */
-	protected void getPotentials(ProbNet probNet, Element probNetElement, Element potentialsElement) {
+	@Override protected void getPotentials(ProbNet probNet, Element probNetElement, Element potentialsElement) {
 		// HashMap of declared TablePotentials
 		List<Potential> potentials = probNet.getPotentials();
 		for (Potential potential : potentials) {
@@ -160,7 +160,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param potentialElement
 	 * @param potentialElement
 	 */
-	protected void getPotential(ProbNet probNet, Potential potential, Element potentialElement) {
+	@Override protected void getPotential(ProbNet probNet, Potential potential, Element potentialElement) {
 		getPotentialAttributesAndVariables(potential, potentialElement);
 		getPotentialBody(probNet, potential, potentialElement);
 	}
@@ -222,7 +222,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param potential
 	 * @param potentialElement
 	 */
-	protected void getPotentialBody(ProbNet probNet, Potential potential, Element potentialElement) {
+	@Override protected void getPotentialBody(ProbNet probNet, Potential potential, Element potentialElement) {
 		super.getPotentialBody(probNet, potential, potentialElement);
 		if (potential instanceof UnivariateDistrPotential) { // New from the previous version of the writer
 			getUnivariateDistrPotential(potentialElement, (UnivariateDistrPotential) potential);

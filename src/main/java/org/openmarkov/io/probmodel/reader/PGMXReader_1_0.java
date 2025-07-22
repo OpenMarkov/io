@@ -34,7 +34,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
 	 * @return <code>Potential</code> read from the XML element
 	 * @throws PGMXParserException if the potential type is not supported
 	 */
-	protected Potential getPotential(Element xmlPotential, ProbNet probNet) throws PGMXParserException {
+	@Override protected Potential getPotential(Element xmlPotential, ProbNet probNet) throws PGMXParserException {
 
 		return getPotential(xmlPotential, probNet, PotentialRole.CONDITIONAL_PROBABILITY);
 	}
@@ -45,7 +45,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
 	 * @return <code>Potential</code> read from the XML element
 	 * @throws PGMXParserException if the potential type is not supported
 	 */
-	protected Potential getPotential(Element eXMLPotential, ProbNet probNet, PotentialRole potentialRole)
+	@Override protected Potential getPotential(Element eXMLPotential, ProbNet probNet, PotentialRole potentialRole)
 			throws PGMXParserException {
 
 		Potential potential;
@@ -124,7 +124,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
 	 * @param xmlPotential <code>Element</code>
 	 * @return PotentialRole read from the XML element
 	 */
-	protected PotentialRole getPotentialRole(Element xmlPotential) {
+	@Override protected PotentialRole getPotentialRole(Element xmlPotential) {
 		String xmlPotentialRole = xmlPotential.getAttributeValue(XMLAttributes.ROLE.toString());
 		PotentialRole xmlRole;
 		if (xmlPotentialRole.equalsIgnoreCase("utility")) {
