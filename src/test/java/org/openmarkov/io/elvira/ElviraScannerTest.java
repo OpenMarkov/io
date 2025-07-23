@@ -34,14 +34,14 @@ public class ElviraScannerTest {
 	private ElviraToken token;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws Exception {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws FileNotFoundException {
 			elviraScanner = ElviraScanner.getUniqueInstance();
 			URL url = this.getClass().getClassLoader().getResource(testFile);
 			elviraScanner.initializeScanner(url.getFile());
 
 	}
 
-	@Test public void testGetNextToken() throws Exception {
+	@Test public void testGetNextToken() throws org.openmarkov.core.exception.ParserException, java.io.IOException {
 		// bnet token
 		token = elviraScanner.getNextToken();
 		assertEquals(TokenType.RESERVED, token.getTokenType());

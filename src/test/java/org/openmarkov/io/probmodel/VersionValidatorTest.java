@@ -22,7 +22,7 @@ public class VersionValidatorTest {
     
     private static String absolutePath;
     
-    private static void Version(String name) throws Exception {
+    private static void Version(String name) throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
         DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = parser.parse(new File(absolutePath + "\\" + name));
         
@@ -37,7 +37,7 @@ public class VersionValidatorTest {
     
     @Disabled("Jenkins compilation failure")
     @Test
-    public void Validator() throws Exception {
+    public void Validator() throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
         String[] files;
         
         Path resourceDirectory = Paths.get("src", "test", "resources");
@@ -49,7 +49,7 @@ public class VersionValidatorTest {
         
         for (String path : files) {
             if (path.contains(".pgmx")) {
-                Version(path);
+                VersionValidatorTest.Version(path);
             }
         }
         

@@ -66,7 +66,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param netName = path + network name + extension <code>String</code>
      * @param probNet <code>ProbNet</code>
      */
-    public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
+    @Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
         writeProbNet(netName, probNet, null);
     }
     
@@ -75,7 +75,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param probNet   <code>ProbNet</code> <code>String</code>
      * @param evidences list of evidence cases. <code>ArrayList</code> of <code>EvidenceCase</code>
      */
-    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException {
+    @Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException {
         UtilParameters.manageParametersWriter(netName, probNet);
         // PrintWriter out = new PrintWriter(new FileOutputStream(netName));
         Element root = new Element("ProbModelXML");

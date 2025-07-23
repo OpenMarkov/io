@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.net.URL;
 import java.util.List;
 
-import org.openmarkov.core.exception.ConstraintViolationException;
 import org.openmarkov.core.model.network.Node;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.State;
@@ -42,7 +41,7 @@ public class ElviraParserTest {
 	private ElviraParser elviraParser;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws Exception {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();
 		probNet = elviraParser.loadProbNet(url.getFile());
@@ -66,7 +65,7 @@ public class ElviraParserTest {
 		assertTrue(defaultNodeStates[1].getName().contentEquals("presente"));
 	}
 
-	@Test public void getNodes() throws Exception {
+	@Test public void getNodes() {
 		assertEquals(65, probNet.getNumNodes()); // Test number of nodes
 		// Test some attributes of one random node
 		String nameOfVariable = "v_ganancia_deslu";
@@ -129,7 +128,7 @@ public class ElviraParserTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test public void loadANodeThreeState() throws Exception {
+	@Test public void loadANodeThreeState() throws org.openmarkov.core.exception.ParserException {
 		String testFile = "UnNodoTresEstados.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();

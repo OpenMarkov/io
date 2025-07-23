@@ -90,7 +90,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	 * @param probNet . <code>ProbNet</code> <code>String</code>
 	 * @throws WriterException WriterException
 	 */
-	public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
 		if (probNet.additionalProperties.get("hasElviraProperties") == null) {
 			generateElviraProperties(probNet);
 		}
@@ -706,7 +706,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	/**
 	 * Ignores evidence, as evidence is stores in another file in Elvira
 	 */
-	public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException {
 		writeProbNet(netName, probNet);
 	}
 

@@ -58,7 +58,7 @@ public class ElviraReaderCanonicModelsTest {
 	}
 	
 	@Tag(TestSpeed.SLOW)
-	@Test public void testLoadElviraOr() throws Exception {
+	@Test public void testLoadElviraOr() throws ParserException {
 		String testFile = "puerta-or.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
@@ -122,7 +122,7 @@ public class ElviraReaderCanonicModelsTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test public void testCataratas() throws Exception {
+	@Test public void testCataratas() throws ParserException {
 		String testFile = "cataratas-escenarios-091123.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
