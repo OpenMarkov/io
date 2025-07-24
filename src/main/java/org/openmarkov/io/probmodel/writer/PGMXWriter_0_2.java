@@ -93,9 +93,6 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             throw new WriterException("Can not create: " + netName + " file.");
         } catch (IOException e) {
             throw new WriterException("General Input/Output error writing: " + netName + ".");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new WriterException(e.getMessage());
         }
     }
     

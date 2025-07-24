@@ -14,6 +14,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.located.LocatedJDOMFactory;
+import org.openmarkov.core.exception.IncompatibleEvidenceException;
+import org.openmarkov.core.exception.OpenMarkovException;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
 import org.openmarkov.core.inference.TransitionTime;
@@ -47,8 +49,11 @@ import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -83,12 +88,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     @Override public ProbNet loadProbNet(String netName) throws ParserException {
         FormatManager formatManager = FormatManager.getInstance();
-        
         try {
             formatManager.checkVersion(netName);
             formatManager.checkStructure(netName);
-            
-        } catch (Exception e) {
+        } catch (SAXException | IOException | ParserConfigurationException | OpenMarkovException e) {
             throw new ParserException("Invalid PGMX Structure.");
         }
         
@@ -568,7 +571,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                             finding = new Finding(variable, numericalValue);
                         }
                         evidenceCase.addFinding(finding);
-                    } catch (Exception e) {
+                    } catch (NumberFormatException | IncompatibleEvidenceException e) {
                         throw new PGMXParserException(e.getMessage(), xmlFinding);
                     }
                 }
@@ -616,10 +619,12 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 String constraintName = getElementName(constraintElement);
                 try {
                     probNet.addConstraint((PNConstraint) Class.forName(constraintName).getConstructor().newInstance());
-                } catch (Exception e) {
+                } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException |
+                         IllegalAccessException | InvocationTargetException e) {
                     throw new PGMXParserException("Can not create an instance " + "of constraint: " + constraintName,
                                                   root);
                 }
+                
             }
         }
         return probNet;
@@ -1328,7 +1333,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             for (Element xmlState : xmlStates) {
                 String stateName = getElementName(xmlState);
                 int stateIndex = topVariable.getStateIndex(stateName);
-                if(stateIndex == -1) {
+                if (stateIndex == -1) {
                     throw new PGMXParserException("Unknown state name +'" + stateName + "'", xmlState);
                 }
                 states.add(topVariable.getStates()[stateIndex]);
