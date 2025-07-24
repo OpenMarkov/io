@@ -7,12 +7,7 @@
 
 package org.openmarkov.io.elvira;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -497,12 +492,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 		// The potentials in OpenMarkov are stored in the opposite in Elvira
 		// The same method do the two conversions:
 		// Elvira -> OpenMarkov and OpenMarkov -> Elvira
-		Variable firstVariablePotential = null;
-		try {
-			firstVariablePotential = potential.getVariables().get(0);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+		Variable firstVariablePotential = potential.getVariables().get(0);
 		if (firstVariablePotential.getDecisionCriterion() != null) {
 			writeUtilityVariable(out, firstVariablePotential);
 		}

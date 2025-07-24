@@ -193,7 +193,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 		} catch (IOException e) {
 			throw new ParserException("Error reading general information in : " + fileName + ": " + e.getMessage());
-		} catch (Exception e) {
+		} catch (ParserException e) {
 			throw new ParserException(
 					"Error reading file :\n" + fileName + ": " + e.getLocalizedMessage() + ".\n line: " + scanner
 							.lineno());
