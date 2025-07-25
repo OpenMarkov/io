@@ -141,10 +141,9 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
      * @param xmlRole      the role of the potential
      * @param variables    the variables of the potential
      * @return the UnivariateDistrPotential read
-     * @throws PGMXParserException if there is an error reading the potential
      */
     protected Potential getUnivariateDistrPotential(Element xmlPotential, PotentialRole xmlRole,
-                                                    List<Variable> variables) throws PGMXParserException {
+                                                    List<Variable> variables) {
         String univariateName = xmlPotential.getAttributeValue(XMLAttributes.DISTRIBUTION.toString());
         String parametrization = xmlPotential.getAttributeValue(XMLAttributes.PARAMETRIZATION.toString());
         Element xmlRootTable = xmlPotential.getChild(XMLTags.PARAMETERS.toString());
@@ -170,11 +169,10 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
      * @param xmlRole      <code>PotentialRole</code>
      * @param variables    <code>List</code> of <code>Variable</code> of the potential
      * @return Potential
-     * @throws PGMXParserException if there is an error reading the potential
      */
     // TODO Remove?
     protected Potential getAugmentedTablePotential(Element xmlPotential, PotentialRole xmlRole,
-                                                   List<Variable> variables) throws PGMXParserException {
+                                                   List<Variable> variables) {
         
         List<Variable> finiteStatesVariables;
         List<Variable> parameterVariables;
