@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class SuperValueTest {
 
 	private ProbNet probNet;
 
-	@Test public void test1() throws ParserException {
+	@Test public void test1() throws ParserException, IOException {
 			URL url = this.getClass().getClassLoader().getResource("IDE4-decide-test.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 		Node node = probNet.getNode("Global utility", NodeType.UTILITY);
@@ -42,13 +43,13 @@ public class SuperValueTest {
 
 	}
 
-	@Test public void test2() throws ParserException {
+	@Test public void test2() throws ParserException, IOException {
 			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 		assertNotNull(probNet);
 	}
 
-	@Test public void test3() throws ParserException {
+	@Test public void test3() throws ParserException, IOException {
 			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 		assertNotNull(probNet);

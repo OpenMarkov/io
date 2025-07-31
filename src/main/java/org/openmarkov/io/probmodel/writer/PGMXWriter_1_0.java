@@ -34,7 +34,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param netName = path + network name + extension
 	 * @param probNet
 	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
 		formatVersion= "1.0.0";
 		super.writeProbNet(netName, probNet);
 	}
@@ -44,7 +44,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param probNet
 	 * @param evidences list of evidence cases
 	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
 		formatVersion= "1.0.0";
 		super.writeProbNet(netName, probNet, evidences);
 	}

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class ElviraReaderCanonicModelsTest {
 	}
 	
 	@Tag(TestSpeed.SLOW)
-	@Test public void testLoadElviraOr() throws ParserException {
+	@Test public void testLoadElviraOr() throws ParserException, IOException {
 		String testFile = "puerta-or.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
@@ -103,7 +104,7 @@ public class ElviraReaderCanonicModelsTest {
 	 * @throws ParserException
 	 * @throws Exception
 	 */
-	@Test public void testNaN() throws ParserException {
+	@Test public void testNaN() throws ParserException, IOException {
 		String testFile = "cataratas-NaN.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		String file = url.getFile();
@@ -122,7 +123,7 @@ public class ElviraReaderCanonicModelsTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test public void testCataratas() throws ParserException {
+	@Test public void testCataratas() throws ParserException, IOException {
 		String testFile = "cataratas-escenarios-091123.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());

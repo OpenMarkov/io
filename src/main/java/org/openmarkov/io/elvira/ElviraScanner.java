@@ -122,7 +122,7 @@ public class ElviraScanner {
 				} else if (streamTokenizer.ttype == TT_LEFTP) {
 					return getCanonicalToken(reservedWord);
 				} else {
-					throw new ParserException("Unexpected token reading MIN " + "in line: " + streamTokenizer.lineno());
+					throw new ParserException.MissingToken("MIN");
 				}
 			} else if (reservedWord == ReservedWord.MAX) {
 				readTokenType(streamTokenizer, TT_ASSIGNMENT);
@@ -328,7 +328,7 @@ public class ElviraScanner {
 	 * @param reservedWord <code>ReservedWord</code>
 	 * @return ElviraToken
 	 */
-	private ElviraToken getCanonicalToken(ReservedWord reservedWord) throws IOException, ParserException {
+	private ElviraToken getCanonicalToken(ReservedWord reservedWord) throws IOException, ParserException.MismatchedToken {
 		ArrayList<String> relationsNames = new ArrayList<String>();
 		String relationName;
 		while (streamTokenizer.ttype != TT_RIGHTP) {
@@ -380,12 +380,10 @@ public class ElviraScanner {
 	 *                         error occurs.
 	 * @throws ParserException parser exception
 	 */
-	private void readTokenType(StreamTokenizer streamTokenizer, int ttype) throws IOException, ParserException {
+	private void readTokenType(StreamTokenizer streamTokenizer, int ttype) throws IOException, ParserException.MismatchedToken {
 		readToken(streamTokenizer);
 		if (streamTokenizer.ttype != ttype) {
-			throw new ParserException(
-					"Wrong token type. Expected: " + ttype + ". Readed: " + streamTokenizer.ttype + ". "
-							+ streamTokenizer.toString());
+			throw new ParserException.MismatchedToken(ttype, streamTokenizer.ttype);
 		}
 	}
 
@@ -410,13 +408,11 @@ public class ElviraScanner {
 	 * @throws ParserException
 	 */
 	private void checkToken(StreamTokenizer streamTokenizer, ReservedWord reservedWordExpected)
-			throws IOException, ParserException {
+			throws IOException, ParserException.MismatchedToken {
 		streamTokenizer.nextToken();
 		ReservedWord reservedWordReaded = ReservedWordTokens.getReservedWord(streamTokenizer.sval);
 		if (reservedWordReaded != reservedWordExpected) {
-			throw new ParserException(
-					"Unexpected token: " + streamTokenizer.sval + ". Expected: " + reservedWordExpected.toString()
-							.toLowerCase() + ". At line: " + streamTokenizer.lineno());
+			throw new ParserException.MismatchedToken(reservedWordExpected.toString(), streamTokenizer.sval);
 		}
 	}
 

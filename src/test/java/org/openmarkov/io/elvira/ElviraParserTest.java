@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class ElviraParserTest {
 	private ElviraParser elviraParser;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();
 		probNet = elviraParser.loadProbNet(url.getFile());
@@ -128,7 +129,7 @@ public class ElviraParserTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test public void loadANodeThreeState() throws org.openmarkov.core.exception.ParserException {
+	@Test public void loadANodeThreeState() throws org.openmarkov.core.exception.ParserException, IOException {
 		String testFile = "UnNodoTresEstados.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();

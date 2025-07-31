@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom2.Element;
+import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.network.ProbNet;
@@ -18,7 +19,6 @@ import org.openmarkov.core.model.network.Variable;
 import org.openmarkov.core.model.network.potential.*;
 import org.openmarkov.core.model.network.potential.plugin.PotentialManager;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
-import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 
@@ -109,7 +109,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
             potential = getExactDistrPotential(eXMLPotential, probNet, potentialRole, variables);
             
         } else {
-            throw new PGMXParserException("Potential type " + sXMLPotentialType + " not supported", eXMLPotential);
+            throw new PGMXParserException.PotentialTypeNotSupported(sXMLPotentialType, eXMLPotential);
         }
         
         Element xmlComment = eXMLPotential.getChild(XMLTags.COMMENT.toString());

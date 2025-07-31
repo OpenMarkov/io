@@ -7,13 +7,13 @@
 
 package org.openmarkov.io.elvira;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openmarkov.core.exception.InvalidNetworkTypeException;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.exception.UnreacheableException;
 import org.openmarkov.core.io.ProbNetInfo;
@@ -171,13 +171,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *  associate that constraint to <code>probNet</code> 
 	 * @throws ParserException */
 
-	@Override public ProbNetInfo loadProbNetInfo(String fileName) throws ParserException {
+	@Override public ProbNetInfo loadProbNetInfo(String fileName) throws ParserException, IOException {
 		this.fileName = fileName;
-		try {
 			scanner.initializeScanner(fileName);
-		} catch (FileNotFoundException e) {
-			throw new ParserException("File: " + fileName + " not found.");
-		}
 		// Load probNet
 		probNet = new ProbNet();
 		getConstraints();
@@ -190,13 +186,10 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			}
 			getPotentials(token);
 			ElviraUtil.swapNameAndTitle(probNet);
-
-		} catch (IOException e) {
-			throw new ParserException("Error reading general information in : " + fileName + ": " + e.getMessage());
 		} catch (ParserException e) {
-			throw new ParserException(
-					"Error reading file :\n" + fileName + ": " + e.getLocalizedMessage() + ".\n line: " + scanner
-							.lineno());
+			e.setFilename(fileName);
+			e.setLineNumber(scanner.lineno());
+			throw e;
 		}
 
 		addSubPotentials(); // Only for canonical models
@@ -212,7 +205,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	@Override
-	public ProbNet loadProbNet(String netName) throws ParserException {
+	public ProbNet loadProbNet(String netName) throws IOException, ParserException {
 		return loadProbNetInfo(netName).getProbNet();
 	}
 
@@ -227,10 +220,10 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		try {
 			token = scanner.getNextToken();
 		} catch (IOException e) {
-			throw new ParserException("Problem reading constraints.");
+			throw new ParserException.CannotReadConstraint();
 		}
 		if (token.getTokenType() != TokenType.RESERVED) {
-			throw new ParserException("No probNet type.");
+			throw new ParserException.ProbabilisticNetworkTypeMissing();
 		}
 		try {
 			if (token.getReservedWord() == ReservedWord.BNET) {
@@ -243,9 +236,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				probNet.setNetworkType(InfluenceDiagramType.getUniqueInstance());
 				probNet.setName(token.getStringValue1());
 			} else {
-				throw new ParserException("ProbNet type not recognized.");
+				throw new ParserException.ProbabilisticNetworkTypeNotRecognized(token.getReservedWord().toString());
 			}
-		} catch (org.openmarkov.core.exception.InvalidNetworkTypeException e) {
+		} catch (InvalidNetworkTypeException.UnmetConstraints e) {
             throw new UnreacheableException(e);
         }
     }
@@ -368,9 +361,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				if (numStates < 0) {
 					numStates = reverseOrderStatesNames.length;
 				} else if (numStates != reverseOrderStatesNames.length) {
-					throw new ParserException(
-							"Wrong number of states in node " + variableName + ": expected " + numStates + ", found "
-									+ reverseOrderStatesNames.length);
+					throw new ParserException.WrongNumberOfStates(variableName, numStates, reverseOrderStatesNames.length);
 				}
 				State[] statesNames = new State[numStates];
 				for (int i = 0; i < numStates; i++) {
@@ -391,10 +382,12 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				Double min = Double.parseDouble(infoNode.get("Min"));
 				Double max = Double.parseDouble(infoNode.get("Max"));
 				Double precision = Double.parseDouble(infoNode.get("Precision"));
-				if ((min == null) || (max == null) || (precision == null)) {
-					throw new ParserException(
-							"Missing information in " + "definition of continuos variable " + variableName + " in line "
-									+ scanner.lineno());
+				var missingProperties = new ArrayList<String>();
+				if(min == null) missingProperties.add("Min");
+				if(max == null) missingProperties.add("Max");
+				if(precision == null) missingProperties.add("Precision");
+				if(!missingProperties.isEmpty()){
+					throw new ParserException.MissingPropertiesOfContiousVariable(variableName, missingProperties						);
 				}
 				variable = new Variable(variableName, true, min, max, true, precision);
 				node = probNet.addNode(variable, nodeType);
@@ -442,22 +435,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			String variable2Name = token.getStringValue2();
 			Node node1 = probNet.getNode(variable1Name);
 			Node node2 = probNet.getNode(variable2Name);
-			if ((node1 == null) || (node2 == null)) {
-				String msg = new String("");
-				if (node1 == null) {
-					msg = msg + "Variable " + variable1Name + " does not exists on probNet";
-				}
-				if (node2 == null) {
-					if (node1 == null) {
-						msg = msg + " and v";
-					} else {
-						msg = msg + "V";
-					}
-					msg = msg + "ariable " + variable2Name + " does not exists on probNet";
-				}
-				msg = msg + " adding link: " + variable1Name + "->" + variable2Name + " at line" + scanner.lineno();
-				throw new ParserException(msg);
-			}
+			if(node1 == null) throw new ParserException.MissingVariable(variable1Name);
+			if(node2 == null) throw new ParserException.MissingVariable(variable2Name);
 			probNet.addLink(node1, node2, true);
 			token = scanner.getNextToken();
 		} while (token.getReservedWord() == ReservedWord.LINK);
@@ -592,13 +571,13 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * @throws ParserException if remains one or more sub-potential or there are
 	 *                         some missing relation.
 	 */
-	private void addSubPotentials() throws ParserException {
+	private void addSubPotentials() throws ParserException.MissingPotential, ParserException.SomeSubpotentialsArentLinkedToAnICIPotential {
 		for (ICIPotential potential : iciPotentials) {
 			String[] relations = (String[]) potential.properties.get("Relations");
 			for (String relation : relations) {
 				TablePotential subPotential = subPotentials.get(relation);
 				if (subPotential == null) {
-					throw new ParserException("Sub-potential " + relation + " does not exist.");
+					throw new ParserException.MissingPotential(relation);
 				} else {
 					if (subPotential.getVariables().size() > 1) {
 						potential.setNoisyParameters(subPotential.getVariable(1), //parent
@@ -612,8 +591,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			}
 		}
 		if (subPotentials.size() > 0) {
-			throw new ParserException(
-					"There are " + subPotentials.size() + " sub-potentials not linked no an ICIPotential");
+			throw new ParserException.SomeSubpotentialsArentLinkedToAnICIPotential(subPotentials);
 		}
 	}
 

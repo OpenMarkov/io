@@ -4,8 +4,11 @@ open module org.openmarkov.io {
 	requires org.jdom2;
 	requires org.apache.commons.io;
 	requires java.desktop;
-	
-	uses javax.swing.event.UndoableEditListener;
+    requires jeval;
+    requires org.jetbrains.annotations;
+    requires org.openmarkov.annotation_processing;
+    
+    uses javax.swing.event.UndoableEditListener;
 	uses org.xml.sax.InputSource;
 	
 	exports org.openmarkov.io.probmodel.exception;

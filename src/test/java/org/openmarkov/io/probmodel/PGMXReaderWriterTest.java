@@ -21,6 +21,7 @@ import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.probmodel.writer.PGMXWriter_0_2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class PGMXReaderWriterTest {
     
     @Tag(TestSpeed.MEDIUM)
     @Test
-    public void iciPotentialsReadingTest() throws ParserException {
+    public void iciPotentialsReadingTest() throws ParserException, FileNotFoundException {
         
         // Read test network
         String testNetworkName = rootPath + "/test-ici-reading.pgmx";
