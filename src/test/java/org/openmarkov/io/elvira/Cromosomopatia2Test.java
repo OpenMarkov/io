@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Cromosomopatia2Test {
 	private ProbNet probNet;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws ParserException {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws ParserException, IOException {
 			URL url = this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv");
 			probNet = new ElviraParser().loadProbNet(url.getFile());
 	}

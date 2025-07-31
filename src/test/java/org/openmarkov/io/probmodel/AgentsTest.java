@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class AgentsTest {
 	
 	@Tag(TestSpeed.MEDIUM)
 	@Test
-	public void testAgentsNumber() throws ParserException {
+	public void testAgentsNumber() throws ParserException, FileNotFoundException {
 		manualProbNet = new PGMXReader_0_2().loadProbNet(rootPath + probNetManualName);
 		List<StringWithProperties> agents = manualProbNet.getAgents();
 		assertEquals(2, agents.size());

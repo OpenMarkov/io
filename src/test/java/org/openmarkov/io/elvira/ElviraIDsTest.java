@@ -9,6 +9,7 @@ package org.openmarkov.io.elvira;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.IOException;
 import java.net.URL;
 
 import org.junit.jupiter.api.*;
@@ -23,7 +24,7 @@ public class ElviraIDsTest {
 	private ProbNet probNet;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		System.out.println(testFile);
 		System.out.println("-------------------------------------");

@@ -10,6 +10,7 @@ package org.openmarkov.io.elvira;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -122,7 +123,7 @@ public class ElviraWriterCanonicModelsTest {
 
 	}
 
-	@Test public final void testWriteProbNet() throws WriterException, ParserException {
+	@Test public final void testWriteProbNet() throws ParserException, IOException, WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
 		URL url = this.getClass().getClassLoader().getResource("trivial3jensen.elv");
 		String rootPath = url.getPath();
 		File file = new File(rootPath);

@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class ElviraMiniIDTest {
 	private List<Potential> utilityPotentials;
 
 	@BeforeEach
-	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException {
+	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		probNet = new ElviraParser().loadProbNet(url.getFile());
 		nodeA = probNet.getNode("A");

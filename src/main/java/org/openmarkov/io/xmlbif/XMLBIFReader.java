@@ -9,6 +9,7 @@ package org.openmarkov.io.xmlbif;
 
 import org.jdom2.Element;
 
+import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.io.ProbNetInfo;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.network.NodeType;
@@ -17,10 +18,10 @@ import org.openmarkov.core.model.network.VariableType;
 import org.openmarkov.core.model.network.potential.PotentialRole;
 import org.openmarkov.core.model.network.potential.TablePotential;
 import org.openmarkov.core.model.network.potential.plugin.PotentialManager;
-import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.xmlbif.strings.XMLBIFTags;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +35,11 @@ public class XMLBIFReader extends PGMXReader_0_2 {
 	}
 
 	@Override
-	public ProbNetInfo loadProbNetInfo(Element root, String netName) {
+	public ProbNetInfo loadProbNetInfo(Element root, String netName) throws FileNotFoundException {
     	ProbNet probNet = null;
-
 		try {
 			probNet = getProbNet(root, netName);
-		} catch (PGMXParserException e) {
+		} catch (ParserException e) {
 			e.printStackTrace();
 		}
 		return new ProbNetInfo(probNet, null);

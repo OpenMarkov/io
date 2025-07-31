@@ -8,6 +8,7 @@
 package org.openmarkov.io.elvira;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 
 import org.junit.jupiter.api.*;
@@ -25,7 +26,7 @@ public class ElviraReaderTest {
 		elviraParser = new ElviraParser();
 	}
 
-	@Test public void testAlarm() throws ParserException {
+	@Test public void testAlarm() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("alarm.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -33,7 +34,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(46, probNet.getLinks().size());
 	}
 
-	@Test public void testApples() throws ParserException {
+	@Test public void testApples() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("apples.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -41,7 +42,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(9, probNet.getLinks().size());
 	}
 
-	@Test public void testAzar() throws ParserException {
+	@Test public void testAzar() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("azar.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -50,7 +51,7 @@ public class ElviraReaderTest {
 	}
 	
 	@Tag(TestSpeed.SLOW)
-	@Test public void testBarley() throws ParserException {
+	@Test public void testBarley() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("Barley.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -58,7 +59,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(84, probNet.getLinks().size());
 	}
 
-	@Test public void testBoblo() throws ParserException {
+	@Test public void testBoblo() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("boblo.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -66,7 +67,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(24, probNet.getLinks().size());
 	}
 
-	@Test public void testBoerlage92() throws ParserException {
+	@Test public void testBoerlage92() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("boerlage92.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -74,7 +75,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(36, probNet.getLinks().size());
 	}
 
-	@Test public void testCancer() throws ParserException {
+	@Test public void testCancer() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("cancer.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -82,7 +83,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(5, probNet.getLinks().size());
 	}
 
-	@Test public void testCarStarts() throws ParserException {
+	@Test public void testCarStarts() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("car-starts.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -91,7 +92,7 @@ public class ElviraReaderTest {
 	}
 	
 	@Tag(TestSpeed.SLOW)
-	@Test public void testDiabetes() throws ParserException {
+	@Test public void testDiabetes() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("Diabetes.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -99,7 +100,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(602, probNet.getLinks().size());
 	}
 
-	@Test public void testDogProblem() throws ParserException {
+	@Test public void testDogProblem() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("dog-problem.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -107,7 +108,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(4, probNet.getLinks().size());
 	}
 
-	@Test public void testElimbel2() throws ParserException {
+	@Test public void testElimbel2() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("elimbel2.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -115,7 +116,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(10, probNet.getLinks().size());
 	}
 
-	@Test public void testHailfinder() throws ParserException {
+	@Test public void testHailfinder() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("hailfinder.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -123,7 +124,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(66, probNet.getLinks().size());
 	}
 
-	@Test public void testHeadache() throws ParserException {
+	@Test public void testHeadache() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("headache.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -131,7 +132,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(11, probNet.getLinks().size());
 	}
 
-	@Test public void testInfUrinarias() throws ParserException {
+	@Test public void testInfUrinarias() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("inf-unirarias.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -139,7 +140,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(20, probNet.getLinks().size());
 	}
 
-	@Test public void testInsurance() throws ParserException {
+	@Test public void testInsurance() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("insurance.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -147,7 +148,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(52, probNet.getLinks().size());
 	}
 
-	@Test public void testJavier1() throws ParserException {
+	@Test public void testJavier1() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("javier1.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -155,7 +156,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(9, probNet.getLinks().size());
 	}
 
-	@Test public void testJensenDI() throws ParserException {
+	@Test public void testJensenDI() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("jensendi.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -164,7 +165,7 @@ public class ElviraReaderTest {
 	}
 	
 	@Tag(TestSpeed.MEDIUM)
-	@Test public void testLink() throws ParserException {
+	@Test public void testLink() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("Link.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -172,7 +173,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(1125, probNet.getLinks().size());
 	}
 
-	@Test public void testMediastinoBasico3() throws ParserException {
+	@Test public void testMediastinoBasico3() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("mediastino-basico-3.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -181,7 +182,7 @@ public class ElviraReaderTest {
 	}
 	
 	@Tag(TestSpeed.MEDIUM)
-	@Test public void testMildew() throws ParserException {
+	@Test public void testMildew() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("Mildew.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -189,7 +190,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(46, probNet.getLinks().size());
 	}
 
-	@Test public void testOil() throws ParserException {
+	@Test public void testOil() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("oil.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -197,7 +198,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(6, probNet.getLinks().size());
 	}
 
-	@Test public void testPigs() throws ParserException {
+	@Test public void testPigs() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("Pigs.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);
@@ -205,7 +206,7 @@ public class ElviraReaderTest {
 		Assertions.assertEquals(592, probNet.getLinks().size());
 	}
 
-	@Test public void testProstanetE() throws ParserException {
+	@Test public void testProstanetE() throws ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource("prostanetE.elv");
 		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
 		Assertions.assertNotNull(probNet);

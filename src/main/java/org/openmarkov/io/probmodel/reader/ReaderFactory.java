@@ -11,33 +11,33 @@ import org.openmarkov.core.exception.ParserException;
 
 import java.util.Arrays;
 
-/** Create readers given a version */
+/**
+ * Create readers given a version
+ */
 public class ReaderFactory {
-
-	/**
-	 * @param strVersion, read from the PGXML file. <code>String</code>
-	 * @return PGMXReader 0_2 or newer
-	 * @throws ParserException when the version is missing.
-	 */
-	public static PGMXReader_0_2 getReader(String strVersion) throws ParserException {
-		Version version = Arrays.stream(Version.values()).filter(
-				iteratorVersion -> strVersion.startsWith(iteratorVersion.toString())).findFirst().orElse(Version.V02); // Default value
-
+    
+    /**
+     * @param strVersion, read from the PGXML file. <code>String</code>
+     * @return PGMXReader 0_2 or newer
+     * @throws ParserException when the version is missing.
+     */
+    public static PGMXReader_0_2 getReader(String strVersion) throws ParserException.WrongVersion {
+        Version version = Arrays.stream(Version.values())
+                                .filter(
+                                        iteratorVersion -> strVersion.startsWith(iteratorVersion.toString()))
+                                .findFirst()
+                                .orElse(Version.V02); // Default value
         // This means that, for example, 0.5.0 will be considered equal to 0.5.1,
         // because last digit is used to correct bugs. As consequence, both will use the same Reader.
-        PGMXReader_0_2 reader;
-    	switch (version) {
-    	case V02:
-    		reader = new PGMXReader_0_2();
-    		break;
-    	case V10:
-    		reader = new PGMXReader_1_0();
-    		break;
-   		// Extension point in future parser versions.
-    	default:
-    		throw new ParserException("The PGMX version " + strVersion + " is not readable in this OpenMarkov version.");
-    	}
-		return reader;
-	}
-
+        switch (version) {
+            case V02:
+                return new PGMXReader_0_2();
+            case V10:
+                return new PGMXReader_1_0();
+            // Extension point in future parser versions.
+            default:
+                throw new ParserException.WrongVersion(strVersion);
+        }
+    }
+    
 }

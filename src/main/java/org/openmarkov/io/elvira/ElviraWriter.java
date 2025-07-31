@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sourceforge.jeval.EvaluationException;
 import org.openmarkov.core.exception.NonProjectablePotentialException;
 import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.io.ProbNetWriter;
@@ -39,8 +40,8 @@ import org.openmarkov.core.model.network.type.NetworkType;
  *
  * @author marias
  */
-@FormatType(name = "ElviraWriter", version = "0.1", extension = "elv", description = "Elvira", role = "Writer") public class ElviraWriter
-		implements ProbNetWriter {
+@FormatType(name = "ElviraWriter", version = "0.1", extension = "elv", description = "Elvira", role = "Writer")
+public class ElviraWriter implements ProbNetWriter {
 
 	// Attributes
 
@@ -85,7 +86,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	 * @param probNet . <code>ProbNet</code> <code>String</code>
 	 * @throws WriterException WriterException
 	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
 		if (probNet.additionalProperties.get("hasElviraProperties") == null) {
 			generateElviraProperties(probNet);
 		}
@@ -93,16 +94,16 @@ import org.openmarkov.core.model.network.type.NetworkType;
 		PrintWriter out;
 		try {
 			writer = new FileOutputStream(netName);
-		} catch (IOException e) {
-			throw new WriterException("Can not create file " + netName + ".");
+		} catch (FileNotFoundException e) {
+			throw new WriterException.CannotCreateFile(netName);
 		}
 		out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(writer, Charset.forName("windows-1252"))));
 		ElviraUtil.swapNameAndTitle(probNet);
 		try {
 			writeElviraNetwork(out, probNet);
-		}catch (WriterException ex){
+		} catch (WriterException.ICIModelNotSupportedByElvira | WriterException.NonProjectablePotentialException e) {
 			out.close();
-			throw ex;
+			throw e;
 		}
 		ElviraUtil.swapNameAndTitle(probNet); // Restore previous version
 		out.close();
@@ -115,7 +116,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	 * @param probNet <code>InfoNet</code>
 	 * @throws WriterException
 	 */
-	private void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException {
+	private void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
 		writeElviraPreamble(out, probNet);
 		writeElviraNodes(out, probNet);
 		writeElviraLinks(out, probNet);
@@ -127,7 +128,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	 * @param probNet <code>InfoNet</code>
 	 * @throws WriterException
 	 */
-	private void writeElviraPreamble(PrintWriter out, ProbNet probNet) throws WriterException {
+	private void writeElviraPreamble(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType {
 		// preamble comment
 		out.println("//	   Network");
 		out.println("//	   Elvira format");
@@ -141,7 +142,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 		} else if (networkType instanceof BayesianNetworkType) {
 			out.print("bnet ");
 		} else {
-			throw new WriterException("Network type unknown: " + "neither Bayesian or IDiagram.");
+			throw new WriterException.UnknownNetworkType(networkType, List.of(InfluenceDiagramType.class, BayesianNetworkType.class));
 		}
 
 		out.print('"');
@@ -424,7 +425,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	 * @param probNet <code>InfoNet</code>
 	 * @throws WriterException
 	 */
-	private void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException {
+	private void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
 		// relations comment
 		out.println("//		Network Relationships:");
 		out.println();
@@ -443,7 +444,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	 * @param potential <code>Potential</code>
 	 * @throws WriterException
 	 */
-	private void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException {
+	private void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
 		writeCommonElviraPotentialPreamble(out, potential);
 		TablePotential elviraPotential;
 		if (potential.getClass() != TablePotential.class) {
@@ -454,8 +455,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 				try {
 					elviraPotential = potential.tableProject(null, null).get(0);
 				} catch (NonProjectablePotentialException e) {
-					throw new WriterException("Can not project potential type " + potential.getClass().toString()
-							+ " to a TablePotential in " + "ElviraWriter.");
+					throw new WriterException.NonProjectablePotentialException(e);
 				}
 				writeElviraTable(out, openMarkov2ElviraPotential(elviraPotential));
 			}
@@ -563,7 +563,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 		out.println('}');
 	}
 
-	private void writeICIElviraPotentialBody(PrintWriter out, ICIPotential potential) throws WriterException {
+	private void writeICIElviraPotentialBody(PrintWriter out, ICIPotential potential) throws WriterException.ICIModelNotSupportedByElvira {
 		out.println("values = function ");
 		out.print("          ");
 		ICIModelType modelType = potential.getModelType();
@@ -587,8 +587,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 			out.print("GeneralizedMin");
 			break;
 		default:
-			throw new WriterException(
-					"Trying to write an ICI model (" + modelType.toString() + ") not supported by Elvira format");
+			throw new WriterException.ICIModelNotSupportedByElvira(modelType);
 		}
 		out.print("(");
 		List<Variable> potentialVariables = potential.getVariables();
@@ -696,7 +695,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 	/**
 	 * Ignores evidence, as evidence is stores in another file in Elvira
 	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException {
+	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
 		writeProbNet(netName, probNet);
 	}
 

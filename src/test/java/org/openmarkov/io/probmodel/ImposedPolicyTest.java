@@ -8,6 +8,7 @@
 package org.openmarkov.io.probmodel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 
 import org.junit.jupiter.api.*;
@@ -41,7 +42,7 @@ public class ImposedPolicyTest {
     }
     
 	@Test
-	public final void test() throws ParserException {
+	public final void test() throws ParserException, FileNotFoundException {
 		String rootPath = 
 				absolutePath.substring(0, absolutePath.length() - networkTestName.length());
 		String pathAndName = rootPath + networkTestName;

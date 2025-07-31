@@ -13,7 +13,6 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.openmarkov.core.exception.NoFindingException;
 import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
@@ -66,7 +65,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param netName = path + network name + extension <code>String</code>
      * @param probNet <code>ProbNet</code>
      */
-    @Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException {
+    @Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
         writeProbNet(netName, probNet, null);
     }
     
@@ -75,7 +74,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param probNet   <code>ProbNet</code> <code>String</code>
      * @param evidences list of evidence cases. <code>ArrayList</code> of <code>EvidenceCase</code>
      */
-    @Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException {
+    @Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
         UtilParameters.manageParametersWriter(netName, probNet);
         // PrintWriter out = new PrintWriter(new FileOutputStream(netName));
         Element root = new Element("ProbModelXML");
@@ -89,10 +88,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         try (FileOutputStream out = new FileOutputStream(netName)) {
             xmlOutputter.output(document, out);
             out.flush();
-        } catch (FileNotFoundException e) {
-            throw new WriterException("Can not create: " + netName + " file.");
         } catch (IOException e) {
-            throw new WriterException("General Input/Output error writing: " + netName + ".");
+            throw new WriterException.CannotCreateFile(netName);
         }
     }
     
@@ -109,11 +106,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             List<Variable> evidenceVariables = evidenceCase.getVariables();
             for (Variable variable : evidenceVariables) {
                 if (!probNetVariables.contains(variable)) {
-                    try {
-                        evidenceCase.removeFinding(variable.getName());
-                    } catch (NoFindingException e) {
-                        // Unreachable code
-                    }
+                    evidenceCase.removeFinding(variable.getName());
+                    
                 }
             }
         }

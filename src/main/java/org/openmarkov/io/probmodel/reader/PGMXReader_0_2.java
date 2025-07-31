@@ -14,9 +14,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.located.LocatedJDOMFactory;
-import org.openmarkov.core.exception.IncompatibleEvidenceException;
-import org.openmarkov.core.exception.OpenMarkovException;
-import org.openmarkov.core.exception.ParserException;
+import org.openmarkov.core.exception.*;
+import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
 import org.openmarkov.core.inference.TransitionTime;
 import org.openmarkov.core.io.ProbNetInfo;
@@ -44,8 +43,6 @@ import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.core.model.network.type.NetworkType;
 import org.openmarkov.core.model.network.type.plugin.NetworkTypeManager;
 import org.openmarkov.core.oopn.*;
-import org.openmarkov.core.oopn.exception.InstanceAlreadyExistsException;
-import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
@@ -71,10 +68,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param inputStream InputStream[]
      * @throws PGMXParserException
      */
-    @Override public ProbNet loadProbNet(String netName, InputStream inputStream) throws ParserException {
+    @Override
+    public ProbNet loadProbNet(String netName, InputStream inputStream) throws ParserException, FileNotFoundException {
         ProbNetInfo probNetInfo = loadProbNetInfo(netName, inputStream);
         if (probNetInfo == null) {
-            throw new ParserException("No ProbNet in ProbNetInfo.");
+            throw new ParserException.MissingProbabilisticNetworkInformation();
         }
         return probNetInfo.getProbNet();
     }
@@ -86,18 +84,18 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return The <code>ProbNet</code> readed or <code>null</code>
      * @throws ParserException if there is an error parsing the XML
      */
-    @Override public ProbNet loadProbNet(String netName) throws ParserException {
+    @Override public ProbNet loadProbNet(String netName) throws FileNotFoundException, ParserException {
         FormatManager formatManager = FormatManager.getInstance();
         try {
             formatManager.checkVersion(netName);
             formatManager.checkStructure(netName);
-        } catch (SAXException | IOException | ParserConfigurationException | OpenMarkovException e) {
-            throw new ParserException("Invalid PGMX Structure.");
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new ParserException.PGMXInvalid(e.getMessage());
         }
         
         ProbNetInfo probNetInfo = loadProbNetInfo(netName);
         if (probNetInfo == null) {
-            throw new ParserException("No ProbNet in ProbNetInfo.");
+            throw new ParserException.MissingProbabilisticNetworkInformation();
         }
         return probNetInfo.getProbNet();
     }
@@ -110,7 +108,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return The <code>ProbNet</code> readed or <code>null</code>
      * @throws PGMXParserException if there is an error parsing the XML
      */
-    @Override public ProbNetInfo loadProbNetInfo(String netName, InputStream inputStream) throws ParserException {
+    @Override
+    public ProbNetInfo loadProbNetInfo(String netName, InputStream inputStream) throws FileNotFoundException, ParserException {
         
         Element root = getRootElement(inputStream, netName);
         
@@ -124,14 +123,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return The <code>ProbNet</code> readed or <code>null</code>
      * @throws PGMXParserException if there is an error parsing the XML
      */
-    @Override public ProbNetInfo loadProbNetInfo(String netName) throws ParserException {
-        try {
-            InputStream stream = new FileInputStream(netName);
-            Element root = getRootElement(stream, netName);
-            return loadProbNetInfo(root, netName);
-        } catch (FileNotFoundException e) {
-            throw new ParserException(e.getMessage());
-        }
+    @Override public ProbNetInfo loadProbNetInfo(String netName) throws ParserException, FileNotFoundException {
+        InputStream stream = new FileInputStream(netName);
+        Element root = getRootElement(stream, netName);
+        return loadProbNetInfo(root, netName);
     }
     
     /**
@@ -140,7 +135,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return ProbNetInfo with the ProbNet and the evidence
      * @throws PGMXParserException if there is an error parsing the XML
      */
-    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws ParserException {
+    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws FileNotFoundException, ParserException {
         
         String formatVersion = root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
         PGMXReader_0_2 reader = ReaderFactory.getReader(formatVersion);
@@ -157,8 +152,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return network version in a String
      * @throws ParserException if the file is not found
      */
-    public String getVersion(String netName, InputStream... inputStream) throws ParserException {
-        
+    public String getVersion(String netName, InputStream... inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
         Element root = getRootElement(getStream(netName, inputStream), netName);
         return root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
     }
@@ -171,16 +165,16 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return root Element
      * @throws ParserException
      */
-    private Element getRootElement(InputStream stream, String netName) throws ParserException {
+    private Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
         SAXBuilder builder = new SAXBuilder();
         builder.setJDOMFactory(new LocatedJDOMFactory());
         Document document = null;
         try {
             document = builder.build(stream);
         } catch (JDOMException e) {
-            throw new ParserException("Can not parse XML document " + netName + ":" + e.getMessage());
+            throw new ParserException.XMLInvalid(netName, e);
         } catch (IOException e) {
-            throw new ParserException("Error trying to open " + netName + ".\n" + e.getMessage());
+            throw new ParserException.CannotOpenFile(netName);
         }
         return document.getRootElement();
     }
@@ -193,17 +187,17 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return InputStream of the network
      * @throws ParserException if the file is not found
      */
-    private InputStream getStream(String netName, InputStream... inputStream) throws ParserException {
+    private InputStream getStream(String netName, InputStream... inputStream) throws ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
         InputStream stream;
         if (inputStream.length == 0) {
             try {
                 stream = new FileInputStream(netName);
             } catch (FileNotFoundException e) {
-                throw new ParserException("File " + netName + " not found.");
+                throw new ParserException.CannotOpenFile(netName);
             }
         } else {
             if (inputStream.length > 1) {
-                throw new ParserException("Only is allowed to open ONE InputStream, not " + inputStream.length + ".");
+                throw new ParserException.MoreThanOneInputOpened(inputStream.length);
             }
             stream = inputStream[0];
         }
@@ -216,7 +210,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return ProbNet or null
      * @throws PGMXParserException
      */
-    public ProbNet getProbNet(Element root, String netName) throws PGMXParserException {
+    public ProbNet getProbNet(Element root, String netName) throws FileNotFoundException, ParserException {
         return getProbNet(root, netName, new HashMap<>());
     }
     
@@ -227,7 +221,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return ProbNet or null
      * @throws PGMXParserException
      */
-    protected ProbNet getProbNet(Element root, String netName, Map<String, ProbNet> classes) throws PGMXParserException {
+    protected ProbNet getProbNet(Element root, String netName, Map<String, ProbNet> classes) throws FileNotFoundException, ParserException {
         Element xMLProbNet = root.getChild(getStringTagNetwork());
         ProbNet probNet = null;
         if (xMLProbNet != null) { // Read prob net if the xml file exists
@@ -248,7 +242,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException
      */
     protected void getNetworkAdvancedInformation(Element xMLProbNet, ProbNet probNet, String netName,
-                                                 Map<String, ProbNet> classes) throws PGMXParserException {
+                                                 Map<String, ProbNet> classes) throws FileNotFoundException, ParserException {
         getAgents(xMLProbNet, probNet);
         getTemporaUnit(xMLProbNet, probNet);
         getAdditionalProperties(xMLProbNet, probNet);
@@ -289,7 +283,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         //getVariables( xMLProbNet, probNet );
         try {
             getVariables(xMLProbNet, probNet);
-        } catch (PGMXParserException e) {
+        } catch (PGMXParserException.VariableHasNoStates e) {
             System.err.println(e.getMessage());
             return;
         }
@@ -305,7 +299,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     protected ProbNet initializeProbNet(Element xMLProbNet, String netName)
-            throws PGMXParserException {
+            throws PGMXParserException.NoNetworkTypeFound, PGMXParserException.UnknownNetworkType, PGMXParserException.ConstraintNotFound {
         ProbNet probNet;
         // =
         // xMLProbNet.getAttribute(XMLAttributes.TYPE.toString());
@@ -551,7 +545,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException
      */
     protected List<EvidenceCase> getEvidence(Element root, ProbNet probNet)
-            throws PGMXParserException {
+            throws PGMXParserException.EvidenceIsIncompatibleWithOther {
         Element xMLEvidence = root.getChild(XMLTags.EVIDENCE.toString());
         List<EvidenceCase> evidence = new ArrayList<>();
         if (xMLEvidence != null) {
@@ -571,8 +565,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
                             finding = new Finding(variable, numericalValue);
                         }
                         evidenceCase.addFinding(finding);
-                    } catch (NumberFormatException | IncompatibleEvidenceException e) {
-                        throw new PGMXParserException(e.getMessage(), xmlFinding);
+                    } catch (IncompatibleEvidenceException.EvidenceIsIncompatibleWithOther e) {
+                        throw new PGMXParserException.EvidenceIsIncompatibleWithOther(e, xmlFinding);
                     }
                 }
                 evidence.add(evidenceCase);
@@ -592,15 +586,15 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     protected NetworkType getNetworkType(Element xMLProbNet)
-            throws PGMXParserException {
+            throws PGMXParserException.NoNetworkTypeFound, PGMXParserException.UnknownNetworkType {
         String sType = getStringXMLPotentialType(xMLProbNet);
         if (sType == null || sType.isEmpty()) {
-            throw new PGMXParserException("No network type found", xMLProbNet);
+            throw new PGMXParserException.NoNetworkTypeFound(xMLProbNet);
         }
         NetworkTypeManager networkTypeManager = new NetworkTypeManager();
         NetworkType networkType = networkTypeManager.getNetworkType(sType);
         if (networkType == null) {
-            throw new PGMXParserException("Unknown network type: " + sType, xMLProbNet);
+            throw new PGMXParserException.UnknownNetworkType(sType, xMLProbNet);
         }
         return networkType;
     }
@@ -610,7 +604,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param probNet . <code>ProbNet</code>
      */
     protected ProbNet getConstraints(Element root, ProbNet probNet)
-            throws PGMXParserException {
+            throws PGMXParserException.ConstraintNotFound {
         // ProbNet network = null;
         Element xmlConstraintsRoot = root.getChild(XMLTags.ADDITIONAL_CONSTRAINTS.toString());
         if (xmlConstraintsRoot != null) {
@@ -621,8 +615,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                     probNet.addConstraint((PNConstraint) Class.forName(constraintName).getConstructor().newInstance());
                 } catch (InstantiationException | ClassNotFoundException | NoSuchMethodException |
                          IllegalAccessException | InvocationTargetException e) {
-                    throw new PGMXParserException("Can not create an instance " + "of constraint: " + constraintName,
-                                                  root);
+                    throw new PGMXParserException.ConstraintNotFound(constraintName, root);
                 }
                 
             }
@@ -663,7 +656,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param probNet <code>ProbNet</code>
      * @throws PGMXParserException
      */
-    protected void getVariables(Element root, ProbNet probNet) throws PGMXParserException {
+    protected void getVariables(Element root, ProbNet probNet) throws PGMXParserException.VariableHasNoStates {
         Element xmlVariablesRoot = getXMLVariables(root);
         if (xmlVariablesRoot != null) {
             List<Element> xmlVariables = getVariablesElements(xmlVariablesRoot);
@@ -676,14 +669,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     protected void loadVariables(List<Element> xmlVariables, ProbNet probNet)
-            throws PGMXParserException {
+            throws PGMXParserException.VariableHasNoStates {
         for (Element variableElement : xmlVariables) {
             loadVariable(variableElement, probNet);
         }
     }
     
     protected void loadVariable(Element variableElement, ProbNet probNet)
-            throws PGMXParserException {
+            throws PGMXParserException.VariableHasNoStates {
         VariableType variableType = getXMLVariableType(variableElement);
         NodeType nodeType = getXMLNodeType(variableElement);
         String variableName = getVariableName(variableElement);
@@ -714,7 +707,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             VariableType variableType,
             NodeType nodeType,
             String variableName)
-            throws PGMXParserException {
+            throws PGMXParserException.VariableHasNoStates {
         
         String stringTimeSlice = variableElement.getAttributeValue(XMLAttributes.TIMESLICE.toString());
         if (stringTimeSlice != null) {
@@ -737,8 +730,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 if (statesElement != null) { // jlgozalo. 25/10/2009
                     states = getXMLStates(statesElement); // previously without null control
                 } else {
-                    throw new PGMXParserException("States list not found in finite states variable " + variableName,
-                                                  variableElement);
+                    throw new PGMXParserException.VariableHasNoStates(variableName, variableElement);
                 }
             }
             if (variableType == VariableType.FINITE_STATES) {
@@ -1137,14 +1129,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         getRevelationConditions(xmlRevelationCondition, link);
                     }
                 } catch (DataConversionException e) {
-                    throw new PGMXParserException("Data conversion exception in PGMXReader.getLinks()", xmlLink);
+                    throw new PGMXParserException.DataCouldNotBeConverted(e.getMessage(), xmlLink);
                 }
             }
         }
     }
     
     protected void getRevelationConditions(Element root, Link<Node> link)
-            throws PGMXParserException {
+            throws PGMXParserException.InvalidState {
         Node node = link.getNode1();
         Variable var = node.getVariable();
         List<Element> xmlStates = root.getChildren(XMLTags.STATE.toString());
@@ -1152,8 +1144,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             String stateName = getElementName(elementState);
             int stateIndex = var.getStateIndex(stateName);
             if (stateIndex == -1) {
-                throw new PGMXParserException("Invalid state \"" + stateName + "\" for variable \"" + var.getName()
-                                                      + "\"", elementState);
+                throw new PGMXParserException.InvalidState(var.getName(), stateName, elementState);
             }
             link.addRevealingState(var.getStates()[stateIndex]);
         }
@@ -1257,8 +1248,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 } else if (xmlReference != null) {
                     reference = xmlReference.getText();
                 } else {
-                    throw new PGMXParserException("A TreeADD branch should specify either a potential or a reference",
-                                                  xmlBranch);
+                    throw new PGMXParserException.TreeADDWithoutPotentialOrReferenfe(xmlBranch);
                 }
                 TreeADDBranch branch = null;
                 if (rootVariable.getVariableType() == VariableType.FINITE_STATES
@@ -1291,14 +1281,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @author myebra
      */
     protected List<Threshold> getThresholds(Element xmlBranch)
-            throws PGMXParserException {
+            throws PGMXParserException.TreeADDWithoutTwoThresholds {
         List<Threshold> thresholds = new ArrayList<Threshold>();
         Element xmlRootThresholds = xmlBranch.getChild(XMLTags.THRESHOLDS.toString());
         if (xmlRootThresholds != null) {
             List<Element> xmlThresholds = getXMLChildren(xmlRootThresholds);
             int numThresholds = xmlThresholds.size();
             if (numThresholds != 2)
-                throw new PGMXParserException("A TreeADDD branch can only have two thresholds", xmlBranch);
+                throw new PGMXParserException.TreeADDWithoutTwoThresholds(xmlThresholds, xmlBranch);
             for (int i = 0; i < numThresholds; i++) {
                 Element xmlThreshold = xmlThresholds.get(i);
                 Float value = Float.parseFloat(xmlThreshold.getAttributeValue(XMLAttributes.VALUE.toString()));
@@ -1325,7 +1315,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException if there is one state that is not in the topVariable
      */
     protected List<State> getBranchStates(Element xmlBranch, Variable topVariable)
-            throws PGMXParserException {
+            throws PGMXParserException.FoundUnknownState {
         List<State> states = new ArrayList<>();
         Element xmlRootStates = xmlBranch.getChild(XMLTags.STATES.toString());
         if (xmlRootStates != null) {
@@ -1334,7 +1324,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 String stateName = getElementName(xmlState);
                 int stateIndex = topVariable.getStateIndex(stateName);
                 if (stateIndex == -1) {
-                    throw new PGMXParserException("Unknown state name +'" + stateName + "'", xmlState);
+                    throw new PGMXParserException.FoundUnknownState(topVariable, stateName, xmlState);
                 }
                 states.add(topVariable.getStates()[stateIndex]);
             }
@@ -1549,7 +1539,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         } else if (sXmlPotentialType.equals(PotentialManager.getPotentialName(ExactDistrPotential.class))) {
             potential = getExactDistrPotential(xmlPotential, probNet, potentialRole, variables);
         } else {
-            throw new PGMXParserException("Potential type " + sXmlPotentialType + " not supported", xmlPotential);
+            throw new PGMXParserException.PotentialTypeNotSupported(sXmlPotentialType, xmlPotential);
         }
         
         Element xmlComment = xmlPotential.getChild(XMLTags.COMMENT.toString());
@@ -1715,7 +1705,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     protected Potential getDeltaPotential(Element xmlPotential, ProbNet probNet, PotentialRole role,
                                           List<Variable> variables)
-            throws PGMXParserException {
+            throws PGMXParserException.DeltaPotentialWithoutState {
         DeltaPotential deltaPotential = null;
         
         Element xmlNumericValue = xmlPotential.getChild(XMLTags.NUMERIC_VALUE.toString());
@@ -1732,8 +1722,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             State state = variables.get(0).getStates()[stateIndex];
             deltaPotential = new DeltaPotential(variables, role, state);
         } else {
-            throw new PGMXParserException("A delta potential has to specify either a State, a StateIndex or a NumericValue",
-                                          xmlPotential);
+            throw new PGMXParserException.DeltaPotentialWithoutState(role, xmlPotential);
         }
         return deltaPotential;
     }
@@ -1749,7 +1738,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     protected Potential getBinomialPotential(Element xmlPotential, ProbNet probNet, PotentialRole role,
                                              List<Variable> variables)
-            throws PGMXParserException {
+            throws PGMXParserException.BinomialPotentialMissingCasesAndProbabilities {
         BinomialPotential binomialPotential = null;
         
         Element xmlNumberOfCases = xmlPotential.getChild(XMLTags.NUMBER_OF_CASES.toString());
@@ -1760,8 +1749,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             double theta = Double.parseDouble(xmlTheta.getText());
             binomialPotential = new BinomialPotential(variables, role, N, theta);
         } else {
-            throw new PGMXParserException("A binomial potential has to specify a Number of Cases and a probability theta",
-                                          xmlPotential);
+            throw new PGMXParserException.BinomialPotentialMissingCasesAndProbabilities(role, xmlPotential);
         }
         return binomialPotential;
     }
@@ -1814,11 +1802,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException
      */
     protected Potential getSameAsPrevious(Element xmlPotential, List<Variable> variables)
-            throws PGMXParserException {
+            throws PGMXParserException.CannotAsignPotentialToStaticVariable {
         
         if (!variables.get(0).isTemporal()) {
-            throw new PGMXParserException("XMLReader exception: "
-                                                  + "can not assign a SameAsPrevious potential to static variable", xmlPotential);
+            throw new PGMXParserException.CannotAsignPotentialToStaticVariable("SameAsPrevious", xmlPotential);
         }
         return new SameAsPrevious(variables);
     }
@@ -1835,12 +1822,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     protected Potential getCycleLengthShiftPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                      List<Variable> variables)
-            throws PGMXParserException {
+            throws PGMXParserException.CannotAsignPotentialToStaticVariable {
         
         Variable variable = variables.get(0);
         if (!variable.isTemporal()) {
-            throw new PGMXParserException("XMLReader exception: can not assign a CycleLengthShift potential: "
-                                                  + variables + " to a static variable: " + variable, xmlPotential);
+            throw new PGMXParserException.CannotAsignPotentialToStaticVariable("CycleLengthShift", xmlPotential);
         }
         
         return new CycleLengthShift(variables, probNet.getCycleLength());
@@ -1888,7 +1874,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException
      */
     protected void getOOPN(String netName, Element root, ProbNet probNet, Map<String, ProbNet> classes)
-            throws PGMXParserException {
+            throws FileNotFoundException, ParserException {
         if (probNet instanceof OOPNet) {
             OOPNet ooNet = (OOPNet) probNet;
             Element xmlOONRoot = root.getChild(XMLTags.OOPN.toString());
@@ -1913,11 +1899,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         String folder = new File(netName).getParent();
                         String className = xmlInstance.getAttributeValue("class");
                         if (!classes.containsKey(className)) {
-                            try {
-                                classes.put(className, loadProbNetInfo(folder + "\\" + className).getProbNet());
-                            } catch (ParserException e) {
-                                throw new PGMXParserException(e.getMessage(), xmlInstance);
-                            }
+                            classes.put(className, loadProbNetInfo(folder + "\\" + className).getProbNet());
                         }
                         ProbNet classNet = classes.get(className);
                         List<Node> instanceNodes = new ArrayList<Node>();
@@ -1928,7 +1910,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         Instance instance = new Instance(name, classNet, instanceNodes, isInput);
                         try {
                             ooNet.addInstance(instance);
-                        } catch (InstanceAlreadyExistsException ignore) {
+                        } catch (DoEditException.InstanceAlreadyExists e) {
+                            throw new UnreacheableException(e);
                         }
                         if (xmlInstance.getAttributeValue("arity") != null) {
                             Instance.ParameterArity arity =
