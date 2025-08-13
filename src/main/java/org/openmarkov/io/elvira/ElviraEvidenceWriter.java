@@ -19,43 +19,44 @@ import org.openmarkov.core.model.network.Variable;
  * @author marias
  */
 public class ElviraEvidenceWriter {
-
-	// Methods
-
-	/**
-	 * @param fileName = path + network name + extension.
-	 * @param evidence <code>EvidenceCase</code> evidence case
-	 * @throws IOException
-	 */
-	public static void writeEvidenceCase(String fileName, EvidenceCase evidence) throws IOException {
-		FileWriter writer;
-		PrintWriter out;
-		writer = new FileWriter(fileName);
-		out = new PrintWriter(writer);
-		writeEvidencePreamble(out, evidence);
-		writeFindings(out, evidence);
-		out.println("\n}");
-		out.close();
-	}
-
-	private static void writeEvidencePreamble(PrintWriter out, EvidenceCase evidence) {
-		out.println("//	   Evidence case");
-		out.println("//	   Elvira format\n");
-		out.println("evidence NoName {\n");
-		out.println("//	   Evidence additionalProperties\n");
-		out.println("title = " + '"' + "Untitled" + '"' + ";");
-		out.println("version = 1.0;\n");
-	}
-
-	private static void writeFindings(PrintWriter out, EvidenceCase evidence) {
-		for (Finding finding : evidence.getFindings()) {
-			int stateIndex = finding.getStateIndex();
-			Variable variable = finding.getVariable();
-			int numStates = variable.getNumStates();
-			int elviraEvidenceStateIndex = numStates - stateIndex - 1;
-			out.println(finding.getVariable().getName() + " = " + elviraEvidenceStateIndex + ",     // " + variable
-					.getStateName(stateIndex));
-		}
-	}
-
+    
+    // Methods
+    
+    /**
+     * @param fileName = path + network name + extension.
+     * @param evidence <code>EvidenceCase</code> evidence case
+     *
+     * @throws IOException
+     */
+    public static void writeEvidenceCase(String fileName, EvidenceCase evidence) throws IOException {
+        FileWriter writer;
+        PrintWriter out;
+        writer = new FileWriter(fileName);
+        out = new PrintWriter(writer);
+        writeEvidencePreamble(out, evidence);
+        writeFindings(out, evidence);
+        out.println("\n}");
+        out.close();
+    }
+    
+    private static void writeEvidencePreamble(PrintWriter out, EvidenceCase evidence) {
+        out.println("//	   Evidence case");
+        out.println("//	   Elvira format\n");
+        out.println("evidence NoName {\n");
+        out.println("//	   Evidence additionalProperties\n");
+        out.println("title = " + '"' + "Untitled" + '"' + ";");
+        out.println("version = 1.0;\n");
+    }
+    
+    private static void writeFindings(PrintWriter out, EvidenceCase evidence) {
+        for (Finding finding : evidence.getFindings()) {
+            int stateIndex = finding.getStateIndex();
+            Variable variable = finding.getVariable();
+            int numStates = variable.getNumStates();
+            int elviraEvidenceStateIndex = numStates - stateIndex - 1;
+            out.println(finding.getVariable().getName() + " = " + elviraEvidenceStateIndex + ",     // " + variable
+                    .getStateName(stateIndex));
+        }
+    }
+    
 }
