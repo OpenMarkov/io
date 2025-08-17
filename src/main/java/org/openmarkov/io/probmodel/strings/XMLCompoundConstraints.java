@@ -7,29 +7,22 @@
 
 package org.openmarkov.io.probmodel.strings;
 
+import org.openmarkov.java.enumUtils.EnumUtils;
+
 /** A compound constraint defines a type of ProbNet and it contains a bundle of basic constraints. */
 public enum XMLCompoundConstraints {
-	BAYESIAN_NETWORK(0, "BayesianNetwork"),
-	DINAMIC_BAYESIAN_NETWORK(1, "DinamicBayesianNetwork"),
-	INFLUENCE_DIAGRAM(2, "InfluenceDiagram"),
-	MDP(3, "MDP"),
-	POMDP(4, "POMDP");
-	
-	private int type;
-	
-	private String name;
-	
-	XMLCompoundConstraints(int type, String name) {
-		this.type = type;
-		this.name = name;
+    BAYESIAN_NETWORK,
+    DINAMIC_BAYESIAN_NETWORK,
+    INFLUENCE_DIAGRAM,
+    MDP,
+    POMDP;
+    
+    public String toString() {
+        return switch (this) {
+            case MDP -> "MDP";
+            case POMDP -> "POMDP";
+            default -> EnumUtils.toPascalCase(this);
+        };
 	}
-	
-	public String toString() {
-		return name;
-	}
-	
-	public int getType() {
-		return type;
-	}
-
+ 
 }

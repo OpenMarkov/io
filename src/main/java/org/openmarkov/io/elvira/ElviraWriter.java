@@ -253,9 +253,9 @@ public class ElviraWriter implements ProbNetWriter {
 			} else {
 				out.print("node " + node.getVariable().getName() + "(");
 			}
-
-			VariableType variableKind = (VariableType) node.getVariable().
-					getVariableType();
+            
+            VariableType variableKind = node.getVariable().
+                                            getVariableType();
 
 			switch (variableKind) {
 			case FINITE_STATES: {
@@ -289,7 +289,7 @@ public class ElviraWriter implements ProbNetWriter {
 
 			// write kind of node
 			NodeType nodeType = node.getNodeType();
-			String nodeKindName = nodeType.name().toString();
+            String nodeKindName = nodeType.name();
 			nodeKindName.toLowerCase();
 			out.println("kind-of-node = " + nodeKindName.toLowerCase() + ";");
 

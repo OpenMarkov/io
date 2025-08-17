@@ -404,9 +404,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		node.setCoordinateY(coordY);
 
 		if (infoNode.get("Comment") != null)
-			node.setComment((String) infoNode.get("Comment"));
+            node.setComment(infoNode.get("Comment"));
 		if (infoNode.get("Purpose") != null)
-			node.setPurpose((String) infoNode.get("Purpose"));
+            node.setPurpose(infoNode.get("Purpose"));
 		if (infoNode.get("Relevance") != null)
 			node.setRelevance(Double.parseDouble(infoNode.get("Relevance")));
 		if (infoNode.get("Min") != null)
@@ -596,7 +596,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	public String toString() {
-		String parser = new String();
+        String parser = "";
 		if (fileName != null) {
 			parser = parser + "File: " + fileName;
 		} else {

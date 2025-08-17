@@ -361,7 +361,7 @@ public class ElviraScanner {
 		if (streamTokenizer.sval != null) {
 			ReservedWord reservedWord = ReservedWordTokens.getReservedWord(streamTokenizer.sval);
 			if (reservedWord == null) {
-				String identifier = new String(streamTokenizer.sval);
+                String identifier = streamTokenizer.sval;
 				streamTokenizer.nextToken();
 				readNextToken = false;
 				reservedWord = ReservedWordTokens.getReservedWord(identifier);
@@ -478,7 +478,7 @@ public class ElviraScanner {
 	}
 
 	public String toString() {
-		String scanner = new String();
+        String scanner = "";
 		if (fileName != null) {
 			scanner = scanner + "File: " + fileName + ".\n" + "ReadNextToken: " + readNextToken + ". " + "Token: "
 					+ streamTokenizer.toString();

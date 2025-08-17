@@ -7,19 +7,14 @@
 
 package org.openmarkov.io.xmlbif.strings;
 
+import org.openmarkov.java.enumUtils.EnumUtils;
+
 import java.io.Serializable;
 
 public enum XMLBIFValues implements Serializable {
-		NATURE("nature");
-		
-		private String name;
-
-		XMLBIFValues(String name) {
-			this.name = name;
-		}
-		
-		public String toString() {
-			return name;
-		}
-
+    NATURE;
+    
+    public String toString() {
+        return EnumUtils.toCamelCase(this);
+    }
 }

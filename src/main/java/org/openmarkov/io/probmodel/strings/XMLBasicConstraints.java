@@ -7,44 +7,33 @@
 
 package org.openmarkov.io.probmodel.strings;
 
+import org.openmarkov.java.enumUtils.EnumUtils;
+
 /** Constraints applicable to a ProbNet */
 public enum XMLBasicConstraints {
-	DISTINCT_VARIABLE_NAMES(0, "DistinctVariableNames"),
-	MAX_NUM_PARENTS(1, "MaxNumParents"),
-	NO_BACKWARD_LINKS(2, "NoBackwardLinks"),
-	NO_CLOSED_PATH(3, "NoClosedPath"),
-	NO_CYCLES(4, "NoCycles"),
-	NO_EMPTY_NAME(5, "NoEmptyName"),
-	NO_MIXED_PARENTS(6, "NoMixedParents"),
-	NO_SELF_LOOPS(7, "NoSelfLoops"),
-	NO_SUPER_VALUE_NODES(8, "NoSuperValueNodes"),
-	NO_UTILITY_PARENTS(9, "NoUtilityParents"),
-	NOT_EQUAL_LINKS(10, "NotEqualLinks"),
-	NOT_MULTIPLE_LINKS(11, "NotMultipleLinks"),
-	ONLY_CHANCE_NODES(12, "OnlyChanceNodes"),
-	ONLY_DIRECTED_LINKS(13, "OnlyDirectedLinks"),
-	ONLY_FINITE_STATE_VARIABLES(14, "OnlyFiniteStateVariables"),
-	ONLY_NUMERIC_VARIABLES(15, "OnlyNumericVariables"),
-	ONLY_ONE_UTILITY_NODE(16, "OnlyOneUtilityNode"),
-	ONLY_TEMPORAL_NODES(17, "OnlyTemporalNodes"),
-	ONLY_UNDIRECTED_LINKS(18, "OnlyUndirectedLinks"),
-	UNLABELED_LINKS(19, "UnlabeledLinks");
-	
-	private int type;
-	
-	private String name;
-	
-	XMLBasicConstraints(int type, String name) {
-		this.type = type;
-		this.name = name;
-	}
-	
-	public String toString() {
-		return name;
-	}
-	
-	public int getType() {
-		return type;
-	}
-
+    DISTINCT_VARIABLE_NAMES,
+    MAX_NUM_PARENTS,
+    NO_BACKWARD_LINKS,
+    NO_CLOSED_PATH,
+    NO_CYCLES,
+    NO_EMPTY_NAME,
+    NO_MIXED_PARENTS,
+    NO_SELF_LOOPS,
+    NO_SUPER_VALUE_NODES,
+    NO_UTILITY_PARENTS,
+    NOT_EQUAL_LINKS,
+    NOT_MULTIPLE_LINKS,
+    ONLY_CHANCE_NODES,
+    ONLY_DIRECTED_LINKS,
+    ONLY_FINITE_STATE_VARIABLES,
+    ONLY_NUMERIC_VARIABLES,
+    ONLY_ONE_UTILITY_NODE,
+    ONLY_TEMPORAL_NODES,
+    ONLY_UNDIRECTED_LINKS,
+    UNLABELED_LINKS;
+    
+    
+    @Override public String toString() {
+        return EnumUtils.toPascalCase(this);
+    }
 }

@@ -7,33 +7,25 @@
 
 package org.openmarkov.io.probmodel.strings;
 
+import org.openmarkov.java.enumUtils.EnumUtils;
+
 import java.io.Serializable;
 
 public enum XMLValues implements Serializable {
-	FALSE(0, "false"),
-	TRUE(1, "true"),
-	TABLE(2, "table"),  // potential role
-	DECISION(3, "decision"),  // potential role
-	UTILITY(4, "utility"),  // potential role
-	LEFT(5, "left"), // for intervals (belongsTo = left)
-	RIGHT(6, "right"), // for intervals (belongsTo = right)
-	POLICY(7, "Policy");
-	
-	private int type;
-	
-	private String name;
-	
-	XMLValues(int type, String name) {
-		this.type = type;
-		this.name = name;
-	}
-	
-	public String toString() {
-		return name;
-	}
-	
-	public int getType() {
-		return type;
+    FALSE,
+    TRUE,
+    TABLE,  // potential role
+    DECISION,  // potential role
+    UTILITY,  // potential role
+    LEFT, // for intervals (belongsTo = left)
+    RIGHT, // for intervals (belongsTo = right)
+    POLICY;
+    
+    public String toString() {
+        return switch (this) {
+            case POLICY -> "Policy";
+            default -> EnumUtils.toCamelCase(this);
+        };
 	}
 	
 }

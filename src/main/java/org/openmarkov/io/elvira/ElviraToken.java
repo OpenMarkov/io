@@ -305,7 +305,7 @@ public class ElviraToken {
 	}
 
 	public String toString() {
-		String string = new String();
+        String string = "";
 		string = string + "Token type: " + tokenType + "\n";
 		if (isReservedWord) {
 			string = string + "Reserved word: " + reservedWord;

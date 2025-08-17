@@ -21,16 +21,8 @@ import java.io.Serializable;
  * @author marias
  */
 public enum TokenType implements Serializable {
-	IDENTIFIER(0), RESERVED(1), INTEGER(2), DOUBLE(3);
-
-	private final int value;
-
-	TokenType(int value) {
-		this.value = value;
-	}
-
-	public int value() {
-		return value;
-	}
-
+    IDENTIFIER,
+    RESERVED,
+    INTEGER,
+    DOUBLE;
 }

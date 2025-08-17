@@ -7,51 +7,39 @@
 
 package org.openmarkov.io.probmodel.strings;
 
+import org.openmarkov.java.enumUtils.EnumUtils;
+
 /** Names of attributes */
 public enum XMLAttributes {
-	BELONGS_TO("belongsTo"),
-	DIRECTED("directed"),
-	DISTRIBUTION("distribution"),
-	FORMAT_VERSION("formatVersion"),
-	FUNCTION("function"),
-	LABEL("label"),
-	NAME("name"),
-	NUMERIC_VALUE("numericValue"),
-	ORDER("order"),
+    BELONGS_TO,
+    DIRECTED,
+    DISTRIBUTION,
+    FORMAT_VERSION,
+    FUNCTION,
+    LABEL,
+    NAME,
+    NUMERIC_VALUE,
+    ORDER,
 	//For Univariate
-	PARAMETRIZATION("parametrization"),
-	REF("ref"),
-	ROLE("role"),
-	SHOW_COMMENT("showWhenOpeningNetwork"),
-	TIMESLICE("timeSlice"),
-	TYPE("type"),
-	VALUE("value"),
-	VAR1("var1"),
-	VAR2("var2"),
-	X("x"),
-	Y("y"),
+    PARAMETRIZATION,
+    REF,
+    ROLE,
+    SHOW_WHEN_OPENING_NETWORK,
+    TIME_SLICE,
+    TYPE,
+    VALUE,
+    VAR1,
+    VAR2,
+    X,
+    Y,
 	//TODO OOBN start
-	IS_INPUT("isInput"),
+    IS_INPUT,
 	//TODO OOBN end
-	
-	UNIT("unit");
-	
-	private int type;
-	
-	private String name;
-	
-	XMLAttributes(String name) {
-		this.type = this.ordinal();
-		this.name = name;
+    
+    UNIT;
+    
+    public String toString() {
+        return EnumUtils.toCamelCase(this);
 	}
-	
-	public String toString() {
-		return name;
-	}
-	
-	public int getType() {
-		return type;
-	}
-
 	
 }

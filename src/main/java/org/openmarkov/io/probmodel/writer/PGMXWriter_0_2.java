@@ -35,7 +35,6 @@ import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
@@ -78,7 +77,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         UtilParameters.manageParametersWriter(netName, probNet);
         // PrintWriter out = new PrintWriter(new FileOutputStream(netName));
         Element root = new Element("ProbModelXML");
-        root.setAttribute(XMLAttributes.FORMAT_VERSION.toString(), formatVersion.toString());
+        root.setAttribute(XMLAttributes.FORMAT_VERSION.toString(), formatVersion);
         writeXMLProbNet(probNet, root);
         writeInferenceOptions(probNet, root);
         writeEvidence(probNet, evidences, root);
@@ -221,7 +220,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
                     Element propertyElement = new Element(XMLTags.PROPERTY.toString());
                     propertyElement.setAttribute(XMLAttributes.NAME.toString(), propertyName);
                     propertyElement.setAttribute(XMLAttributes.VALUE.toString(),
-                                                 probNet.additionalProperties.get(propertyName).toString());
+                                                 probNet.additionalProperties.get(propertyName));
                     propertiesElement.addContent(propertyElement);
                 }
             }
@@ -352,7 +351,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
              * probNetElement.addContent( commentElement.setText( probNet.
              * getComment() ) );
              */
-            commentElement.setAttribute(XMLAttributes.SHOW_COMMENT.toString(),
+            commentElement.setAttribute(XMLAttributes.SHOW_WHEN_OPENING_NETWORK.toString(),
                                         String.valueOf(probNet.getShowCommentWhenOpening()));
             probNetElement.addContent(commentElement.addContent(cdata));
         }
@@ -366,7 +365,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     protected void getLanguage(ProbNet probNet, Element probNetElement, Element languageElement) {
         if (probNet.additionalProperties.get(XMLTags.LANGUAGE.toString()) != null)
             probNetElement.addContent(
-                    languageElement.setText(probNet.additionalProperties.get(XMLTags.LANGUAGE.toString()).toString()));
+                    languageElement.setText(probNet.additionalProperties.get(XMLTags.LANGUAGE.toString())));
     }
     
     /**
@@ -519,7 +518,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             propertyElement.setAttribute(XMLAttributes.VALUE.toString(), node.getPurpose());
             additionalElement.addContent(propertyElement);
         }
-        if (node.getRelevance() != Node.defaultRelevance) {
+        if (node.getRelevance() != Node.DEFAULT_RELEVANCE) {
             Element propertyElement = new Element(XMLTags.PROPERTY.toString());
             propertyElement.setAttribute(XMLAttributes.NAME.toString(), XMLTags.RELEVANCE.toString());
             propertyElement.setAttribute(XMLAttributes.VALUE.toString(), String.valueOf(node.getRelevance()));
@@ -853,10 +852,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     protected void getValuesTablePotential(TablePotential potential, Element potentialElement) {
         Element valuesElement;
         valuesElement = new Element(XMLTags.VALUES.toString());
-        valuesElement.setText(getValuesInAString(((TablePotential) potential).values));
+        valuesElement.setText(getValuesInAString(potential.values));
         // Write table values to the XML file
         potentialElement.addContent(valuesElement);
-        if (((TablePotential) potential).getUncertainValues() != null) {
+        if (potential.getUncertainValues() != null) {
             Element uncertainValuesElement = getUncertainValuesElement(potential);
             potentialElement.addContent(uncertainValuesElement);
         }
@@ -937,7 +936,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         if (timeVariable != null) {
             Element timeVariableElement = new Element(XMLTags.TIME_VARIABLE.toString());
             timeVariableElement.setAttribute(XMLAttributes.NAME.toString(), timeVariable.getBaseName() + "");
-            timeVariableElement.setAttribute(XMLAttributes.TIMESLICE.toString(), timeVariable.getTimeSlice() + "");
+            timeVariableElement.setAttribute(XMLAttributes.TIME_SLICE.toString(), timeVariable.getTimeSlice() + "");
             potentialElement.addContent(timeVariableElement);
         }
         if (!weibullPotential.isLog()) {
@@ -1115,7 +1114,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     protected void writeVariableName(Variable variable, Element xmlElement) {
         xmlElement.setAttribute(XMLAttributes.NAME.toString(), variable.getBaseName());
         if (variable.getTimeSlice() >= 0) {
-            xmlElement.setAttribute(XMLAttributes.TIMESLICE.toString(), String.valueOf(variable.getTimeSlice()));
+            xmlElement.setAttribute(XMLAttributes.TIME_SLICE.toString(), String.valueOf(variable.getTimeSlice()));
         }
     }
     
@@ -1244,7 +1243,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      */
     protected void getCostEffectivenessOptions(ProbNet probNet, Element multicriteriaOptions) {
         if (probNet.getDecisionCriteria() != null && !probNet.getDecisionCriteria().isEmpty()) {
-            Element costEffectivenessOptions = new Element(XMLTags.COSTEFFECTIVENESS.toString());
+            Element costEffectivenessOptions = new Element(XMLTags.COST_EFFECTIVENESS.toString());
             Element costEffectivenessCriteria = new Element(XMLTags.CE_CRITERIA.toString());
             
             if (probNet.getDecisionCriteria() != null && !probNet.getDecisionCriteria().isEmpty()) {
@@ -1340,10 +1339,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     protected void getOOPN(OOPNet OOPNet, Element probNetElement, Element oonElement) {
         if (OOPNet.getClasses().size() > 0) {
             Element classesElement = new Element(XMLTags.CLASSES.toString());
-            for (String className : ((OOPNet) OOPNet).getClasses().keySet()) {
+            for (String className : OOPNet.getClasses().keySet()) {
                 Element classElement = new Element(XMLTags.CLASS.toString());
                 classElement.setAttribute(new Attribute("name", className));
-                writeXMLProbNet(((OOPNet) OOPNet).getClasses().get(className), classElement);
+                writeXMLProbNet(OOPNet.getClasses().get(className), classElement);
                 classesElement.addContent(classElement);
             }
             oonElement.addContent(classesElement);
@@ -1351,7 +1350,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         
         if (OOPNet.getInstances().size() > 0) {
             Element instancesElement = new Element(XMLTags.INSTANCES.toString());
-            for (Instance instance : ((OOPNet) OOPNet).getInstances().values()) {
+            for (Instance instance : OOPNet.getInstances().values()) {
                 Element instanceElement = new Element(XMLTags.INSTANCE.toString());
                 instanceElement.setAttribute(new Attribute("name", instance.getName()));
                 instanceElement.setAttribute(new Attribute("class", instance.getClassNet().getName()));

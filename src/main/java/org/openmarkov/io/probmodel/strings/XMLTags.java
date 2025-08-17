@@ -7,6 +7,8 @@
 
 package org.openmarkov.io.probmodel.strings;
 
+import org.openmarkov.java.enumUtils.EnumUtils;
+
 import java.io.Serializable;
 
 public enum XMLTags implements Serializable {
@@ -28,7 +30,7 @@ public enum XMLTags implements Serializable {
 	COORDINATES_SHIFT("CoordinatesShift"),
 	CONSTRAINT("Constraint"),
 	CONSTRAINTS("Constraints"),
-	COSTEFFECTIVENESS("CostEffectiveness"),
+    COST_EFFECTIVENESS("CostEffectiveness"),
 	CE_CRITERIA("CE_Criteria"),
 	CE_CRITERION("CE_Criterion"),
 	CRITERION("Criterion"),
@@ -105,25 +107,18 @@ public enum XMLTags implements Serializable {
     INSTANCE_NODE("InstanceNode"),
     INSTANCE_NODES("Nodes"),
     INSTANCES("Instances"),
-    OOPN("OON")	
+    OOPN("OOPN")
     // TODO OOPN end
 	;
-	
-	private int type;
-	
-	private String name;
+    
+    private String name;
 	
 	XMLTags(String name) {
 		this.name = name;
-		this.type = this.ordinal();
-	}
+    }
 	
 	public String toString() {
-		return name;
-	}
-	
-	public int getType() {
-		return type;
+        return this.name;
 	}
 	
 }

@@ -468,7 +468,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 }
             }
             
-            Element ceOptions = multicriteriaOptions.getChild(XMLTags.COSTEFFECTIVENESS.toString());
+            Element ceOptions = multicriteriaOptions.getChild(XMLTags.COST_EFFECTIVENESS.toString());
             if (ceOptions != null) {
                 Element scalesTag = ceOptions.getChild(XMLTags.SCALES.toString());
                 if (scalesTag != null) {
@@ -630,7 +630,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         Element xmlComments = root.getChild(XMLTags.COMMENT.toString());
         String comment = null;
         if (xmlComments != null) {
-            String showCommentWhenOpening = xmlComments.getAttributeValue(XMLAttributes.SHOW_COMMENT.toString());
+            String showCommentWhenOpening = xmlComments.getAttributeValue(XMLAttributes.SHOW_WHEN_OPENING_NETWORK.toString());
             probNet.setShowCommentWhenOpening(Boolean.valueOf(showCommentWhenOpening));
             comment = textToHtml(xmlComments.getText());
         }
@@ -709,7 +709,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             String variableName)
             throws PGMXParserException.VariableHasNoStates {
         
-        String stringTimeSlice = variableElement.getAttributeValue(XMLAttributes.TIMESLICE.toString());
+        String stringTimeSlice = variableElement.getAttributeValue(XMLAttributes.TIME_SLICE.toString());
         if (stringTimeSlice != null) {
             variableName = variableName.replace(" [" + stringTimeSlice + "]", "");
         }
@@ -784,7 +784,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
         if (properties.get(XMLTags.RELEVANCE) != null) {
             String relevance = properties.get(XMLTags.RELEVANCE);
-            if (Double.parseDouble(relevance) == Node.defaultRelevance) {
+            if (Double.parseDouble(relevance) == Node.DEFAULT_RELEVANCE) {
                 properties.remove(XMLTags.RELEVANCE);
             }
         }
@@ -828,7 +828,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     protected Variable getVariable(Element element, ProbNet probNet) {
         String variableName = getElementName(element);
         // strip the name from the time slice for backwards compatibility
-        String timeSlice = element.getAttributeValue(XMLAttributes.TIMESLICE.toString());
+        String timeSlice = element.getAttributeValue(XMLAttributes.TIME_SLICE.toString());
         variableName = variableName.replace(" [" + timeSlice + "]", "");
         Variable variable = null;
         variable = (timeSlice == null) ? probNet.getVariable(variableName)
@@ -865,7 +865,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return Double
      */
     protected Double getXMLRelevance(Element aditionalElement) {
-        double relevance = Node.defaultRelevance;
+        double relevance = Node.DEFAULT_RELEVANCE;
         if (aditionalElement != null) {
             Element relevanceElement = aditionalElement.getChild(XMLTags.RELEVANCE.toString());
             if (relevanceElement != null) {
@@ -1464,7 +1464,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         if (xmlPotentialRole.equalsIgnoreCase("utility")) {
             xmlRole = PotentialRole.UNSPECIFIED;
         } else {
-            xmlRole = PotentialRole.getEnumMember(xmlPotentialRole);
+            xmlRole = PGMXReader_0_2.getPotentialRolByLabel(xmlPotentialRole);
         }
         return xmlRole;
     }
@@ -1634,7 +1634,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         Element xmlTimeVariable = xmlPotential.getChild(XMLTags.TIME_VARIABLE.toString());
         if (xmlTimeVariable != null) {
             String variableName = getElementName(xmlTimeVariable);
-            String timeSlice = xmlTimeVariable.getAttributeValue(XMLAttributes.TIMESLICE.toString());
+            String timeSlice = xmlTimeVariable.getAttributeValue(XMLAttributes.TIME_SLICE.toString());
             Variable timeVariable = probNet.getVariable(variableName, Integer.parseInt(timeSlice));
             potential.setTimeVariable(timeVariable);
         }
@@ -1992,6 +1992,16 @@ public class PGMXReader_0_2 implements ProbNetReader {
     protected List<Element> getXMLChildren(Element xmlRootVariables) {
         
         return xmlRootVariables.getChildren();
+    }
+    
+    protected static PotentialRole getPotentialRolByLabel(String auxLabel) {
+        for (PotentialRole role : PotentialRole.values()) {
+            String u = role.toString();
+            if (u.equals(auxLabel)) {
+                return role;
+            }
+        }
+        return null;
     }
     
 }

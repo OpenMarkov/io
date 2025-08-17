@@ -129,7 +129,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
         if (xmlPotentialRole.equalsIgnoreCase("utility")) {
             xmlRole = PotentialRole.UNSPECIFIED;
         } else {
-            xmlRole = PotentialRole.getEnumMember(xmlPotentialRole);
+            xmlRole = PGMXReader_0_2.getPotentialRolByLabel(xmlPotentialRole);
         }
         return xmlRole;
     }
