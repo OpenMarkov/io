@@ -50,8 +50,8 @@ public class ElviraToken {
 	/**
 	 * Integer value constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param integerValue <code>int</code>
+     * @param tokenType    {@code TokenType}
+     * @param integerValue {@code int}
 	 */
 	public ElviraToken(TokenType tokenType, int integerValue) {
 		this.tokenType = tokenType;
@@ -62,8 +62,8 @@ public class ElviraToken {
 	/**
 	 * Double value constructor.
 	 *
-	 * @param tokenType   <code>TokenType</code>
-	 * @param doubleValue <code>double</code>
+     * @param tokenType   {@code TokenType}
+     * @param doubleValue {@code double}
 	 */
 	public ElviraToken(TokenType tokenType, double doubleValue) {
 		this.tokenType = tokenType;
@@ -74,8 +74,8 @@ public class ElviraToken {
 	/**
 	 * Identifier constructor.
 	 *
-	 * @param tokenType        <code>TokenType</code>
-	 * @param identifierString <code>String</code>
+     * @param tokenType        {@code TokenType}
+     * @param identifierString {@code String}
 	 * tokenType == IDENTIFIER during the whole method execution
 	 */
 	public ElviraToken(TokenType tokenType, String identifierString) {
@@ -87,8 +87,8 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param reservedWord <code>ReservedWord</code>
+     * @param tokenType    {@code TokenType}
+     * @param reservedWord {@code ReservedWord}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord) {
 		this.tokenType = tokenType;
@@ -99,9 +99,9 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param reservedWord <code>ReservedWord</code>
-	 * @param integerValue <code>int</code>
+     * @param tokenType    {@code TokenType}
+     * @param reservedWord {@code ReservedWord}
+     * @param integerValue {@code int}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, int integerValue) {
 		this(tokenType, reservedWord);
@@ -112,9 +112,9 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param reservedWord <code>ReservedWord</code>
-	 * @param doubleValue  <code>double</code>
+     * @param tokenType    {@code TokenType}
+     * @param reservedWord {@code ReservedWord}
+     * @param doubleValue  {@code double}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, double doubleValue) {
 		this(tokenType, reservedWord);
@@ -125,8 +125,8 @@ public class ElviraToken {
 	/**
 	 * Boolean value constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param booleanValue <code>boolean</code>
+     * @param tokenType    {@code TokenType}
+     * @param booleanValue {@code boolean}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, boolean booleanValue) {
 		this(tokenType, reservedWord);
@@ -137,9 +137,9 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param reservedWord <code>ReservedWord</code>
-	 * @param stringValue1 <code>String</code>
+     * @param tokenType    {@code TokenType}
+     * @param reservedWord {@code ReservedWord}
+     * @param stringValue1 {@code String}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, String stringValue1) {
 		this(tokenType, reservedWord);
@@ -149,10 +149,10 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param reservedWord <code>ReservedWord</code>
-	 * @param stringValue1 <code>String</code>
-	 * @param stringValue2 <code>String</code>
+     * @param tokenType    {@code TokenType}
+     * @param reservedWord {@code ReservedWord}
+     * @param stringValue1 {@code String}
+     * @param stringValue2 {@code String}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, String stringValue1, String stringValue2) {
 		this(tokenType, reservedWord);
@@ -163,9 +163,9 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor for words with a list of strings.
 	 *
-	 * @param tokenType       <code>TokenType</code>
-	 * @param reservedWord    <code>ReservedWord</code>
-	 * @param stringListValue <code>String[]</code>
+     * @param tokenType       {@code TokenType}
+     * @param reservedWord    {@code ReservedWord}
+     * @param stringListValue {@code String[]}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, String[] stringListValue) {
 		this(tokenType, reservedWord);
@@ -175,8 +175,8 @@ public class ElviraToken {
 	/**
 	 * Reserved word constructor for tables of doubles.
 	 *
-	 * @param tokenType    <code>TokenType</code>
-	 * @param reservedWord <code>ReservedWord</code>
+     * @param tokenType    {@code TokenType}
+     * @param reservedWord {@code ReservedWord}
 	 */
 	public ElviraToken(TokenType tokenType, ReservedWord reservedWord, double[] table) {
 		this(tokenType, reservedWord);
@@ -186,122 +186,122 @@ public class ElviraToken {
 	// Methods
 
 	/**
-	 * @return Reserved word of this token. <code>ReservedWord</code>
+     * @return Reserved word of this token. {@code ReservedWord}
 	 */
 	public ReservedWord getReservedWord() {
 		return reservedWord;
 	}
 
 	/**
-	 * @return isInteger. <code>boolean</code>
+     * @return isInteger. {@code boolean}
 	 */
 	public boolean isInteger() {
 		return isInteger;
 	}
 
 	/**
-	 * @return isDouble. <code>boolean</code>
+     * @return isDouble. {@code boolean}
 	 */
 	public boolean isDouble() {
 		return isDouble;
 	}
 
 	/**
-	 * @return isReservedWord. <code>boolean</code>
+     * @return isReservedWord. {@code boolean}
 	 */
 	public boolean isReservedWord() {
 		return isReservedWord;
 	}
 
 	/**
-	 * @return isIdentifier. <code>boolean</code>
+     * @return isIdentifier. {@code boolean}
 	 */
 	public boolean isIdentifier() {
 		return isIdentifier;
 	}
 
 	/**
-	 * @return isBoolean. <code>boolean</code>
+     * @return isBoolean. {@code boolean}
 	 */
 	public boolean isBoolean() {
 		return isBoolean;
 	}
 
 	/**
-	 * @return integerValue. <code>int</code>
+     * @return integerValue. {@code int}
 	 */
 	public int getIntegerValue() {
 		return integerValue;
 	}
 
 	/**
-	 * @return doubleValue. <code>double</code>
+     * @return doubleValue. {@code double}
 	 */
 	public double getDoubleValue() {
 		return doubleValue;
 	}
 
 	/**
-	 * @return stringValue. <code>String</code>
+     * @return stringValue. {@code String}
 	 */
 	public String getStringValue1() {
 		return stringValue1;
 	}
 
 	/**
-	 * @return stringValue. <code>String</code>
+     * @return stringValue. {@code String}
 	 */
 	public String getStringValue2() {
 		return stringValue2;
 	}
 
 	/**
-	 * @return identifierString. <code>String</code>
+     * @return identifierString. {@code String}
 	 */
 	public String getIdentifierString() {
 		return identifierString;
 	}
 
 	/**
-	 * @return booleanValue. <code>boolean</code>
+     * @return booleanValue. {@code boolean}
 	 */
 	public boolean getBooleanValue() {
 		return booleanValue;
 	}
 
 	/**
-	 * @return stringListValue. <code>String[]</code>
+     * @return stringListValue. {@code String[]}
 	 */
 	public String[] getStringListValue() {
 		return stringListValue;
 	}
 
 	/**
-	 * @return doublesTableValue. <code>double[]</code>
+     * @return doublesTableValue. {@code double[]}
 	 */
 	public double[] getDoublesTableValue() {
 		return doublesTableValue;
 	}
 
 	/**
-	 * @return tokenType. <code>Enumerate TokenType</code>
+     * @return tokenType. {@code Enumerate TokenType}
 	 */
 	public TokenType getTokenType() {
 		return tokenType;
 	}
 
 	/**
-	 * @param token <code>ElviraToken</code>
+     * @param token {@code ElviraToken}
 	 * @return boolean
 	 */
-	public boolean sameToken(ElviraToken token) {
-		boolean equalStringList;
+    public static boolean sameToken(ElviraToken token) {
+		/*
+        boolean equalStringList;
 		equalStringList = (
 				(token.stringListValue == stringListValue) && (stringListValue == null)
 		);
-		equalStringList = !equalStringList && (token.stringListValue == null);
-
-		return false;
+        */
+        return false;
 	}
 
 	public String toString() {

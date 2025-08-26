@@ -25,7 +25,7 @@ public class ElviraUtil {
 		List<Node> nodes = probNet.getNodes();
 		for (Node node : nodes) {
 			String title = node.additionalProperties.get("Title");
-			if ((title != null) && (title.length() > 0)) {
+            if ((title != null) && (!title.isEmpty())) {
 				Variable variable = node.getVariable();
 				String variableName = variable.getName();
 				variable.setName(title);
@@ -38,8 +38,8 @@ public class ElviraUtil {
 	 * Puts a property A that is an array as a set of additionalProperties with
 	 * names A[0], A[1],...
 	 *
-	 * @param key    . <code>String</code>
-	 * @param values . <code>List</code> of <code>String</code>
+     * @param key    . {@code String}
+     * @param values . {@code List} of {@code String}
 	 */
 	public static void putPropertyArray(Map<String, String> properties, String key, List<String> values) {
 		if (values != null) {
@@ -53,13 +53,13 @@ public class ElviraUtil {
 	/**
 	 * Gets a multi-valued property as a List.
 	 *
-	 * @param key . <code>String</code>
-	 * @return <code>List</code> of <code>String</code>
+     * @param key . {@code String}
+     * @return {@code List} of {@code String}
 	 */
 	public static List<String> getPropertyArray(Map<String, String> properties, String key) {
 		List<String> values = new ArrayList<String>();
 		int i = 0;
-		String value = null;
+        String value;
 		do {
 			String extendedKey = key + "[" + i++ + "]";
 			value = properties.get(extendedKey);
@@ -67,7 +67,7 @@ public class ElviraUtil {
 				values.add(value);
 			}
 		} while (value != null);
-		if (values.size() == 0) { // property does not exist
+        if (values.isEmpty()) { // property does not exist
 			values = null;
 		}
 		return values;

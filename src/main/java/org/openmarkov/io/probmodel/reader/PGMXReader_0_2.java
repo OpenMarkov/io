@@ -64,7 +64,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * Loads a ProbNet from a PGMX file.
      *
-     * @param netName     = path + network name + extension. <code>String</code>
+     * @param netName     = path + network name + extension. {@code String}
      * @param inputStream InputStream[]
      * @throws PGMXParserException
      */
@@ -80,8 +80,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * Loads a ProbNet from a PGMX file given by its name.
      *
-     * @param netName = path + network name + extension. <code>String</code>
-     * @return The <code>ProbNet</code> readed or <code>null</code>
+     * @param netName = path + network name + extension. {@code String}
+     * @return The {@code ProbNet} readed or {@code null}
      * @throws ParserException if there is an error parsing the XML
      */
     @Override public ProbNet loadProbNet(String netName) throws FileNotFoundException, ParserException {
@@ -104,8 +104,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * Loads a ProbNetInfo from a PGMX file given by netName.
      *
-     * @param netName = path + network name + extension. <code>String</code>
-     * @return The <code>ProbNet</code> readed or <code>null</code>
+     * @param netName = path + network name + extension. {@code String}
+     * @return The {@code ProbNet} readed or {@code null}
      * @throws PGMXParserException if there is an error parsing the XML
      */
     @Override
@@ -119,8 +119,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * Loads a ProbNetInfo from a PGMX file given by netName.
      *
-     * @param netName = path + network name + extension. <code>String</code>
-     * @return The <code>ProbNet</code> readed or <code>null</code>
+     * @param netName = path + network name + extension. {@code String}
+     * @return The {@code ProbNet} readed or {@code null}
      * @throws PGMXParserException if there is an error parsing the XML
      */
     @Override public ProbNetInfo loadProbNetInfo(String netName) throws ParserException, FileNotFoundException {
@@ -136,7 +136,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException if there is an error parsing the XML
      */
     public ProbNetInfo loadProbNetInfo(Element root, String netName) throws FileNotFoundException, ParserException {
-        
         String formatVersion = root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
         PGMXReader_0_2 reader = ReaderFactory.getReader(formatVersion);
         ProbNet probNet = reader.getProbNet(root, netName);
@@ -152,7 +151,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return network version in a String
      * @throws ParserException if the file is not found
      */
-    public String getVersion(String netName, InputStream... inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
+    public static String getVersion(String netName, InputStream... inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
         Element root = getRootElement(getStream(netName, inputStream), netName);
         return root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
     }
@@ -165,10 +164,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return root Element
      * @throws ParserException
      */
-    private Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
+    private static Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
         SAXBuilder builder = new SAXBuilder();
         builder.setJDOMFactory(new LocatedJDOMFactory());
-        Document document = null;
+        Document document;
         try {
             document = builder.build(stream);
         } catch (JDOMException e) {
@@ -187,7 +186,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return InputStream of the network
      * @throws ParserException if the file is not found
      */
-    private InputStream getStream(String netName, InputStream... inputStream) throws ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
+    private static InputStream getStream(String netName, InputStream... inputStream) throws ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
         InputStream stream;
         if (inputStream.length == 0) {
             try {
@@ -249,7 +248,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         getOOPN(netName, xMLProbNet, probNet, classes);
     }
     
-    protected void getTemporaUnit(Element xMLProbNet, ProbNet probNet) {
+    protected static void getTemporaUnit(Element xMLProbNet, ProbNet probNet) {
         Element temporalUnit = xMLProbNet.getChild(XMLTags.TIME_UNIT.toString());
         if (temporalUnit != null) {
             CycleLength temporalUnitProbNet = new CycleLength();
@@ -325,7 +324,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         Element xmlAdditionalProperties = root.getChild(XMLTags.ADDITIONAL_PROPERTIES.toString());
         if (xmlAdditionalProperties != null) {
             List<Element> propertiesListElement = getXMLChildren(xmlAdditionalProperties);
-            if (propertiesListElement != null && propertiesListElement.size() > 0) {
+            if (propertiesListElement != null && !propertiesListElement.isEmpty()) {
                 for (Element propertyElement : propertiesListElement) {
                     String propertyName = getElementName(propertyElement);
                     String propertyValue = propertyElement.getAttributeValue(XMLAttributes.VALUE.toString());
@@ -336,7 +335,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         Element xmlProperties = root.getChild(XMLTags.PROPERTIES.toString());
         if (xmlProperties != null) {
             List<Element> propertiesListElement = getXMLChildren(xmlProperties);
-            if (propertiesListElement != null && propertiesListElement.size() > 0) {
+            if (propertiesListElement != null && !propertiesListElement.isEmpty()) {
                 for (Element propertyElement : propertiesListElement) {
                     String propertyName = getElementName(propertyElement);
                     String propertyValue = propertyElement.getAttributeValue(XMLAttributes.VALUE.toString());
@@ -347,8 +346,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param root    . <code>Element</code>
-     * @param probNet . <code>ProbNet</code>
+     * @param root    . {@code Element}
+     * @param probNet . {@code ProbNet}
      */
     protected void getAgents(Element root, ProbNet probNet) {
         Element xmlAgentsRoot = root.getChild(XMLTags.AGENTS.toString());
@@ -367,8 +366,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param root    . <code>Element</code>
-     * @param probNet . <code>ProbNet</code>
+     * @param root    . {@code Element}
+     * @param probNet . {@code ProbNet}
      */
     protected void getDecisionCriterion(Element root, ProbNet probNet) {
         Element xmlCriteronRoot = root.getChild(XMLTags.DECISION_CRITERIA.toString());
@@ -398,13 +397,13 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param agentElement . <code>Element</code>
-     * @return <code>Properties</code>
+     * @param agentElement . {@code Element}
+     * @return {@code Properties}
      */
     protected Properties getAdditionalProperties(Element agentElement) {
         Properties properties = null;
         List<Element> propertiesListElement = getXMLChildren(agentElement);
-        if (propertiesListElement != null && propertiesListElement.size() > 0) {
+        if (propertiesListElement != null && !propertiesListElement.isEmpty()) {
             properties = new Properties();
             for (Element propertyElement : propertiesListElement) {
                 String propertyName = getElementName(propertyElement);
@@ -575,13 +574,13 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return evidence;
     }
     
-    protected void getAdditionalConstraints(ProbNet probNet, Element xMLProbNet) {
+    protected static void getAdditionalConstraints(ProbNet probNet, Element xMLProbNet) {
         if (parseXMLElement(xMLProbNet, XMLTags.ADDITIONAL_CONSTRAINTS)) {
             // TODO - Get the additional constraints
         }
     }
     
-    protected boolean parseXMLElement(Element xMLRoot, XMLTags additionalConstraints) {
+    protected static boolean parseXMLElement(Element xMLRoot, XMLTags additionalConstraints) {
         return false;
     }
     
@@ -600,8 +599,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param root    . <code>Element</code>
-     * @param probNet . <code>ProbNet</code>
+     * @param root    . {@code Element}
+     * @param probNet . {@code ProbNet}
      */
     protected ProbNet getConstraints(Element root, ProbNet probNet)
             throws PGMXParserException.ConstraintNotFound {
@@ -624,36 +623,36 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param root . <code>Element</code>
+     * @param root . {@code Element}
      */
-    protected String getProbNetComment(Element root, ProbNet probNet) {
+    protected static String getProbNetComment(Element root, ProbNet probNet) {
         Element xmlComments = root.getChild(XMLTags.COMMENT.toString());
         String comment = null;
         if (xmlComments != null) {
             String showCommentWhenOpening = xmlComments.getAttributeValue(XMLAttributes.SHOW_WHEN_OPENING_NETWORK.toString());
-            probNet.setShowCommentWhenOpening(Boolean.valueOf(showCommentWhenOpening));
+            probNet.setShowCommentWhenOpening(Boolean.parseBoolean(showCommentWhenOpening));
             comment = textToHtml(xmlComments.getText());
         }
-        return comment = comment == null ? "" : comment;
+        return comment == null ? "" : comment;
     }
     
     /**
-     * @param root . <code>Element</code>
+     * @param root . {@code Element}
      */
-    protected String getComment(Element root) {
+    protected static String getComment(Element root) {
         Element xmlComments = root.getChild(XMLTags.COMMENT.toString());
         String comment = null;
         if (xmlComments != null) {
             comment = textToHtml(xmlComments.getText());
         }
-        return comment = comment == null ? "" : comment;
+        return comment == null ? "" : comment;
     }
     
     /**
      * Reads Nodes:
      *
-     * @param root    <code>Element</code>
-     * @param probNet <code>ProbNet</code>
+     * @param root    {@code Element}
+     * @param probNet {@code ProbNet}
      * @throws PGMXParserException
      */
     protected void getVariables(Element root, ProbNet probNet) throws PGMXParserException.VariableHasNoStates {
@@ -801,7 +800,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
         // TODO revisar el posible error al convertir un string a número
         if (properties.get(XMLTags.RELEVANCE.toString()) != null) {
-            node.setRelevance(Double.valueOf(properties.get(XMLTags.RELEVANCE.toString())));
+            node.setRelevance(Double.parseDouble(properties.get(XMLTags.RELEVANCE.toString())));
             properties.remove(XMLTags.RELEVANCE.toString());
         }
         // OOPN start
@@ -818,10 +817,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
         if (precision != null) {
             node.getVariable().setPrecision(precision);
         }
-        if (properties != null) {
-            for (String key : new ArrayList<>(properties.keySet())) {
-                node.additionalProperties.put(key, properties.get(key));
-            }
+        for (String key : new ArrayList<>(properties.keySet())) {
+            node.additionalProperties.put(key, properties.get(key));
         }
     }
     
@@ -830,8 +827,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         // strip the name from the time slice for backwards compatibility
         String timeSlice = element.getAttributeValue(XMLAttributes.TIME_SLICE.toString());
         variableName = variableName.replace(" [" + timeSlice + "]", "");
-        Variable variable = null;
-        variable = (timeSlice == null) ? probNet.getVariable(variableName)
+        Variable variable = (timeSlice == null) ? probNet.getVariable(variableName)
                 : probNet.getVariable(variableName, Integer.parseInt(timeSlice));
         return variable;
     }
@@ -840,7 +836,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return element.getAttributeValue(XMLAttributes.NAME.toString());
     }
     
-    protected Double getXMLPrecision(Element variableElement) {
+    protected static Double getXMLPrecision(Element variableElement) {
         Element precisionElement = variableElement.getChild(XMLTags.PRECISION.toString());
         Double precision = null;
         if (precisionElement != null) {
@@ -849,7 +845,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return precision;
     }
     
-    protected String getXMLPurpose(Element aditionalElement) {
+    protected static String getXMLPurpose(Element aditionalElement) {
         String purpose = "";
         if (aditionalElement != null) {
             Element purposeElement = aditionalElement.getChild(XMLTags.PURPOSE.toString());
@@ -861,15 +857,15 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param aditionalElement . <code>Element</code>
+     * @param aditionalElement . {@code Element}
      * @return Double
      */
-    protected Double getXMLRelevance(Element aditionalElement) {
+    protected static Double getXMLRelevance(Element aditionalElement) {
         double relevance = Node.DEFAULT_RELEVANCE;
         if (aditionalElement != null) {
             Element relevanceElement = aditionalElement.getChild(XMLTags.RELEVANCE.toString());
             if (relevanceElement != null) {
-                relevance = Double.valueOf(relevanceElement.getText());
+                relevance = Double.parseDouble(relevanceElement.getText());
             }
         }
         return relevance;
@@ -878,8 +874,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * Reads additionalProperties that have not a clear classification.
      *
-     * @param variableElement . <code>Element</code>
-     * @return A <code>HashMap</code> with <code>key = String</code> and <code>value = Object</code>
+     * @param variableElement . {@code Element}
+     * @return A {@code HashMap} with {@code key = String} and {@code value = Object}
      */
     protected LinkedHashMap<String, String> getProperties(Element variableElement) {
         LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
@@ -902,10 +898,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         Integer.parseInt(value);
                         properties.put(key, value);
                     } catch (NumberFormatException ni) { // try parse boolean
-                        Boolean bTrue = Boolean.parseBoolean(value);
+                        boolean bTrue = Boolean.parseBoolean(value);
                         boolean bFalse = value.equalsIgnoreCase("false");
                         if (bTrue || bFalse) {
-                            properties.put(key, bTrue.toString());
+                            properties.put(key, Boolean.toString(bTrue));
                         } else { // Nor double nor integer nor boolean -> String
                             properties.put(key, value);
                         }
@@ -917,8 +913,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement . <code>Element</code>
-     * @return variable type. <code>VariableType</code>
+     * @param variableElement . {@code Element}
+     * @return variable type. {@code VariableType}
      */
     protected VariableType getXMLVariableType(Element variableElement) {
         VariableType variableType = null;
@@ -934,8 +930,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement . <code>Element</code>
-     * @return node type. <code>NodeType</code>
+     * @param variableElement . {@code Element}
+     * @return node type. {@code NodeType}
      */
     protected NodeType getXMLNodeType(Element variableElement) {
         NodeType nodeType = null;
@@ -951,10 +947,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement . <code>Element</code>
-     * @return Node X coordinate. <code>int</code>
+     * @param variableElement . {@code Element}
+     * @return Node X coordinate. {@code int}
      */
-    protected int getXMLXCoordinate(Element variableElement) {
+    protected static int getXMLXCoordinate(Element variableElement) {
         Element coordinatesElement = variableElement.getChild(XMLTags.COORDINATES.toString());
         int xCoordinate = 0;
         if (coordinatesElement != null) {
@@ -965,10 +961,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement . <code>Element</code>
-     * @return Node Y coordinate. <code>int</code>
+     * @param variableElement . {@code Element}
+     * @return Node Y coordinate. {@code int}
      */
-    protected int getXMLYCoordinate(Element variableElement) {
+    protected static int getXMLYCoordinate(Element variableElement) {
         Element coordinatesElement = variableElement.getChild(XMLTags.COORDINATES.toString());
         int yCoordinate = 0;
         if (coordinatesElement != null) {
@@ -979,8 +975,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement . <code>Element</code>
-     * @return variable states. <code>String[]</code>
+     * @param variableElement . {@code Element}
+     * @return variable states. {@code String[]}
      */
     protected State[] getXMLStates(Element variableElement) {
         List<Element> variableStatesElements = getStatesElements(variableElement);
@@ -1002,15 +998,15 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement . <code>Element</code>
-     * @param variableName    . <code>String</code>
-     * @return A continuous variable. <code>Variable</code>
+     * @param variableElement . {@code Element}
+     * @param variableName    . {@code String}
+     * @return A continuous variable. {@code Variable}
      */
-    protected Variable getXMLContinuousVariable(
+    protected static Variable getXMLContinuousVariable(
             Element variableElement,
             String variableName) {
         
-        boolean leftClosedDefined, leftClosed = false, rightClosedDefined = false, rightClosed = false;
+        boolean leftClosedDefined, leftClosed = false, rightClosedDefined, rightClosed = false;
         double min = Double.NEGATIVE_INFINITY;  // Default value
         double max = Double.POSITIVE_INFINITY;  // Default value
         
@@ -1041,9 +1037,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
         
         // Precision
-        double precision = 0.0;
         Element xMLPrecision = variableElement.getChild(XMLTags.PRECISION.toString());
-        precision = xMLPrecision != null ? Double.parseDouble(xMLPrecision.getText()) : 0.0;
+        double precision = xMLPrecision != null ? Double.parseDouble(xMLPrecision.getText()) : 0.0;
         
         Variable variable = new Variable(variableName, leftClosed, min, max, rightClosed, precision);
         return variable;
@@ -1051,9 +1046,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     /**
      * @param states
-     * @param variableElement . <code>Element</code>
-     * @param variableName    . <code>String</code>
-     * @return A discretized continuous variable. <code>Variable</code>
+     * @param variableElement . {@code Element}
+     * @param variableName    . {@code String}
+     * @return A discretized continuous variable. {@code Variable}
      */
     protected Variable getXMLDiscretizedVariable(
             Element variableElement,
@@ -1070,7 +1065,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 boolean[] belongsToLeftSide = new boolean[numSubIntervals];
                 int numInterval = 0;
                 for (Element subInterval : subIntervals) {
-                    limits[numInterval] = Double.valueOf(subInterval.getAttributeValue(
+                    limits[numInterval] = Double.parseDouble(subInterval.getAttributeValue(
                             XMLAttributes.VALUE.toString()));
                     belongsToLeftSide[numInterval] = subInterval.getAttributeValue(
                             XMLAttributes.BELONGS_TO.toString()).equalsIgnoreCase("left");
@@ -1091,8 +1086,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param root    . <code>Element</code>
-     * @param probNet . <code>ProbNet</code>
+     * @param root    . {@code Element}
+     * @param probNet . {@code ProbNet}
      * @throws PGMXParserException PGMXParserException
      */
     protected void getLinks(
@@ -1138,24 +1133,24 @@ public class PGMXReader_0_2 implements ProbNetReader {
     protected void getRevelationConditions(Element root, Link<Node> link)
             throws PGMXParserException.InvalidState {
         Node node = link.getNode1();
-        Variable var = node.getVariable();
+        Variable variable = node.getVariable();
         List<Element> xmlStates = root.getChildren(XMLTags.STATE.toString());
         for (Element elementState : xmlStates) {
             String stateName = getElementName(elementState);
-            int stateIndex = var.getStateIndex(stateName);
+            int stateIndex = variable.getStateIndex(stateName);
             if (stateIndex == -1) {
-                throw new PGMXParserException.InvalidState(var.getName(), stateName, elementState);
+                throw new PGMXParserException.InvalidState(variable.getName(), stateName, elementState);
             }
-            link.addRevealingState(var.getStates()[stateIndex]);
+            link.addRevealingState(variable.getStates()[stateIndex]);
         }
         List<Element> xmlThresholds = root.getChildren(XMLTags.THRESHOLD.toString());
-        if (xmlThresholds.size() > 0) {
+        if (!xmlThresholds.isEmpty()) {
             for (int i = 0; i < xmlThresholds.size(); i += 2) {
                 double[] limits = new double[2];
                 boolean[] belongsToLeftSide = new boolean[2];
                 for (int index = 0; index < 2; index++) {
                     Element subInterval = xmlThresholds.get(i + index);
-                    limits[index] = Double.valueOf(subInterval.getAttributeValue(XMLAttributes.VALUE.toString()));
+                    limits[index] = Double.parseDouble(subInterval.getAttributeValue(XMLAttributes.VALUE.toString()));
                     belongsToLeftSide[index] =
                             subInterval.getAttributeValue(XMLAttributes.BELONGS_TO.toString()).contentEquals("left");
                 }
@@ -1166,8 +1161,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param root    . <code>Element</code>
-     * @param probNet . <code>ProbNet</code>
+     * @param root    . {@code Element}
+     * @param probNet . {@code ProbNet}
      * @throws PGMXParserException
      */
     protected void getPotentials(Element root, ProbNet probNet)
@@ -1291,7 +1286,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 throw new PGMXParserException.TreeADDWithoutTwoThresholds(xmlThresholds, xmlBranch);
             for (int i = 0; i < numThresholds; i++) {
                 Element xmlThreshold = xmlThresholds.get(i);
-                Float value = Float.parseFloat(xmlThreshold.getAttributeValue(XMLAttributes.VALUE.toString()));
+                float value = Float.parseFloat(xmlThreshold.getAttributeValue(XMLAttributes.VALUE.toString()));
                 String belongsTo = xmlThreshold.getAttributeValue(XMLAttributes.BELONGS_TO.toString());
                 boolean belongsToLeft = false;
                 if (belongsTo.equals("left")) {
@@ -1309,9 +1304,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * Gets the states of a branch.
      *
-     * @param xmlBranch   <code>Element</code>
-     * @param topVariable <code>Variable</code>
-     * @return <code>List</code> of <code>State</code>
+     * @param xmlBranch   {@code Element}
+     * @param topVariable {@code Variable}
+     * @return {@code List} of {@code State}
      * @throws PGMXParserException if there is one state that is not in the topVariable
      */
     protected List<State> getBranchStates(Element xmlBranch, Variable topVariable)
@@ -1339,8 +1334,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param variables
      * @return UniformPotential
      */
-    protected UniformPotential getUniformPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                   List<Variable> variables) {
+    protected static UniformPotential getUniformPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                          List<Variable> variables) {
         return new UniformPotential(variables, xmlRole);
     }
     
@@ -1351,8 +1346,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param variables
      * @return ProductPotential
      */
-    protected ProductPotential getProductPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                   List<Variable> variables) {
+    protected static ProductPotential getProductPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                          List<Variable> variables) {
         return new ProductPotential(variables, xmlRole);
     }
     
@@ -1409,10 +1404,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return
      */
     protected UncertainValue[] getUncertainValues(Element xmlRootUncertainTable) {
-        int valuesSize;
-        List<Element> values;
-        values = xmlRootUncertainTable.getChildren();
-        valuesSize = values.size();
+        List<Element> values = xmlRootUncertainTable.getChildren();
+        int valuesSize = values.size();
         UncertainValue[] uncertainTable = new UncertainValue[valuesSize];
         for (int i = 0; i < valuesSize; i++) {
             Element xmlUncertainValue = values.get(i);
@@ -1443,9 +1436,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param probNet      . <code>ProbNet</code>
-     * @param xmlPotential . <code>Element</code>
-     * @return <code>Potential</code>
+     * @param probNet      . {@code ProbNet}
+     * @param xmlPotential . {@code Element}
+     * @return {@code Potential}
      * @throws PGMXParserException
      */
     protected Potential getPotential(Element xmlPotential, ProbNet probNet)
@@ -1470,14 +1463,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param probNet      . <code>ProbNet</code>
-     * @param xmlPotential . <code>Element</code>
-     * @return <code>Potential</code>
+     * @param probNet      . {@code ProbNet}
+     * @param xmlPotential . {@code Element}
+     * @return {@code Potential}
      * @throws PGMXParserException
      */
     protected Potential getPotential(Element xmlPotential, ProbNet probNet, PotentialRole potentialRole)
             throws PGMXParserException {
-        Potential potential = null;
+        Potential potential;
         // get type and role of potential
         String sXmlPotentialType = getStringXMLPotentialType(xmlPotential);
         List<Variable> variables = getReferencedVariables(xmlPotential, probNet);
@@ -1644,8 +1637,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return potential;
     }
     
-    protected Potential getExponentialHazardPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                      List<Variable> variables) {
+    protected static Potential getExponentialHazardPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                             List<Variable> variables) {
         ExponentialHazardPotential potential = new ExponentialHazardPotential(variables, xmlRole);
         Element xmlLog = xmlPotential.getChild(XMLTags.LOG.toString());
         potential.setLog(xmlLog == null || Boolean.parseBoolean(xmlLog.getValue()));
@@ -1653,21 +1646,21 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return potential;
     }
     
-    protected Potential getExponentialPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                List<Variable> variables) {
+    protected static Potential getExponentialPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                       List<Variable> variables) {
         ExponentialPotential potential = new ExponentialPotential(variables, xmlRole);
         getRegressionPotential(xmlPotential, potential);
         return potential;
     }
     
-    protected Potential getLinearRegressionPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                     List<Variable> variables) {
+    protected static Potential getLinearRegressionPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                            List<Variable> variables) {
         LinearCombinationPotential potential = new LinearCombinationPotential(variables, xmlRole);
         getRegressionPotential(xmlPotential, potential);
         return potential;
     }
     
-    protected void getRegressionPotential(Element xmlPotential, GLMPotential potential) {
+    protected static void getRegressionPotential(Element xmlPotential, GLMPotential potential) {
         Element xmlCoefficients = xmlPotential.getChild(XMLTags.COEFFICIENTS.toString());
         potential.setCoefficients(parseDoubles(xmlCoefficients.getText()));
         
@@ -1686,8 +1679,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     // Function
-    protected Potential getFunctionPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                             List<Variable> variables) {
+    protected static Potential getFunctionPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                    List<Variable> variables) {
         FunctionPotential potential = new FunctionPotential(variables, xmlRole);
         Element xmlFunction = xmlPotential.getChild(XMLTags.FUNCTION.toString());
         potential.setFunction(xmlFunction.getText());
@@ -1703,10 +1696,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return
      * @throws PGMXParserException
      */
-    protected Potential getDeltaPotential(Element xmlPotential, ProbNet probNet, PotentialRole role,
-                                          List<Variable> variables)
+    protected static Potential getDeltaPotential(Element xmlPotential, ProbNet probNet, PotentialRole role,
+                                                 List<Variable> variables)
             throws PGMXParserException.DeltaPotentialWithoutState {
-        DeltaPotential deltaPotential = null;
+        DeltaPotential deltaPotential;
         
         Element xmlNumericValue = xmlPotential.getChild(XMLTags.NUMERIC_VALUE.toString());
         Element xmlState = xmlPotential.getChild(XMLTags.STATE.toString());
@@ -1736,10 +1729,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException
      * @author carmenyago
      */
-    protected Potential getBinomialPotential(Element xmlPotential, ProbNet probNet, PotentialRole role,
-                                             List<Variable> variables)
+    protected static Potential getBinomialPotential(Element xmlPotential, ProbNet probNet, PotentialRole role,
+                                                    List<Variable> variables)
             throws PGMXParserException.BinomialPotentialMissingCasesAndProbabilities {
-        BinomialPotential binomialPotential = null;
+        BinomialPotential binomialPotential;
         
         Element xmlNumberOfCases = xmlPotential.getChild(XMLTags.NUMBER_OF_CASES.toString());
         Element xmlTheta = xmlPotential.getChild(XMLTags.THETA.toString());
@@ -1754,8 +1747,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return binomialPotential;
     }
     
-    protected Potential getConditionalGaussianPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                        List<Variable> variables) {
+    protected static Potential getConditionalGaussianPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                               List<Variable> variables) {
         // TODO - Descomentar
         return null;
         // ConditionalGaussianPotential potential = new ConditionalGaussianPotential(variables, xmlRole);
@@ -1772,8 +1765,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
         // return potential;
     }
     
-    protected Potential getDiscretizedCauchyPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                      List<Variable> variables) {
+    protected static Potential getDiscretizedCauchyPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                             List<Variable> variables) {
         // TODO - Descomentar
         return null;
         // DiscretizedCauchyPotential potential = new DiscretizedCauchyPotential(variables, xmlRole);
@@ -1790,7 +1783,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         // return potential;
     }
     
-    protected Potential getSumPotential(PotentialRole xmlRole, List<Variable> variables) {
+    protected static Potential getSumPotential(PotentialRole xmlRole, List<Variable> variables) {
         
         return new SumPotential(variables, xmlRole);
     }
@@ -1798,10 +1791,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
     /**
      * @param xmlPotential XML element
      * @param variables    List of variables
-     * @return <code>SameAsPrevious</code> potential
+     * @return {@code SameAsPrevious} potential
      * @throws PGMXParserException
      */
-    protected Potential getSameAsPrevious(Element xmlPotential, List<Variable> variables)
+    protected static Potential getSameAsPrevious(Element xmlPotential, List<Variable> variables)
             throws PGMXParserException.CannotAsignPotentialToStaticVariable {
         
         if (!variables.get(0).isTemporal()) {
@@ -1811,17 +1804,17 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /***
-     * Gets the <code>CycleLengthShift</code> potential for temporal chance variable
+     * Gets the {@code CycleLengthShift} potential for temporal chance variable
      *
      * @param xmlPotential XML element
      * @param probNet ProbNet
      * @param xmlRole PotentialRole
      * @param variables List of variables
-     * @return <code>CycleLengthShift</code> potential
+     * @return {@code CycleLengthShift} potential
      * @throws PGMXParserException
      */
-    protected Potential getCycleLengthShiftPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
-                                                     List<Variable> variables)
+    protected static Potential getCycleLengthShiftPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
+                                                            List<Variable> variables)
             throws PGMXParserException.CannotAsignPotentialToStaticVariable {
         
         Variable variable = variables.get(0);
@@ -1832,7 +1825,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return new CycleLengthShift(variables, probNet.getCycleLength());
     }
     
-    protected double[] parseDoubles(String string) {
+    protected static double[] parseDoubles(String string) {
         String[] sValues = string.split(" ");
         double[] table = new double[sValues.length];
         int i = 0;
@@ -1842,7 +1835,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return table;
     }
     
-    protected String[] getCovariates(Element xmlCovariates) {
+    protected static String[] getCovariates(Element xmlCovariates) {
         String[] covariates = new String[xmlCovariates.getChildren().size()];
         int i = 0;
         for (Element xmlCovariate : xmlCovariates.getChildren()) {
@@ -1857,7 +1850,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * used here as JDOM is using the character "&amp;" to start a definition of an entity Ref class, so we need to avoid
      * it.
      */
-    protected String textToHtml(String htmlSection) {
+    protected static String textToHtml(String htmlSection) {
         String result = htmlSection;
         result = result.replaceAll("SymbolLT", "<");
         result = result.replaceAll("SymbolGT", ">");
@@ -1868,15 +1861,14 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     /**
      * @param netName
-     * @param root    . <code>Element</code>
-     * @param probNet . <code>ProbNet</code>
+     * @param root    . {@code Element}
+     * @param probNet . {@code ProbNet}
      * @param classes
      * @throws PGMXParserException
      */
     protected void getOOPN(String netName, Element root, ProbNet probNet, Map<String, ProbNet> classes)
             throws FileNotFoundException, ParserException {
-        if (probNet instanceof OOPNet) {
-            OOPNet ooNet = (OOPNet) probNet;
+        if (probNet instanceof OOPNet ooNet) {
             Element xmlOONRoot = root.getChild(XMLTags.OOPN.toString());
             if (xmlOONRoot != null) {
                 LinkedHashMap<String, ProbNet> localClasses = new LinkedHashMap<>();
@@ -1950,8 +1942,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     // OOPN end
     
     /**
-     * @param root    <code>Element</code>
-     * @param probNet <code>ProbNet</code>
+     * @param root    {@code Element}
+     * @param probNet {@code ProbNet}
      * @throws PGMXParserException
      */
     protected void getPolicies(Element root, ProbNet probNet)
@@ -1968,8 +1960,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param rootNetwork <code>Element</code>
-     * @return <code>Element</code>
+     * @param rootNetwork {@code Element}
+     * @return {@code Element}
      */
     protected Element getXMLVariables(Element rootNetwork) {
         
@@ -1977,8 +1969,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlPotential <code>Element</code>
-     * @return <code>Element</code>
+     * @param xmlPotential {@code Element}
+     * @return {@code Element}
      */
     protected Element getXMLPotentialVariables(Element xmlPotential) {
         
@@ -1986,8 +1978,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlRootVariables <code>Element</code>
-     * @return <code>List</code> of <code>Element</code>
+     * @param xmlRootVariables {@code Element}
+     * @return {@code List} of {@code Element}
      */
     protected List<Element> getXMLChildren(Element xmlRootVariables) {
         

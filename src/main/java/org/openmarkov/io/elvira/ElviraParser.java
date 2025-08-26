@@ -40,7 +40,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 /**
  * Reads a probabilistic network in Elvira format and builds a
- * <code>ProbNet</code>
+ * {@code ProbNet}
  *
  * @author marias
  * @version 1.1 carmenyago - adapted parser to new IO methods for OpenMarkov 0.3.x by filling loadProbNetInfo(String netName, InputStream... file)
@@ -62,11 +62,11 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 	/**
 	 * Store in this variable all the sub-potentials corresponding to
-	 * ICIPotentials. The key = <code>String</code> is the
-	 * <code>name-of-relation</code>.<p>
+     * ICIPotentials. The key = {@code String} is the
+     * {@code name-of-relation}.<p>
 	 * When the process of reading potentials finishes the
-	 * <code>iciPotentials</code> are traversed to read all the sub-potentials
-	 * <code>name-of-relation</code>s and this variable is used to locate its
+     * {@code iciPotentials} are traversed to read all the sub-potentials
+     * {@code name-of-relation}s and this variable is used to locate its
 	 * sub-potentials.
 	 */
 	private HashMap<String, TablePotential> subPotentials;
@@ -78,7 +78,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	// Constructor
 
 	/**
-	 * @param scanner <code>ElviraScanner</code>
+     * @param scanner {@code ElviraScanner}
 	 */
 	public ElviraParser(ElviraScanner scanner) {
 		this.scanner = scanner;
@@ -96,8 +96,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
 	 * This method is used to translate elvira potentials to openmarkov potentials.
 	 *
-	 * @param elviraPotential A <code>TablePotential</code>
-	 * @return A <code>TablePotential</code> with the same variables but
+     * @param elviraPotential A {@code TablePotential}
+     * @return A {@code TablePotential} with the same variables but
 	 * in OpenMarkov order: First the conditioned variable and the first
 	 * configuration equals to (no, no...no), increasing first the left-most
 	 * variable: Conf. 0 = (no, no...no) -&gt; Conf. 1 = (yes, no...no), etc.
@@ -125,8 +125,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * This method is used to translate ICI elvira potentials to ICI openmarkov
 	 * potentials.
 	 *
-	 * @param elviraPotential A <code>ICIPotential</code>
-	 * @return A <code>ICIPotential</code> with the same variables but
+     * @param elviraPotential A {@code ICIPotential}
+     * @return A {@code ICIPotential} with the same variables but
 	 * in OpenMarkov order: First the conditioned variable
 	 */
 	static ICIPotential elvira2ICIOpenMarkovPotential(ICIPotential elviraPotential) {
@@ -142,7 +142,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		ICIModelType model = elviraPotential.getModelType();
 
 		// Creation of ICI OpenMarkov potential
-		ICIPotential openMarkovPotential = null;
+        ICIPotential openMarkovPotential;
 		if ((model == ICIModelType.OR) || (model == ICIModelType.CAUSAL_MAX) || (model == ICIModelType.GENERAL_MAX)) {
 			openMarkovPotential = new MaxPotential(model, auxVariables);
 		} else {
@@ -168,7 +168,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	/** Reads the probNet type, creates the right compound constraint and
-	 *  associate that constraint to <code>probNet</code> 
+     *  associate that constraint to {@code probNet}
 	 * @throws ParserException */
 
 	@Override public ProbNetInfo loadProbNetInfo(String fileName) throws ParserException, IOException {
@@ -211,7 +211,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 	/**
 	 * Reads the probNet type, creates the right compound constraint and
-	 * associate that constraint to <code>probNet</code>
+     * associate that constraint to {@code probNet}
 	 *
 	 * @throws ParserException
 	 */
@@ -245,10 +245,10 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 
 	/**
 	 * Gets some general information of the probNet and puts it in
-	 * <code>probNet.properties</code>
+     * {@code probNet.properties}
 	 *
 	 * @return Next token corresponding to a node (end of general information).
-	 * <code>ElviraToken</code>
+     * {@code ElviraToken}
 	 * @throws ParserException
 	 */
 	private ElviraToken getGeneralInfo() throws IOException, ParserException {
@@ -288,7 +288,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
 	 * Reads nodes (variables)
 	 *
-	 * @param token <code>ElviraToken</code>
+     * @param token {@code ElviraToken}
 	 * @throws ParserException
 	 * @throws IOException
 	 */
@@ -300,8 +300,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	/**
-	 * @param token <code>ElviraToken</code>
-	 * @return token. <code>ElviraToken</code>
+     * @param token {@code ElviraToken}
+     * @return token. {@code ElviraToken}
 	 * @throws ParserException
 	 * @throws IOException
 	 */
@@ -379,19 +379,11 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		));
 		if (variable == null) {
 			if (continuousVariable) {
-				Double min = Double.parseDouble(infoNode.get("Min"));
-				Double max = Double.parseDouble(infoNode.get("Max"));
-				Double precision = Double.parseDouble(infoNode.get("Precision"));
-				var missingProperties = new ArrayList<String>();
-				if(min == null) missingProperties.add("Min");
-				if(max == null) missingProperties.add("Max");
-				if(precision == null) missingProperties.add("Precision");
-				if(!missingProperties.isEmpty()){
-					throw new ParserException.MissingPropertiesOfContiousVariable(variableName, missingProperties						);
-				}
-				variable = new Variable(variableName, true, min, max, true, precision);
+                double min = Double.parseDouble(infoNode.get("Min"));
+                double max = Double.parseDouble(infoNode.get("Max"));
+                double precision = Double.parseDouble(infoNode.get("Precision"));
+                variable = new Variable(variableName, true, min, max, true, precision);
 				node = probNet.addNode(variable, nodeType);
-
 			} else { // default states
 				State[] statesNames = probNet.getDefaultStates();
 				variable = new Variable(variableName, statesNames);
@@ -424,8 +416,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
 	 * Reads and creates links between variables.
 	 *
-	 * @param token <code>ElviraToken</code>
-	 * @return token. <code>ElviraToken</code>
+     * @param token {@code ElviraToken}
+     * @return token. {@code ElviraToken}
 	 * @throws IOException
 	 * @throws ParserException
 	 */
@@ -446,7 +438,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
 	 * Reads potentials information and create potentials.
 	 *
-	 * @param token <code>ElviraToken</code>
+     * @param token {@code ElviraToken}
 	 * @throws ParserException
 	 * @throws IOException
 	 */
@@ -469,19 +461,14 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
 	 * Reads and create one potential
 	 *
-	 * @param variables <code>ArrayList</code> of <code>Variable</code>
-	 * @return potential. <code>Potential</code>
+     * @param variables {@code ArrayList} of {@code Variable}
+     * @return potential. {@code Potential}
 	 * @throws ParserException
 	 * @throws IOException
 	 */
 	private Potential getPotential(List<Variable> variables) throws IOException, ParserException {
-		boolean isUtilityPotential = false;
-//		Variable utilityVariable = null; // TODO Remove
-		if (variables.get(0).getVariableType() == VariableType.NUMERIC) {
-			isUtilityPotential = true;
-//			utilityVariable = variables.get(0);
-		}
-		Potential potential = null;
+        boolean isUtilityPotential = variables.get(0).getVariableType() == VariableType.NUMERIC;
+        Potential potential = null;
 		HashMap<String, Object> properties = new HashMap<String, Object>();
 		ElviraToken token = scanner.getNextToken();
 		ReservedWord reservedWord = token.getReservedWord();
@@ -565,8 +552,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	/**
-	 * Adds the sub-potentials stored in <code>subPotentials</code> to
-	 * <code>ICIPotentials</code>.
+     * Adds the sub-potentials stored in {@code subPotentials} to
+     * {@code ICIPotentials}.
 	 *
 	 * @throws ParserException if remains one or more sub-potential or there are
 	 *                         some missing relation.
@@ -578,19 +565,18 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				TablePotential subPotential = subPotentials.get(relation);
 				if (subPotential == null) {
 					throw new ParserException.MissingPotential(relation);
-				} else {
-					if (subPotential.getVariables().size() > 1) {
-						potential.setNoisyParameters(subPotential.getVariable(1), //parent
-								subPotential.values);
-					} else {
-						potential.setLeakyParameters(subPotential.values);
-					}
-					subPotentials.remove(relation);
-
-				}
-			}
-		}
-		if (subPotentials.size() > 0) {
+                }
+                if (subPotential.getVariables().size() > 1) {
+                    potential.setNoisyParameters(subPotential.getVariable(1), //parent
+                                                 subPotential.values);
+                } else {
+                    potential.setLeakyParameters(subPotential.values);
+                }
+                subPotentials.remove(relation);
+                
+            }
+        }
+        if (!subPotentials.isEmpty()) {
 			throw new ParserException.SomeSubpotentialsArentLinkedToAnICIPotential(subPotentials);
 		}
 	}

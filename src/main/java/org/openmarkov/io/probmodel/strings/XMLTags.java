@@ -7,8 +7,6 @@
 
 package org.openmarkov.io.probmodel.strings;
 
-import org.openmarkov.java.enumUtils.EnumUtils;
-
 import java.io.Serializable;
 
 public enum XMLTags implements Serializable {
@@ -111,7 +109,7 @@ public enum XMLTags implements Serializable {
     // TODO OOPN end
 	;
     
-    private String name;
+    private final String name;
 	
 	XMLTags(String name) {
 		this.name = name;

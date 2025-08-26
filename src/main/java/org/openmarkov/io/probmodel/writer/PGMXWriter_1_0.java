@@ -51,9 +51,9 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	
 	/**
 	 * @param probNet
-	 *            . <code>ProbNet</code>
+     *            . {@code ProbNet}
 	 * @param probNetElement
-	 *            . <code>Element</code>
+     *            . {@code Element}
 	 */
 	@Override protected void getProbNetChildren(ProbNet probNet, Element probNetElement) {
 		getAdditionalConstraints(probNet, probNetElement, new Element(XMLTags.ADDITIONAL_CONSTRAINTS.toString()));
@@ -75,9 +75,9 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 
 	/**
 	 * @param probNet
-	 *            . <code>ProbNet</code>
+     *            . {@code ProbNet}
 	 * @param probNetElement
-	 *            . <code>Element</code>
+     *            . {@code Element}
 	 */
 
 
@@ -110,9 +110,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 
 		boolean hasRestriction = false;
 		for (int i = 0; i < table.length; i++) {
-			if (table[i] == 0.0) {
-				hasRestriction = true;
-			}
+            if (table[i] == 0.0) {
+                hasRestriction = true;
+                break;
+            }
 		}
 		if (hasRestriction) {
 			Potential potential = link.getRestrictionsPotential();
@@ -170,7 +171,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param potential
 	 * @param potentialElement
 	 */
-	protected void getPotentialAttributesAndVariables(Potential potential, Element potentialElement) {
+    protected static void getPotentialAttributesAndVariables(Potential potential, Element potentialElement) {
 		/*
          * TablePotential tablePotential = null;
 		 * if (potential instanceof ExactDistrPotential) { ExactDistrPotential
@@ -209,7 +210,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param potential
 	 * @param potentialElement
 	 */
-	protected void getPotentialVariables(Potential potential, Element potentialElement) {
+    protected static void getPotentialVariables(Potential potential, Element potentialElement) {
 		List<Variable> potentialVariables = potential.getVariables();
 		if (!potentialVariables.isEmpty()) {
 			writePotentialVariables(potentialVariables, potentialElement);
@@ -236,7 +237,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param xmlElement 
 	 * @param potential
 	 */
-	protected void getUnivariateDistrPotential(Element xmlElement, UnivariateDistrPotential potential){
+    protected static void getUnivariateDistrPotential(Element xmlElement, UnivariateDistrPotential potential) {
 		xmlElement.setAttribute(XMLAttributes.DISTRIBUTION.toString(), potential.getProbDensFunctionUnivariateName());
 		xmlElement.setAttribute(XMLAttributes.PARAMETRIZATION.toString(), potential.getProbDensFunctionParametrizationName());
 		Element parametersElement = new Element(XMLTags.PARAMETERS.toString());
@@ -251,7 +252,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
 	 * @param xmlElement
 	 * @param augmentedTable
 	 */
-	protected void getAugmentedTablePotential(Element xmlElement, AugmentedTable augmentedTable){
+    protected static void getAugmentedTablePotential(Element xmlElement, AugmentedTable augmentedTable) {
         Element parametersElement = new Element(XMLTags.UNCERTAIN_VALUES.toString());
         
         String[] functionValues = augmentedTable.getFunctionValues();

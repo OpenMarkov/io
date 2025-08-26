@@ -12,17 +12,13 @@ import org.openmarkov.core.model.network.ProbNet;
 
 /** Manage the error conditions in PGMXWriter0_2 and newer classes */
 public class UtilParameters {
-
+    
     public static void manageParametersWriter(String netName, ProbNet probNet) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName {
-        if (probNet == null || netName == null) {
-            String msg;
-            if (probNet == null) {
-                throw new WriterException.TryingToWriteANullProbNet();
-            };
-            if(netName==null) {
-                throw new WriterException.TryingToWriteAProbNetWithoutName(probNet);
-            }
+        if (probNet == null) {
+            throw new WriterException.TryingToWriteANullProbNet();
         }
-
+        if (netName == null) {
+            throw new WriterException.TryingToWriteAProbNetWithoutName(probNet);
+        }
     }
 }

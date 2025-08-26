@@ -10,16 +10,16 @@ package org.openmarkov.io.probmodel.strings;
 public class ToStringFunctions {
 	
 	private final static char wordSeparator = '_';
-
-	/** Given a <code>String</code> with words separated by underline character, 
-	 * produces another <code>String</code> with initials in capital letters,
+    
+    /** Given a {@code String} with words separated by underline character,
+     * produces another {@code String} with initials in capital letters,
 	 * the rest in lower case and removing the underline characters.
 	 * <p>
 	 * Example:<p>
 	 * Input String: THIS_IS_A_TYPICAL_STRING<p>
 	 * Output String: ThisIsATypicalString.
-	 * @param o <code>Object</code>
-	 * @return <code>String</code> */
+     * @param o {@code Object}
+     * @return {@code String} */
 	public static String toStringInitials(Object o) {
 		String auxStr = o.toString();
 		StringBuilder outStr = new StringBuilder().append(auxStr.charAt(0));
@@ -41,16 +41,16 @@ public class ToStringFunctions {
 		} while (newIndex != -1);
 		return outStr.toString();
 	}
-	
-	/** Given a <code>String</code> with words separated by underline character, 
-	 * produces another <code>String</code> with initials in capital letters, 
+    
+    /** Given a {@code String} with words separated by underline character,
+     * produces another {@code String} with initials in capital letters,
 	 * except the first word, the rest in lower case and removing the underline
 	 * characters.<p>
 	 * Example:<p>
 	 * Input String: THIS_IS_A_TYPICAL_STRING<p>
 	 * Output String: thisIsATypicalString.
-	 * @param o <code>Object</code>
-	 * @return <code>String</code> */
+     * @param o {@code Object}
+     * @return {@code String} */
 	public static String toStringInitialsSecond(Object o) {
 		String auxStr = o.toString();
 		StringBuilder outStr = new StringBuilder().append(auxStr.charAt(0));
@@ -82,15 +82,16 @@ public class ToStringFunctions {
 		}
 		return outStr.toString();
 	}
-	/** Given a <code>String</code> with words separated by underline character, 
-	 * produces another <code>String</code> with initials in capital letters, 
+    
+    /** Given a {@code String} with words separated by underline character,
+     * produces another {@code String} with initials in capital letters,
 	 * except the first word, the rest in lower case and removing the underline
 	 * characters.<p>
 	 * Example:<p>
 	 * Input String: thisIsATypicalString <p>
 	 * Output String: THIS_IS_A_TYPICAL_STRING.
-	 * @param o <code>Object</code>
-	 * @return <code>String</code> */
+     * @param o {@code Object}
+     * @return {@code String} */
 	public static String toStringEnumformat(Object o) {
 		String auxStr = o.toString();
 		String charString = String.valueOf(auxStr.charAt(0)).toUpperCase();

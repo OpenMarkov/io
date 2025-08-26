@@ -24,15 +24,13 @@ public class ElviraEvidenceWriter {
     
     /**
      * @param fileName = path + network name + extension.
-     * @param evidence <code>EvidenceCase</code> evidence case
+     * @param evidence {@code EvidenceCase} evidence case
      *
      * @throws IOException
      */
     public static void writeEvidenceCase(String fileName, EvidenceCase evidence) throws IOException {
-        FileWriter writer;
-        PrintWriter out;
-        writer = new FileWriter(fileName);
-        out = new PrintWriter(writer);
+        FileWriter writer = new FileWriter(fileName);
+        PrintWriter out = new PrintWriter(writer);
         writeEvidencePreamble(out, evidence);
         writeFindings(out, evidence);
         out.println("\n}");

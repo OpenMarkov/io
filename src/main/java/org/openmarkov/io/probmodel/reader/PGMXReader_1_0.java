@@ -29,9 +29,9 @@ import org.openmarkov.io.probmodel.strings.XMLTags;
 public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
     
     /**
-     * @param probNet      <code>ProbNet</code>
-     * @param xmlPotential <code>Element</code>
-     * @return <code>Potential</code> read from the XML element
+     * @param probNet      {@code ProbNet}
+     * @param xmlPotential {@code Element}
+     * @return {@code Potential} read from the XML element
      * @throws PGMXParserException if the potential type is not supported
      */
     @Override protected Potential getPotential(Element xmlPotential, ProbNet probNet) throws PGMXParserException {
@@ -40,9 +40,9 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param probNet       <code>ProbNet</code>
-     * @param eXMLPotential <code>Element</code>
-     * @return <code>Potential</code> read from the XML element
+     * @param probNet       {@code ProbNet}
+     * @param eXMLPotential {@code Element}
+     * @return {@code Potential} read from the XML element
      * @throws PGMXParserException if the potential type is not supported
      */
     @Override protected Potential getPotential(Element eXMLPotential, ProbNet probNet, PotentialRole potentialRole)
@@ -120,7 +120,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlPotential <code>Element</code>
+     * @param xmlPotential {@code Element}
      * @return PotentialRole read from the XML element
      */
     @Override protected PotentialRole getPotentialRole(Element xmlPotential) {
@@ -142,16 +142,14 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
      * @param variables    the variables of the potential
      * @return the UnivariateDistrPotential read
      */
-    protected Potential getUnivariateDistrPotential(Element xmlPotential, PotentialRole xmlRole,
-                                                    List<Variable> variables) {
+    protected static Potential getUnivariateDistrPotential(Element xmlPotential, PotentialRole xmlRole,
+                                                           List<Variable> variables) {
         String univariateName = xmlPotential.getAttributeValue(XMLAttributes.DISTRIBUTION.toString());
         String parametrization = xmlPotential.getAttributeValue(XMLAttributes.PARAMETRIZATION.toString());
         Element xmlRootTable = xmlPotential.getChild(XMLTags.PARAMETERS.toString());
         double[] table = parseDoubles(xmlRootTable.getTextNormalize());
         
-        UnivariateDistrPotential potential;
-        
-        potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
+        UnivariateDistrPotential potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
         List<Variable> parameterVariables = potential.getParameterVariables();
         
         List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
@@ -165,37 +163,33 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlPotential <code>Element</code>
-     * @param xmlRole      <code>PotentialRole</code>
-     * @param variables    <code>List</code> of <code>Variable</code> of the potential
+     * @param xmlPotential {@code Element}
+     * @param xmlRole      {@code PotentialRole}
+     * @param variables    {@code List} of {@code Variable} of the potential
      * @return Potential
      */
     // TODO Remove?
-    protected Potential getAugmentedTablePotential(Element xmlPotential, PotentialRole xmlRole,
-                                                   List<Variable> variables) {
+    protected static Potential getAugmentedTablePotential(Element xmlPotential, PotentialRole xmlRole,
+                                                          List<Variable> variables) {
         
-        List<Variable> finiteStatesVariables;
-        List<Variable> parameterVariables;
-        AugmentedTablePotential potential;
-        
-        potential = new AugmentedTablePotential(variables, xmlRole);
-        parameterVariables = potential.getParameterVariables();
-        finiteStatesVariables = potential.getFiniteStatesVariables();
+        AugmentedTablePotential potential = new AugmentedTablePotential(variables, xmlRole);
+        List<Variable> parameterVariables = potential.getParameterVariables();
+        List<Variable> finiteStatesVariables = potential.getFiniteStatesVariables();
         
         potential.setAugmentedTable(getAugmentedTable(xmlPotential, xmlRole, finiteStatesVariables, parameterVariables));
         return potential;
     }
     
     /**
-     * @param xmlPotential          <code>Element</code>
-     * @param xmlRole               <code>PotentialRole</code>
-     * @param finiteStatesVariables <code>List</code> of <code>Variable</code> of the potential
-     * @param parameterVariables    <code>List</code> of <code>Variable</code>
+     * @param xmlPotential          {@code Element}
+     * @param xmlRole               {@code PotentialRole}
+     * @param finiteStatesVariables {@code List} of {@code Variable} of the potential
+     * @param parameterVariables    {@code List} of {@code Variable}
      * @return AugmentedTable
      */
     // TODO parameterVariables is not used. Remove or use it
-    protected AugmentedTable getAugmentedTable(Element xmlPotential, PotentialRole xmlRole,
-                                               List<Variable> finiteStatesVariables, List<Variable> parameterVariables) {
+    protected static AugmentedTable getAugmentedTable(Element xmlPotential, PotentialRole xmlRole,
+                                                      List<Variable> finiteStatesVariables, List<Variable> parameterVariables) {
         
         List<Element> uncertainParametersList = xmlPotential.getChild(XMLTags.UNCERTAIN_VALUES.toString())
                                                             .getChildren(XMLTags.UNCERT_PARAM.toString());

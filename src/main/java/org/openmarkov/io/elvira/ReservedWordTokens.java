@@ -15,7 +15,7 @@ import java.util.Hashtable;
 public class ReservedWordTokens {
 
 	/**
-	 * Initial capacity for <code>Hashtable</code> (it works better with
+     * Initial capacity for {@code Hashtable} (it works better with
 	 * prime numbers and much more than enough capacity.)
 	 */
 	private final static int initialCapacity = 151;
@@ -23,9 +23,9 @@ public class ReservedWordTokens {
 	private static boolean hastablePresent = false;
 
 	/**
-	 * @param word <code>String</code>
+     * @param word {@code String}
 	 * @return The enum that corresponds to the reserved word if it exists.
-	 * <code>ReservedWord</code>.
+     * {@code ReservedWord}.
 	 */
 	public static ReservedWord getReservedWord(String word) {
 		if (!hastablePresent) {
