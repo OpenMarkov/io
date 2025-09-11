@@ -20,7 +20,7 @@ import java.util.List;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.StringWithProperties;
-import org.openmarkov.core.test.TestSpeed;
+import org.openmarkov.core.testTags.TestSpeed;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)

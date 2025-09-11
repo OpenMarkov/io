@@ -24,7 +24,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.canonical.ICIFamily;
 import org.openmarkov.core.model.network.potential.canonical.ICIModelType;
 import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
-import org.openmarkov.core.test.TestSpeed;
+import org.openmarkov.core.testTags.TestSpeed;
 
 /**
  * @author marias

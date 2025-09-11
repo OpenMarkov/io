@@ -14,7 +14,7 @@ import java.net.URL;
 
 import org.junit.jupiter.api.*;
 import org.openmarkov.core.model.network.ProbNet;
-import org.openmarkov.core.test.TestSpeed;
+import org.openmarkov.core.testTags.TestSpeed;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraNameAndTitleTest {

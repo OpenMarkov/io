@@ -19,7 +19,7 @@ public abstract sealed class PGMXParserException extends ParserException {
         this.element = element;
     }
     
-    @Override protected @Nullable String getExceptionMessage() {
+    @Override @Nullable public String getExceptionMessage() {
         String exceptionMessage = super.getExceptionMessage();
         if (element instanceof LocatedElement locatedElement) {
         }

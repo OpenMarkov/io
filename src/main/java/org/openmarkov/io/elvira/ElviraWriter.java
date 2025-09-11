@@ -41,139 +41,135 @@ import org.openmarkov.core.model.network.type.NetworkType;
  */
 @FormatType(name = "ElviraWriter", version = "0.1", extension = "elv", description = "Elvira", role = "Writer")
 public class ElviraWriter implements ProbNetWriter {
-
-	// Attributes
-
-	// @Override
-
-	/**
-	 * This method is used to translate openmarkov potentials to elvira potentials.
+    
+    // Attributes
+    
+    // @Override
+    
+    /**
+     * This method is used to translate openmarkov potentials to elvira potentials.
      * This method modify {@code elviraPotential} table.
-	 *
+     *
      * @param openMarkovPotential A {@code TablePotential}
+     *
      * @return A {@code TablePotential} with the same variables but in
-	 * Elvira order: Conditioned variable the last one and the first
-	 * configuration equals to (yes, yes...yes), increasing first the
-	 * right-most variable: Conf. 0 = (yes, yes...yes) -&gt; Conf. 1 =
-	 * (yes, yes...no), etc.
-	 */
-	private static TablePotential openMarkov2ElviraPotential(TablePotential openMarkovPotential) {
-		List<Variable> potentialVariables = openMarkovPotential.getVariables();
-		int numVariables = potentialVariables.size();
-		List<Variable> elviraVariables = new ArrayList<Variable>(numVariables);
-		for (int i = 0; i < numVariables; i++) {
-			elviraVariables.add(potentialVariables.get(numVariables - i - 1));
-		}
-
-		TablePotential elviraPotential = (TablePotential) openMarkovPotential.reorder(elviraVariables);
-
-		// Invert potential values
-		double[] table = elviraPotential.values;
-		double aux;
-		int sizePotential = table.length, halfPotential = sizePotential / 2;
-		for (int i = 0; i < halfPotential; i++) {
-			aux = table[i];
-			table[i] = table[sizePotential - i - 1];
-			table[sizePotential - i - 1] = aux;
-		}
-
-		return elviraPotential;
-	}
-
-	/**
-	 * @param netName = path + network name + extension.
+     * Elvira order: Conditioned variable the last one and the first
+     * configuration equals to (yes, yes...yes), increasing first the
+     * right-most variable: Conf. 0 = (yes, yes...yes) -&gt; Conf. 1 =
+     * (yes, yes...no), etc.
+     */
+    private static TablePotential openMarkov2ElviraPotential(TablePotential openMarkovPotential) {
+        List<Variable> potentialVariables = openMarkovPotential.getVariables();
+        int numVariables = potentialVariables.size();
+        List<Variable> elviraVariables = new ArrayList<Variable>(numVariables);
+        for (int i = 0; i < numVariables; i++) {
+            elviraVariables.add(potentialVariables.get(numVariables - i - 1));
+        }
+        
+        TablePotential elviraPotential = (TablePotential) openMarkovPotential.reorder(elviraVariables);
+        
+        // Invert potential values
+        double[] table = elviraPotential.values;
+        double aux;
+        int sizePotential = table.length, halfPotential = sizePotential / 2;
+        for (int i = 0; i < halfPotential; i++) {
+            aux = table[i];
+            table[i] = table[sizePotential - i - 1];
+            table[sizePotential - i - 1] = aux;
+        }
+        
+        return elviraPotential;
+    }
+    
+    /**
+     * @param netName = path + network name + extension.
      * @param probNet . {@code ProbNet} {@code String}
-	 * @throws WriterException WriterException
-	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
-		if (probNet.additionalProperties.get("hasElviraProperties") == null) {
-			generateElviraProperties(probNet);
-		}
-		OutputStream writer;
-        try {
-			writer = new FileOutputStream(netName);
-		} catch (FileNotFoundException e) {
-			throw new WriterException.CannotCreateFile(netName);
-		}
-        PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(writer, Charset.forName("windows-1252"))));
-		ElviraUtil.swapNameAndTitle(probNet);
-		try {
-			writeElviraNetwork(out, probNet);
-		} catch (WriterException.ICIModelNotSupportedByElvira | WriterException.NonProjectablePotentialException e) {
-			out.close();
-			throw e;
-		}
-		ElviraUtil.swapNameAndTitle(probNet); // Restore previous version
-		out.close();
-	}
-
-	/**
+     *
+     * @throws WriterException WriterException
+     */
+    @Override
+    public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+        if (probNet.additionalProperties.get("hasElviraProperties") == null) {
+            generateElviraProperties(probNet);
+        }
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(netName), Charset.forName("windows-1252"))))) {
+            ElviraUtil.swapNameAndTitle(probNet);
+            writeElviraNetwork(out, probNet);
+        } catch (FileNotFoundException e) {
+            throw new WriterException.CannotCreateFile(netName);
+        }
+        ElviraUtil.swapNameAndTitle(probNet); // Restore previous version
+    }
+    
+    /**
      * This method writes the {@code BayesNet} in a file
-	 *
+     *
      * @param out     {@code PrintWriter}
      * @param probNet {@code InfoNet}
-	 * @throws WriterException
-	 */
+     *
+     * @throws WriterException
+     */
     private static void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
-		writeElviraPreamble(out, probNet);
-		writeElviraNodes(out, probNet);
-		writeElviraLinks(out, probNet);
-		writeElviraRelations(out, probNet);
-	}
-
-	/**
+        writeElviraPreamble(out, probNet);
+        writeElviraNodes(out, probNet);
+        writeElviraLinks(out, probNet);
+        writeElviraRelations(out, probNet);
+    }
+    
+    /**
      * @param out     {@code PrintWriter}
      * @param probNet {@code InfoNet}
-	 * @throws WriterException
-	 */
+     *
+     * @throws WriterException
+     */
     private static void writeElviraPreamble(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType {
-		// preamble comment
-		out.println("//	   Network");
-		out.println("//	   Elvira format");
-		out.println();
-
-		//Object object = infoNet.get("InfluenceDiagram");
-		NetworkType networkType = probNet.getNetworkType();
-
-		if (networkType instanceof InfluenceDiagramType) {
-			out.print("idiagram ");
-		} else if (networkType instanceof BayesianNetworkType) {
-			out.print("bnet ");
-		} else {
-			throw new WriterException.UnknownNetworkType(networkType, List.of(InfluenceDiagramType.class, BayesianNetworkType.class));
-		}
-
-		out.print('"');
-
-		if (probNet.getName() != null) {
-			out.println(probNet.getName() + '"' + " {");
-		} else {
-			out.println("NoNameNet" + '"' + " {");
-		}
-		out.println();
-
-		// additionalProperties bnet comment
-		out.println("//		 Network Properties");
-		out.println();
-
-		//kindofgraph = "...";
-		Object objKindOfGraph = probNet.additionalProperties.get("KindOfGraph");
-		if (objKindOfGraph != null) {
-			String kindOfGraph = objKindOfGraph.toString();
-			out.println("kindofgraph = " + '"' + kindOfGraph + '"' + ';');
-		}
-
-		// comment = "...";
-		String comment = probNet.getComment();
-		if (comment != null) {
-			out.print("comment = ");
-			out.print('"');
-			out.print(comment);
-			out.print('"');
-			out.println(";");
-		}
-
-		// author = "...";
+        // preamble comment
+        out.println("//	   Network");
+        out.println("//	   Elvira format");
+        out.println();
+        
+        //Object object = infoNet.get("InfluenceDiagram");
+        NetworkType networkType = probNet.getNetworkType();
+        
+        if (networkType instanceof InfluenceDiagramType) {
+            out.print("idiagram ");
+        } else if (networkType instanceof BayesianNetworkType) {
+            out.print("bnet ");
+        } else {
+            throw new WriterException.UnknownNetworkType(networkType, List.of(InfluenceDiagramType.class, BayesianNetworkType.class));
+        }
+        
+        out.print('"');
+        
+        if (probNet.getName() != null) {
+            out.println(probNet.getName() + '"' + " {");
+        } else {
+            out.println("NoNameNet" + '"' + " {");
+        }
+        out.println();
+        
+        // additionalProperties bnet comment
+        out.println("//		 Network Properties");
+        out.println();
+        
+        //kindofgraph = "...";
+        Object objKindOfGraph = probNet.additionalProperties.get("KindOfGraph");
+        if (objKindOfGraph != null) {
+            String kindOfGraph = objKindOfGraph.toString();
+            out.println("kindofgraph = " + '"' + kindOfGraph + '"' + ';');
+        }
+        
+        // comment = "...";
+        String comment = probNet.getComment();
+        if (comment != null) {
+            out.print("comment = ");
+            out.print('"');
+            out.print(comment);
+            out.print('"');
+            out.println(";");
+        }
+        
+        // author = "...";
 		/*String author = (String) infoNet.get("AuthorNet");
 		if (author != null) {
 			out.print("author = ");
@@ -217,482 +213,486 @@ public class ElviraWriter implements ProbNetWriter {
 			String version = objVersion.toString();
 			out.println("version = " + version + ';');
 		}*/
-
-		// node default states
-		//Object objDefaultStates = infoNet.get("DefaultNodeStates");
-		Object objDefaultStates = probNet.getDefaultStates();
-		if (objDefaultStates != null) {
-			State[] defaultStates = (State[]) objDefaultStates;
-			out.print("default node states = (");
-			for (int i = defaultStates.length - 1; i >= 1; i--) {
-				out.print('"' + defaultStates[i].getName() + '"' + " , ");
-			}
-			out.println('"' + defaultStates[0].getName() + '"' + ");");
-		}
-		out.println();
-	}
-
-	/**
+        
+        // node default states
+        //Object objDefaultStates = infoNet.get("DefaultNodeStates");
+        Object objDefaultStates = probNet.getDefaultStates();
+        if (objDefaultStates != null) {
+            State[] defaultStates = (State[]) objDefaultStates;
+            out.print("default node states = (");
+            for (int i = defaultStates.length - 1; i >= 1; i--) {
+                out.print('"' + defaultStates[i].getName() + '"' + " , ");
+            }
+            out.println('"' + defaultStates[0].getName() + '"' + ");");
+        }
+        out.println();
+    }
+    
+    /**
      * @param out     {@code PrintWriter}
      * @param probNet {@code InfoNet}
-	 */
+     */
     private static void writeElviraNodes(PrintWriter out, ProbNet probNet) {
-		// write coment
-		out.println("// Variables");
-		out.println();
-
-		// write nodes
-		List<Node> nodes = probNet.getNodes();
-		for (Node node : nodes) {
-			if (node.getVariable().getName().contains(" ")) {
-				out.print("node \"" + node.getVariable().getName() + "\"(");
-			} else {
-				out.print("node " + node.getVariable().getName() + "(");
-			}
+        // write coment
+        out.println("// Variables");
+        out.println();
+        
+        // write nodes
+        List<Node> nodes = probNet.getNodes();
+        for (Node node : nodes) {
+            if (node.getVariable().getName().contains(" ")) {
+                out.print("node \"" + node.getVariable().getName() + "\"(");
+            } else {
+                out.print("node " + node.getVariable().getName() + "(");
+            }
             
             VariableType variableKind = node.getVariable().
                                             getVariableType();
-
-			switch (variableKind) {
-			case FINITE_STATES: {
-				out.print("finite-states");
-				break;
-			}
-			case NUMERIC: {
-				out.print("continuous");
-				break;
-			}
-			case DISCRETIZED: {
-				out.print("hybrid");
-				break;
-			}
-			}
-
-			out.println(") {");
-
-			// write comment
-			//hay dos tipos de comentarios para un nodo (de definición y de
-			//tablas de probabilidad) en OpenMarkov
-			String comment = node.getComment();
-
-			if (comment != null) {
-				out.print("comment = ");
-				out.print('"');
-				out.print(comment);
-				out.print('"');
-				out.println(';');
-			}
-
-			// write kind of node
-			NodeType nodeType = node.getNodeType();
+            
+            switch (variableKind) {
+                case FINITE_STATES: {
+                    out.print("finite-states");
+                    break;
+                }
+                case NUMERIC: {
+                    out.print("continuous");
+                    break;
+                }
+                case DISCRETIZED: {
+                    out.print("hybrid");
+                    break;
+                }
+            }
+            
+            out.println(") {");
+            
+            // write comment
+            //hay dos tipos de comentarios para un nodo (de definición y de
+            //tablas de probabilidad) en OpenMarkov
+            String comment = node.getComment();
+            
+            if (comment != null) {
+                out.print("comment = ");
+                out.print('"');
+                out.print(comment);
+                out.print('"');
+                out.println(';');
+            }
+            
+            // write kind of node
+            NodeType nodeType = node.getNodeType();
             String nodeKindName = nodeType.name();
-			out.println("kind-of-node = " + nodeKindName.toLowerCase() + ";");
-
-			// write kind of variable
-			variableKind = node.getVariable().getVariableType();
-			out.print("type-of-variable = ");
-			switch (variableKind) {
-			case FINITE_STATES: {
-				out.print("finite-states");
-				break;
-			}
-			case NUMERIC: {
-				out.print("continuous");
-				break;
-			}
-			case DISCRETIZED: {
-				out.print("hybrid");
-				break;
-			}
-			}
-			out.println(';');
-
-			// write posX
+            out.println("kind-of-node = " + nodeKindName.toLowerCase() + ";");
+            
+            // write kind of variable
+            variableKind = node.getVariable().getVariableType();
+            out.print("type-of-variable = ");
+            switch (variableKind) {
+                case FINITE_STATES: {
+                    out.print("finite-states");
+                    break;
+                }
+                case NUMERIC: {
+                    out.print("continuous");
+                    break;
+                }
+                case DISCRETIZED: {
+                    out.print("hybrid");
+                    break;
+                }
+            }
+            out.println(';');
+            
+            // write posX
             int coordinateX = (int) node.getCoordinateX();
             out.println("pos_x =" + Integer.toString(coordinateX) + ";");
-
-			// write posY
+            
+            // write posY
             int coordinateY = (int) node.getCoordinateY();
             out.println("pos_y =" + Integer.toString(coordinateY) + ";");
-
-			// write node relevance
+            
+            // write node relevance
             double relevance = node.getRelevance();
             if (relevance > Double.MIN_VALUE) {
                 out.println("relevance = " + Double.toString(relevance) + ";");
-			}
-
-			// write purpose node
-			String purpose = node.getPurpose();
-			if (purpose != null) {
-				out.print("purpose = ");
-				out.print('"');
-				out.print(purpose);
-				out.print('"');
-				out.println(';');
-			}
-
-			// write number of states
-			//TODO revisar el uso de "UseDefaultStates"
-			if (variableKind != VariableType.NUMERIC) {
-				int numStates = node.getVariable().getNumStates();
-				boolean defaultStates = false;
-				if ((node.additionalProperties.get("UseDefaultStates") != null) && Boolean
-						.parseBoolean(node.additionalProperties.get("UseDefaultStates"))) {
-					defaultStates = true;
-					out.print("//");
-				}
-				out.println("num-states = " + numStates + ";");
-				if (!defaultStates) { // print states
-					State[] reverseOrderStates = node.getVariable().getStates();
-
-					State[] states = new State[numStates];
-					for (int i = 0; i < numStates; i++) {
-						states[i] = reverseOrderStates[numStates - i - 1];
-					}
-
-					out.print("states = (");
-					int numStates_1 = states.length - 1;
-					for (int i = 0; i < numStates_1; i++) {
-						if (isInteger(states[i].getName())) {
-							out.print(states[i].getName() + " ");
-						} else {
-							out.print('"' + states[i].getName() + '"' + " ");
-						}
-					}
-					if (isInteger(states[numStates_1].getName())) {
-						out.println(states[numStates_1].getName() + ");");
-					} else {
-						out.println('"' + states[numStates_1].getName() + '"' + ");");
-					}
-				}
-			} else {
-				String min = node.additionalProperties.get("Min");
-				if (min != null) {
-					out.println("min = " + min + ";");
-				}
-				String max = node.additionalProperties.get("Max");
-				if (max != null) {
-					out.println("max = " + max + ";");
-				}
-				String precision = node.additionalProperties.get("Precision");
-				if (precision != null) {
-					out.println("precision = " + precision + ";");
-				}
-			}
-
-			// end of node
-			out.println('}');
-			out.println();
-		}
-
-	}
-
-	/**
+            }
+            
+            // write purpose node
+            String purpose = node.getPurpose();
+            if (purpose != null) {
+                out.print("purpose = ");
+                out.print('"');
+                out.print(purpose);
+                out.print('"');
+                out.println(';');
+            }
+            
+            // write number of states
+            //TODO revisar el uso de "UseDefaultStates"
+            if (variableKind != VariableType.NUMERIC) {
+                int numStates = node.getVariable().getNumStates();
+                boolean defaultStates = false;
+                if ((node.additionalProperties.get("UseDefaultStates") != null) && Boolean
+                        .parseBoolean(node.additionalProperties.get("UseDefaultStates"))) {
+                    defaultStates = true;
+                    out.print("//");
+                }
+                out.println("num-states = " + numStates + ";");
+                if (!defaultStates) { // print states
+                    State[] reverseOrderStates = node.getVariable().getStates();
+                    
+                    State[] states = new State[numStates];
+                    for (int i = 0; i < numStates; i++) {
+                        states[i] = reverseOrderStates[numStates - i - 1];
+                    }
+                    
+                    out.print("states = (");
+                    int numStates_1 = states.length - 1;
+                    for (int i = 0; i < numStates_1; i++) {
+                        if (isInteger(states[i].getName())) {
+                            out.print(states[i].getName() + " ");
+                        } else {
+                            out.print('"' + states[i].getName() + '"' + " ");
+                        }
+                    }
+                    if (isInteger(states[numStates_1].getName())) {
+                        out.println(states[numStates_1].getName() + ");");
+                    } else {
+                        out.println('"' + states[numStates_1].getName() + '"' + ");");
+                    }
+                }
+            } else {
+                String min = node.additionalProperties.get("Min");
+                if (min != null) {
+                    out.println("min = " + min + ";");
+                }
+                String max = node.additionalProperties.get("Max");
+                if (max != null) {
+                    out.println("max = " + max + ";");
+                }
+                String precision = node.additionalProperties.get("Precision");
+                if (precision != null) {
+                    out.println("precision = " + precision + ";");
+                }
+            }
+            
+            // end of node
+            out.println('}');
+            out.println();
+        }
+        
+    }
+    
+    /**
      * @param out     {@code PrintWriter}
      * @param probNet {@code InfoNet}
-	 */
+     */
     private static void writeElviraLinks(PrintWriter out, ProbNet probNet) {
-		// links comment
-		out.println("//		 Links of the associated graph:");
-		out.println();
-
-		// links
-		List<Node> nodes = probNet.getNodes();
-		for (Node parentNode : nodes) {
-			List<Node> children = parentNode.getChildren();
-			for (Node child : children) {
-				out.print("link ");
-				if (parentNode.getVariable().getName().contains(" ")) {
-					out.print("\"" + parentNode.getVariable().getName() + "\" ");
-				} else
-					out.print(parentNode.getVariable().getName() + " ");
-				if (child.getVariable().getName().contains(" ")) {
-					out.println("\"" + child.getVariable().getName() + "\";");
-				} else
-					out.println(child.getVariable().getName() + ";");
-				out.println();
-			}
-		}
-	}
-
-	/**
+        // links comment
+        out.println("//		 Links of the associated graph:");
+        out.println();
+        
+        // links
+        List<Node> nodes = probNet.getNodes();
+        for (Node parentNode : nodes) {
+            List<Node> children = parentNode.getChildren();
+            for (Node child : children) {
+                out.print("link ");
+                if (parentNode.getVariable().getName().contains(" ")) {
+                    out.print("\"" + parentNode.getVariable().getName() + "\" ");
+                } else
+                    out.print(parentNode.getVariable().getName() + " ");
+                if (child.getVariable().getName().contains(" ")) {
+                    out.println("\"" + child.getVariable().getName() + "\";");
+                } else
+                    out.println(child.getVariable().getName() + ";");
+                out.println();
+            }
+        }
+    }
+    
+    /**
      * @param out     {@code PrintWriter}
      * @param probNet {@code InfoNet}
-	 * @throws WriterException
-	 */
+     *
+     * @throws WriterException
+     */
     private static void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
-		// relations comment
-		out.println("//		Network Relationships:");
-		out.println();
-
-		// relations
-		List<Potential> potentials = probNet.getPotentials();
-		for (Potential potential : potentials) {
-			writeElviraTablePotential(out, potential);
-		}
-		out.println('}');
-		out.println();
-	}
-
-	/**
+        // relations comment
+        out.println("//		Network Relationships:");
+        out.println();
+        
+        // relations
+        List<Potential> potentials = probNet.getPotentials();
+        for (Potential potential : potentials) {
+            writeElviraTablePotential(out, potential);
+        }
+        out.println('}');
+        out.println();
+    }
+    
+    /**
      * @param out       {@code PrintWriter}
      * @param potential {@code Potential}
-	 * @throws WriterException
-	 */
+     *
+     * @throws WriterException
+     */
     private static void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
-		writeCommonElviraPotentialPreamble(out, potential);
-		TablePotential elviraPotential;
-		if (potential.getClass() != TablePotential.class) {
-			if (potential instanceof ICIPotential) {
-				writeICIElviraPotentialPreamble(out, potential.getVariables());
-				writeICIElviraPotentialBody(out, (ICIPotential) potential);
-			} else {
-				try {
-					elviraPotential = potential.tableProject(null, null).get(0);
-				} catch (NonProjectablePotentialException e) {
-					throw new WriterException.NonProjectablePotentialException(e);
-				}
-				writeElviraTable(out, openMarkov2ElviraPotential(elviraPotential));
-			}
-		} else {
-			writeElviraTable(out, openMarkov2ElviraPotential((TablePotential) potential));
-		}
-	}
-
-	/**
+        writeCommonElviraPotentialPreamble(out, potential);
+        TablePotential elviraPotential;
+        if (potential.getClass() != TablePotential.class) {
+            if (potential instanceof ICIPotential) {
+                writeICIElviraPotentialPreamble(out, potential.getVariables());
+                writeICIElviraPotentialBody(out, (ICIPotential) potential);
+            } else {
+                try {
+                    elviraPotential = potential.tableProject(null, null).get(0);
+                } catch (NonProjectablePotentialException e) {
+                    throw new WriterException.NonProjectablePotentialException(e);
+                }
+                writeElviraTable(out, openMarkov2ElviraPotential(elviraPotential));
+            }
+        } else {
+            writeElviraTable(out, openMarkov2ElviraPotential((TablePotential) potential));
+        }
+    }
+    
+    /**
      * @param out       {@code PrintWriter}
      * @param variables {@code ArrayList} of {@code Variable}
-	 */
+     */
     private static void writeSubPotentialTrash(PrintWriter out, List<Variable> variables) {
-		out.println("comment = \"new\";");
-		writeICIElviraPotentialPreamble(out, variables);
-	}
+        out.println("comment = \"new\";");
+        writeICIElviraPotentialPreamble(out, variables);
+    }
     
     private static void writeICIElviraPotentialPreamble(PrintWriter out, List<Variable> variables) {
-		out.println("kind-of-relation = potential;");
-		out.println("active=false;");
-		out.print("name-of-relation = ");
-		for (Variable variable : variables) {
-			out.print(variable.getName());
-		}
-		if (variables.size() == 1) {
-			out.print("Residual");
-		}
-		out.print(";");
-		out.println("deterministic=false;");
-	}
+        out.println("kind-of-relation = potential;");
+        out.println("active=false;");
+        out.print("name-of-relation = ");
+        for (Variable variable : variables) {
+            out.print(variable.getName());
+        }
+        if (variables.size() == 1) {
+            out.print("Residual");
+        }
+        out.print(";");
+        out.println("deterministic=false;");
+    }
     
     private static void writeCommonElviraPotentialPreamble(PrintWriter out, Potential potential) {
-		out.print("relation ");
-		// The potentials in OpenMarkov are stored in the opposite in Elvira
-		// The same method do the two conversions:
-		// Elvira -> OpenMarkov and OpenMarkov -> Elvira
-		Variable firstVariablePotential = potential.getVariables().get(0);
-		if (firstVariablePotential.getDecisionCriterion() != null) {
-			writeUtilityVariable(out, firstVariablePotential);
-		}
-		writeVariables(out, potential.getVariables());
-
-		out.println('{');
-	}
+        out.print("relation ");
+        // The potentials in OpenMarkov are stored in the opposite in Elvira
+        // The same method do the two conversions:
+        // Elvira -> OpenMarkov and OpenMarkov -> Elvira
+        Variable firstVariablePotential = potential.getVariables().get(0);
+        if (firstVariablePotential.getDecisionCriterion() != null) {
+            writeUtilityVariable(out, firstVariablePotential);
+        }
+        writeVariables(out, potential.getVariables());
+        
+        out.println('{');
+    }
     
     private static void writeUtilityVariable(PrintWriter out, Variable utilityVariable) {
-		if (utilityVariable != null) {
-			if (utilityVariable.getName().contains(" ")) {
-				out.print("\"" + utilityVariable.getName() + "\" ");
-			} else
-				out.print(utilityVariable.getName() + " ");
-		}
-	}
+        if (utilityVariable != null) {
+            if (utilityVariable.getName().contains(" ")) {
+                out.print("\"" + utilityVariable.getName() + "\" ");
+            } else
+                out.print(utilityVariable.getName() + " ");
+        }
+    }
     
     private static void writeVariables(PrintWriter out, List<Variable> variables) {
-		int numVariables = variables.size();
-		for (int i = 0; i < numVariables; i++) {
-			if (variables.get(i).getName().contains(" ")) {
-				out.print("\"" + variables.get(i).getName() + "\" ");
-			} else
-				out.print(variables.get(i).getName() + " ");
-		}
-	}
+        int numVariables = variables.size();
+        for (int i = 0; i < numVariables; i++) {
+            if (variables.get(i).getName().contains(" ")) {
+                out.print("\"" + variables.get(i).getName() + "\" ");
+            } else
+                out.print(variables.get(i).getName() + " ");
+        }
+    }
     
     private static void writeElviraTable(PrintWriter out, TablePotential elviraPotential) {
-		Map<String, Object> infoPotential = elviraPotential.properties;
+        Map<String, Object> infoPotential = elviraPotential.properties;
         if ((infoPotential != null) && (!infoPotential.isEmpty())) {
-			String comment = (String) infoPotential.get("comment");
+            String comment = (String) infoPotential.get("comment");
             if ((comment != null) && (!comment.isEmpty())) {
-				out.println("comment = " + '"' + comment + '"' + ";");
-			}
-			String kindOfRelation = (String) infoPotential.get("kindrelation");
-			if (kindOfRelation != null) {
-				out.println("kind-of-relation = " + kindOfRelation + ";");
-			}
-			String deterministic = infoPotential.get("deterministic").toString();
-			if (deterministic != null) {
-				out.println("deterministic=" + deterministic + ";");
-			}
-		}
-
-		// write table
-		writeElviraTable(out, null, elviraPotential.values);
-		out.println();
-	}
+                out.println("comment = " + '"' + comment + '"' + ";");
+            }
+            String kindOfRelation = (String) infoPotential.get("kindrelation");
+            if (kindOfRelation != null) {
+                out.println("kind-of-relation = " + kindOfRelation + ";");
+            }
+            String deterministic = infoPotential.get("deterministic").toString();
+            if (deterministic != null) {
+                out.println("deterministic=" + deterministic + ";");
+            }
+        }
+        
+        // write table
+        writeElviraTable(out, null, elviraPotential.values);
+        out.println();
+    }
     
     private static void writeElviraTable(PrintWriter out, List<Variable> variables, double[] values) {
-		if (variables != null) {
-			TablePotential openMarkovPotential = new TablePotential(variables, PotentialRole.CONDITIONAL_PROBABILITY,
-					values);
-			TablePotential elviraPotential = openMarkov2ElviraPotential(openMarkovPotential);
-			values = elviraPotential.values;
-		}
-		out.print("values = table(");
-		for (int i = 0; i < values.length; i++) {
-			out.print(values[i]);
-			if (i < values.length - 1) {
-				out.print(" ");
-			}
-			if (((i + 1) % 20) == 0) {
-				out.println();
-			}
-		}
-		out.println(" );");
-		out.println('}');
-	}
+        if (variables != null) {
+            TablePotential openMarkovPotential = new TablePotential(variables, PotentialRole.CONDITIONAL_PROBABILITY,
+                                                                    values);
+            TablePotential elviraPotential = openMarkov2ElviraPotential(openMarkovPotential);
+            values = elviraPotential.values;
+        }
+        out.print("values = table(");
+        for (int i = 0; i < values.length; i++) {
+            out.print(values[i]);
+            if (i < values.length - 1) {
+                out.print(" ");
+            }
+            if (((i + 1) % 20) == 0) {
+                out.println();
+            }
+        }
+        out.println(" );");
+        out.println('}');
+    }
     
     private static void writeICIElviraPotentialBody(PrintWriter out, ICIPotential potential) throws WriterException.ICIModelNotSupportedByElvira {
-		out.println("values = function ");
-		out.print("          ");
-		ICIModelType modelType = potential.getModelType();
-		switch (modelType) {
-		case OR:
-			out.print("Or");
-			break;
-		case CAUSAL_MAX:
-			out.print("CausalMax");
-			break;
-		case GENERAL_MAX:
-			out.print("GeneralizedMax");
-			break;
-		case AND:
-			out.print("And");
-			break;
-		case CAUSAL_MIN:
-			out.print("CausalMin");
-			break;
-		case GENERAL_MIN:
-			out.print("GeneralizedMin");
-			break;
-		default:
-			throw new WriterException.ICIModelNotSupportedByElvira(modelType);
-		}
-		out.print("(");
-		List<Variable> potentialVariables = potential.getVariables();
-		Variable conditionedVariable = potentialVariables.get(0);
-		int numVariables = potentialVariables.size();
-		for (int i = 1; i < numVariables; i++) {
-			Variable conditioningVariable = potentialVariables.get(i);
-			out.print(conditionedVariable.toString() + conditioningVariable.toString() + ",");
-		}
-		out.println(conditionedVariable.toString() + "Residual);");
-		out.println();
-		out.println("henrionVSdiez = \"Diez\";");
-		out.println("}");
-		out.println();
-
-		// Write sub-potentials
-		for (int i = 1; i < numVariables; i++) {
-			Variable conditioningVariable = potentialVariables.get(i);
-			ArrayList<Variable> subPotentialVariables = new ArrayList<Variable>(2);
-			out.print("relation ");
-			subPotentialVariables.add(conditionedVariable);
-			subPotentialVariables.add(conditioningVariable);
-			writeVariables(out, subPotentialVariables);
-			out.println(" {");
-			writeSubPotentialTrash(out, subPotentialVariables);
-			double[] noisyParameters = potential.getNoisyParameters(conditioningVariable);
-			writeElviraTable(out, subPotentialVariables, noisyParameters);
-			out.println();
-		}
-		// Write residual potential
-		ArrayList<Variable> residualVariable = new ArrayList<Variable>(1);
-		residualVariable.add(conditionedVariable);
-		out.print("relation ");
-		writeVariables(out, residualVariable);
-		out.println(" {");
-		writeSubPotentialTrash(out, residualVariable);
-		double[] leakyParameters = potential.getLeakyParameters();
-		writeElviraTable(out, residualVariable, leakyParameters);
-		out.println();
-	}
-
-	/**
+        out.println("values = function ");
+        out.print("          ");
+        ICIModelType modelType = potential.getModelType();
+        switch (modelType) {
+            case OR:
+                out.print("Or");
+                break;
+            case CAUSAL_MAX:
+                out.print("CausalMax");
+                break;
+            case GENERAL_MAX:
+                out.print("GeneralizedMax");
+                break;
+            case AND:
+                out.print("And");
+                break;
+            case CAUSAL_MIN:
+                out.print("CausalMin");
+                break;
+            case GENERAL_MIN:
+                out.print("GeneralizedMin");
+                break;
+            default:
+                throw new WriterException.ICIModelNotSupportedByElvira(modelType);
+        }
+        out.print("(");
+        List<Variable> potentialVariables = potential.getVariables();
+        Variable conditionedVariable = potentialVariables.get(0);
+        int numVariables = potentialVariables.size();
+        for (int i = 1; i < numVariables; i++) {
+            Variable conditioningVariable = potentialVariables.get(i);
+            out.print(conditionedVariable.toString() + conditioningVariable.toString() + ",");
+        }
+        out.println(conditionedVariable.toString() + "Residual);");
+        out.println();
+        out.println("henrionVSdiez = \"Diez\";");
+        out.println("}");
+        out.println();
+        
+        // Write sub-potentials
+        for (int i = 1; i < numVariables; i++) {
+            Variable conditioningVariable = potentialVariables.get(i);
+            ArrayList<Variable> subPotentialVariables = new ArrayList<Variable>(2);
+            out.print("relation ");
+            subPotentialVariables.add(conditionedVariable);
+            subPotentialVariables.add(conditioningVariable);
+            writeVariables(out, subPotentialVariables);
+            out.println(" {");
+            writeSubPotentialTrash(out, subPotentialVariables);
+            double[] noisyParameters = potential.getNoisyParameters(conditioningVariable);
+            writeElviraTable(out, subPotentialVariables, noisyParameters);
+            out.println();
+        }
+        // Write residual potential
+        ArrayList<Variable> residualVariable = new ArrayList<Variable>(1);
+        residualVariable.add(conditionedVariable);
+        out.print("relation ");
+        writeVariables(out, residualVariable);
+        out.println(" {");
+        writeSubPotentialTrash(out, residualVariable);
+        double[] leakyParameters = potential.getLeakyParameters();
+        writeElviraTable(out, residualVariable, leakyParameters);
+        out.println();
+    }
+    
+    /**
      * Generate a {@code HashMap} with the {@code probNet}
-	 * additionalProperties to write in a elvira format file.
-	 *
+     * additionalProperties to write in a elvira format file.
+     *
      * @param probNet {@code ProbNet}
-	 */
+     */
     private static void generateElviraProperties(ProbNet probNet) {
         //TODO: The elviraNetworkProperties HashMap is filled, but it is ignored.
         HashMap<String, Object> elviraNetworkProperties = new HashMap<>();
-		elviraNetworkProperties.put("ProbNet", probNet);
-		elviraNetworkProperties.put("Name", probNet.getName());
-		elviraNetworkProperties.put("DefaulNodeStates", probNet.getDefaultStates());
-
-		@SuppressWarnings("rawtypes") Class networkTypeClass = probNet.getNetworkType().getClass();
-		if (networkTypeClass == BayesianNetworkType.class) {
-			elviraNetworkProperties.put("BayesNet", probNet);
-		} else if (networkTypeClass == InfluenceDiagramType.class) {
-			elviraNetworkProperties.put("InfluenceDiagram", probNet);
-		}
-
-		// Nodes additionalProperties
-		List<Node> nodes = probNet.getNodes();
-		for (Node node : nodes) {
-			// sets the known node additionalProperties
-			Map<String, String> infoNode = node.additionalProperties;
-			//Variable fsVariable = (Variable) node.getVariable();
-			//String[] states = fsVariable.getStates();
-			ArrayList<String> statesNames = new ArrayList<String>();
-			State[] states = node.getVariable().getStates();
-			for (int i = 0; i < states.length; i++) {
-				statesNames.add(states[i].getName());
-			}
-			ElviraUtil.putPropertyArray(infoNode, "NodeStates", statesNames);
-			NodeType nodeType = node.getNodeType();
-			infoNode.put("NodeType", nodeType.toString());
-			if (nodeType == NodeType.UTILITY) {
-				infoNode.put("TypeOfVariable", VariableType.NUMERIC.toString());
-			} else {
-				infoNode.put("TypeOfVariable", VariableType.FINITE_STATES.toString());
-			}
-		}
-	}
-
-	/**
-	 * @param string with an integer or something else.
+        elviraNetworkProperties.put("ProbNet", probNet);
+        elviraNetworkProperties.put("Name", probNet.getName());
+        elviraNetworkProperties.put("DefaulNodeStates", probNet.getDefaultStates());
+        
+        @SuppressWarnings("rawtypes") Class networkTypeClass = probNet.getNetworkType().getClass();
+        if (networkTypeClass == BayesianNetworkType.class) {
+            elviraNetworkProperties.put("BayesNet", probNet);
+        } else if (networkTypeClass == InfluenceDiagramType.class) {
+            elviraNetworkProperties.put("InfluenceDiagram", probNet);
+        }
+        
+        // Nodes additionalProperties
+        List<Node> nodes = probNet.getNodes();
+        for (Node node : nodes) {
+            // sets the known node additionalProperties
+            Map<String, String> infoNode = node.additionalProperties;
+            //Variable fsVariable = (Variable) node.getVariable();
+            //String[] states = fsVariable.getStates();
+            ArrayList<String> statesNames = new ArrayList<String>();
+            State[] states = node.getVariable().getStates();
+            for (int i = 0; i < states.length; i++) {
+                statesNames.add(states[i].getName());
+            }
+            ElviraUtil.putPropertyArray(infoNode, "NodeStates", statesNames);
+            NodeType nodeType = node.getNodeType();
+            infoNode.put("NodeType", nodeType.toString());
+            if (nodeType == NodeType.UTILITY) {
+                infoNode.put("TypeOfVariable", VariableType.NUMERIC.toString());
+            } else {
+                infoNode.put("TypeOfVariable", VariableType.FINITE_STATES.toString());
+            }
+        }
+    }
+    
+    /**
+     * @param string with an integer or something else.
+     *
      * @return {@code true} if {@code string} contains an integer.
-	 */
+     */
     private static boolean isInteger(String string) {
-		try {
-			int integer = Integer.parseInt(string);
-			int numDigits = 0;
-			do {
-				integer = integer / 10;
-				numDigits++;
-			} while (integer > 0);
-			if (numDigits != string.length()) {
-				return false;
-			}
-		} catch (NumberFormatException n) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Ignores evidence, as evidence is stores in another file in Elvira
-	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
-		writeProbNet(netName, probNet);
-	}
-
+        try {
+            int integer = Integer.parseInt(string);
+            int numDigits = 0;
+            do {
+                integer = integer / 10;
+                numDigits++;
+            } while (integer > 0);
+            if (numDigits != string.length()) {
+                return false;
+            }
+        } catch (NumberFormatException n) {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Ignores evidence, as evidence is stores in another file in Elvira
+     */
+    @Override
+    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+        writeProbNet(netName, probNet);
+    }
+    
 }

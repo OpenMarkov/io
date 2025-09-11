@@ -151,7 +151,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return network version in a String
      * @throws ParserException if the file is not found
      */
-    public static String getVersion(String netName, InputStream... inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
+    public static String getVersion(String netName, InputStream inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
         Element root = getRootElement(getStream(netName, inputStream), netName);
         return root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
     }
@@ -186,21 +186,15 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return InputStream of the network
      * @throws ParserException if the file is not found
      */
-    private static InputStream getStream(String netName, InputStream... inputStream) throws ParserException.CannotOpenFile, ParserException.MoreThanOneInputOpened {
-        InputStream stream;
-        if (inputStream.length == 0) {
+    private static InputStream getStream(String netName, InputStream inputStream) throws ParserException.CannotOpenFile {
+        if (inputStream == null) {
             try {
-                stream = new FileInputStream(netName);
+                return new FileInputStream(netName);
             } catch (FileNotFoundException e) {
                 throw new ParserException.CannotOpenFile(netName);
             }
-        } else {
-            if (inputStream.length > 1) {
-                throw new ParserException.MoreThanOneInputOpened(inputStream.length);
-            }
-            stream = inputStream[0];
         }
-        return stream;
+        return inputStream;
     }
     
     /**

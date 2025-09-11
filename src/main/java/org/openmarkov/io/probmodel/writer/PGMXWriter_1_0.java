@@ -27,7 +27,7 @@ import org.jdom2.Element;
  * @version 0.5
  */
 @FormatType(name = "PGMXWriter0_5",  version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0", role = "Writer")
-public class PGMXWriter_1_0 extends PGMXWriter_0_2 implements ProbNetWriter {
+public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
 	// Methods
 	/**
