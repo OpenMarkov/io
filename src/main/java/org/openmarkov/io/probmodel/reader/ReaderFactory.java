@@ -17,8 +17,10 @@ import java.util.Arrays;
 public class ReaderFactory {
     
     /**
-     * @param strVersion, read from the PGXML file. {@code String}
+     * @param strVersion, read from the PGXM file. {@code String}
+     *
      * @return PGMXReader 0_2 or newer
+     *
      * @throws ParserException when the version is missing.
      */
     public static PGMXReader_0_2 getReader(String strVersion) throws ParserException.WrongVersion {
@@ -26,14 +28,11 @@ public class ReaderFactory {
                                 .filter(
                                         iteratorVersion -> strVersion.startsWith(iteratorVersion.toString()))
                                 .findFirst()
-                                .orElse(Version.V02); // Default value
-        // This means that, for example, 0.5.0 will be considered equal to 0.5.1,
-        // because last digit is used to correct bugs. As consequence, both will use the same Reader.
+                                .orElse(null);
         return switch (version) {
             case V02 -> new PGMXReader_0_2();
             case V10 -> new PGMXReader_1_0();
-            // Extension point in future parser versions.
-            default -> throw new ParserException.WrongVersion(strVersion);
+            case null -> throw new ParserException.WrongVersion(strVersion);
         };
     }
     
