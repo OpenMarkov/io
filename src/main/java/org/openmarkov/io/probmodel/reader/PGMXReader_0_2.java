@@ -84,6 +84,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return The {@code ProbNet} readed or {@code null}
      * @throws ParserException if there is an error parsing the XML
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override public ProbNet loadProbNet(String netName) throws FileNotFoundException, ParserException {
         FormatManager formatManager = FormatManager.getInstance();
         try {
@@ -164,6 +165,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return root Element
      * @throws ParserException
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private static Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
         SAXBuilder builder = new SAXBuilder();
         builder.setJDOMFactory(new LocatedJDOMFactory());
@@ -186,6 +188,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return InputStream of the network
      * @throws ParserException if the file is not found
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private static InputStream getStream(String netName, InputStream inputStream) throws ParserException.CannotOpenFile {
         if (inputStream == null) {
             try {
@@ -596,6 +599,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param root    . {@code Element}
      * @param probNet . {@code ProbNet}
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     protected ProbNet getConstraints(Element root, ProbNet probNet)
             throws PGMXParserException.ConstraintNotFound {
         // ProbNet network = null;
@@ -1084,6 +1088,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param probNet . {@code ProbNet}
      * @throws PGMXParserException PGMXParserException
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     protected void getLinks(
             Element root,
             ProbNet probNet)

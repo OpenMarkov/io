@@ -35,5 +35,4 @@ public class ReaderFactory {
             case null -> throw new ParserException.WrongVersion(strVersion);
         };
     }
-    
 }

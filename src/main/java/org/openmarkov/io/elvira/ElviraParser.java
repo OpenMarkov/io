@@ -215,7 +215,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
 	 * @throws ParserException
 	 */
-	private void getConstraints() throws ParserException {
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
+    private void getConstraints() throws ParserException {
 		ElviraToken token;
 		try {
 			token = scanner.getNextToken();

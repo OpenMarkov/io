@@ -87,6 +87,7 @@ public class ElviraWriter implements ProbNetWriter {
      *
      * @throws WriterException WriterException
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override
     public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
         if (probNet.additionalProperties.get("hasElviraProperties") == null) {

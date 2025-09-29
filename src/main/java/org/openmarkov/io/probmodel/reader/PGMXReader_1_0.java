@@ -28,6 +28,10 @@ import org.openmarkov.io.probmodel.strings.XMLTags;
 @FormatType(name = "PGMXReader", version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0", role = "Reader")
 public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
     
+    public PGMXReader_1_0() {
+        super();
+    }
+    
     /**
      * @param probNet      {@code ProbNet}
      * @param xmlPotential {@code Element}

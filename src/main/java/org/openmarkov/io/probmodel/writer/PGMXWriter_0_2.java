@@ -74,6 +74,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param probNet   {@code ProbNet} {@code String}
      * @param evidences list of evidence cases. {@code ArrayList} of {@code EvidenceCase}
      */
+    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
         UtilParameters.manageParametersWriter(netName, probNet);
         // PrintWriter out = new PrintWriter(new FileOutputStream(netName));
