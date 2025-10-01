@@ -111,9 +111,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     @Override
     public ProbNetInfo loadProbNetInfo(String netName, InputStream inputStream) throws FileNotFoundException, ParserException {
-        
         Element root = getRootElement(inputStream, netName);
-        
         return loadProbNetInfo(root, netName);
     }
     
