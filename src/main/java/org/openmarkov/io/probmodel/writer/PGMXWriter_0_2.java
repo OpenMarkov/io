@@ -138,7 +138,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             getMulticriteriaOptions(probNet, inferenceOptionsElement);
         }
         
-        if (!probNet.hasConstraint(OnlyAtemporalVariables.class)) {
+        if (!probNet.hasConstraintOfClass(OnlyAtemporalVariables.class)) {
             getTemporalOptions(probNet, inferenceOptionsElement);
         }
         
@@ -198,7 +198,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     protected static void getTemporaUnit(ProbNet probNet, Element probNetElement) {
-        if (!probNet.hasConstraint(OnlyAtemporalVariables.class) && probNet.getCycleLength() != null) {
+        if (!probNet.hasConstraintOfClass(OnlyAtemporalVariables.class) && probNet.getCycleLength() != null) {
             Element temporalUnitElement = new Element(XMLTags.TIME_UNIT.toString());
             temporalUnitElement.setAttribute(XMLAttributes.UNIT.toString(),
                                              probNet.getCycleLength().getUnit().toString());

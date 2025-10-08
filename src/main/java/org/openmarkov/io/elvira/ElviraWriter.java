@@ -589,9 +589,9 @@ public class ElviraWriter implements ProbNetWriter {
         int numVariables = potentialVariables.size();
         for (int i = 1; i < numVariables; i++) {
             Variable conditioningVariable = potentialVariables.get(i);
-            out.print(conditionedVariable.toString() + conditioningVariable.toString() + ",");
+            out.print(conditionedVariable.getName() + conditioningVariable.getName() + ",");
         }
-        out.println(conditionedVariable.toString() + "Residual);");
+        out.println(conditionedVariable.getName() + "Residual);");
         out.println();
         out.println("henrionVSdiez = \"Diez\";");
         out.println("}");

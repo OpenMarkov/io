@@ -35,14 +35,8 @@ public class XMLBIFReader extends PGMXReader_0_2 {
 	}
 
 	@Override
-	public ProbNetInfo loadProbNetInfo(Element root, String netName) throws FileNotFoundException {
-    	ProbNet probNet = null;
-		try {
-			probNet = getProbNet(root, netName);
-		} catch (ParserException e) {
-			e.printStackTrace();
-		}
-		return new ProbNetInfo(probNet, null);
+    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws FileNotFoundException, ParserException {
+        return new ProbNetInfo(getProbNet(root, netName), null);
 	}
 
     @Override
