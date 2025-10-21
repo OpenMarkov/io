@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openmarkov.core.exception.ConstraintViolatedException;
 import org.openmarkov.core.exception.InvalidNetworkTypeException;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.exception.UnreacheableException;
@@ -239,7 +240,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			} else {
 				throw new ParserException.ProbabilisticNetworkTypeNotRecognized(token.getReservedWord().toString());
 			}
-		} catch (InvalidNetworkTypeException.UnmetConstraints e) {
+        } catch (ConstraintViolatedException e) {
             throw new UnreacheableException(e);
         }
     }
