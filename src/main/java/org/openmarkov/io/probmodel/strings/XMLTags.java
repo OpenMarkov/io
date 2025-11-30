@@ -95,18 +95,7 @@ public enum XMLTags implements Serializable {
 	VALUE("Value"),
 	VALUES("Values"),
 	VARIABLE("Variable"),
-	VARIABLES("Variables"),
-	// TODO OOPN start
-    CLASS("Class"),
-    CLASSES("Classes"),
-    INSTANCE("Instance"),
-    REFERENCE_LINK("ReferenceLink"),
-    REFERENCE_LINKS("ReferenceLinks"),
-    INSTANCE_NODE("InstanceNode"),
-    INSTANCE_NODES("Nodes"),
-    INSTANCES("Instances"),
-    OOPN("OOPN")
-    // TODO OOPN end
+    VARIABLES("Variables")
 	;
     
     private final String name;

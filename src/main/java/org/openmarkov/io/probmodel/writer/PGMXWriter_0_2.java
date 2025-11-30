@@ -7,7 +7,6 @@
 
 package org.openmarkov.io.probmodel.writer;
 
-import org.jdom2.Attribute;
 import org.jdom2.CDATA;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -30,7 +29,6 @@ import org.openmarkov.core.model.network.potential.treeadd.TreeADDBranch;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.core.model.network.type.NetworkType;
 import org.openmarkov.core.model.network.type.plugin.NetworkTypeManager;
-import org.openmarkov.core.oopn.*;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
@@ -190,11 +188,6 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         getVariables(probNet, probNetElement, new Element(XMLTags.VARIABLES.toString()));
         getLinks(probNet, probNetElement, new Element(XMLTags.LINKS.toString()));
         getPotentials(probNet, probNetElement, new Element(XMLTags.POTENTIALS.toString()));
-        
-        // OOPN start
-        if (probNet instanceof OOPNet)
-            getOOPN((OOPNet) probNet, probNetElement, new Element(XMLTags.OOPN.toString()));
-        // OOPN end
     }
     
     protected static void getTemporaUnit(ProbNet probNet, Element probNetElement) {
@@ -1337,53 +1330,6 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         return result;
     }
     
-    // TODO OOPN start
-    protected void getOOPN(OOPNet OOPNet, Element probNetElement, Element oonElement) {
-        if (!OOPNet.getClasses().isEmpty()) {
-            Element classesElement = new Element(XMLTags.CLASSES.toString());
-            for (String className : OOPNet.getClasses().keySet()) {
-                Element classElement = new Element(XMLTags.CLASS.toString());
-                classElement.setAttribute(new Attribute("name", className));
-                writeXMLProbNet(OOPNet.getClasses().get(className), classElement);
-                classesElement.addContent(classElement);
-            }
-            oonElement.addContent(classesElement);
-        }
-        
-        if (!OOPNet.getInstances().isEmpty()) {
-            Element instancesElement = new Element(XMLTags.INSTANCES.toString());
-            for (Instance instance : OOPNet.getInstances().values()) {
-                Element instanceElement = new Element(XMLTags.INSTANCE.toString());
-                instanceElement.setAttribute(new Attribute("name", instance.getName()));
-                instanceElement.setAttribute(new Attribute("class", instance.getClassNet().getName()));
-                instanceElement.setAttribute(new Attribute("isInput", Boolean.toString(instance.isInput())));
-                instanceElement.setAttribute(new Attribute("arity", instance.getArity().toString()));
-                instancesElement.addContent(instanceElement);
-            }
-            oonElement.addContent(instancesElement);
-            if (!OOPNet.getReferenceLinks().isEmpty()) {
-                Element instanceLinksElement = new Element(XMLTags.REFERENCE_LINKS.toString());
-                for (ReferenceLink link : OOPNet.getReferenceLinks()) {
-                    Element linkElement = new Element(XMLTags.REFERENCE_LINK.toString());
-                    if (link instanceof InstanceReferenceLink instanceLink) {
-                        linkElement.setAttribute(new Attribute("type", "instance"));
-                        linkElement.setAttribute(new Attribute("source", instanceLink.getSourceInstance().getName()));
-                        linkElement
-                                .setAttribute(new Attribute("destination", instanceLink.getDestInstance().getName()));
-                        linkElement
-                                .setAttribute(new Attribute("parameter", instanceLink.getDestSubInstance().getName()));
-                    } else if (link instanceof NodeReferenceLink nodeLink) {
-                        linkElement.setAttribute(new Attribute("type", "node"));
-                        linkElement.setAttribute(new Attribute("source", nodeLink.getSourceNode().getName()));
-                        linkElement.setAttribute(new Attribute("destination", nodeLink.getDestinationNode().getName()));
-                    }
-                    instanceLinksElement.addContent(linkElement);
-                }
-                oonElement.addContent(instanceLinksElement);
-            }
-        }
-        probNetElement.addContent(oonElement);
-    }
     // TODO OOPN end
     
 }

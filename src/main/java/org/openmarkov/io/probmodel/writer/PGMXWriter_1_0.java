@@ -8,13 +8,11 @@
 package org.openmarkov.io.probmodel.writer;
 
 import org.openmarkov.core.exception.WriterException;
-import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.network.potential.*;
 import org.openmarkov.core.model.network.potential.plugin.PotentialType;
-import org.openmarkov.core.oopn.OOPNet;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 
@@ -66,11 +64,6 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 		getVariables(probNet, probNetElement, new Element(XMLTags.VARIABLES.toString()));
 		getLinks(probNet, probNetElement, new Element(XMLTags.LINKS.toString()));
 		getPotentials(probNet, probNetElement, new Element(XMLTags.POTENTIALS.toString()));
-
-		// OOPN start
-		if (probNet instanceof OOPNet)
-			getOOPN((OOPNet) probNet, probNetElement, new Element(XMLTags.OOPN.toString()));
-		// OOPN end
 	}
 
 	/**

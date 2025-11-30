@@ -42,7 +42,6 @@ import org.openmarkov.core.model.network.potential.treeadd.TreeADDBranch;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.core.model.network.type.NetworkType;
 import org.openmarkov.core.model.network.type.plugin.NetworkTypeManager;
-import org.openmarkov.core.oopn.*;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
@@ -253,14 +252,12 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param netName    Network name
      * @param classes
      *
-     * @throws PGMXParserException
      */
     protected void getNetworkAdvancedInformation(Element xMLProbNet, ProbNet probNet, String netName,
-                                                 Map<String, ProbNet> classes) throws FileNotFoundException, ParserException {
+                                                 Map<String, ProbNet> classes) {
         getAgents(xMLProbNet, probNet);
         getTemporaUnit(xMLProbNet, probNet);
         getAdditionalProperties(xMLProbNet, probNet);
-        getOOPN(netName, xMLProbNet, probNet, classes);
     }
     
     protected static void getTemporaUnit(Element xMLProbNet, ProbNet probNet) {
@@ -309,17 +306,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     protected ProbNet initializeProbNet(Element xMLProbNet, String netName)
             throws PGMXParserException.NoNetworkTypeFound, PGMXParserException.UnknownNetworkType, PGMXParserException.ConstraintNotFound {
-        ProbNet probNet;
         // =
         // xMLProbNet.getAttribute(XMLAttributes.TYPE.toString());
         NetworkType networkType = getNetworkType(xMLProbNet);
-        // OOPN start
-        if (xMLProbNet.getChild(XMLTags.OOPN.toString()) != null) {
-            probNet = new OOPNet(networkType);
-        } else {
-            // OOPN end
-            probNet = new ProbNet(networkType);
-        }
+        ProbNet probNet = new ProbNet(networkType);
         getAdditionalConstraints(probNet, xMLProbNet);
         // TODO Read Inference options
         // TODO Read Policies
@@ -1916,87 +1906,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     // OOPN start
     
-    /**
-     * @param netName
-     * @param root    . {@code Element}
-     * @param probNet . {@code ProbNet}
-     * @param classes
-     *
-     * @throws PGMXParserException
-     */
-    protected void getOOPN(String netName, Element root, ProbNet probNet, Map<String, ProbNet> classes)
-            throws FileNotFoundException, ParserException {
-        if (probNet instanceof OOPNet ooNet) {
-            Element xmlOONRoot = root.getChild(XMLTags.OOPN.toString());
-            if (xmlOONRoot != null) {
-                LinkedHashMap<String, ProbNet> localClasses = new LinkedHashMap<>();
-                Element xmlClassesRoot = xmlOONRoot.getChild(XMLTags.CLASSES.toString());
-                if (xmlClassesRoot != null) {
-                    List<Element> xmlClasses = getXMLChildren(xmlClassesRoot);
-                    for (Element xmlClass : xmlClasses) {
-                        String name = xmlClass.getAttributeValue("name");
-                        localClasses.put(name, getProbNet(xmlClass, name, localClasses));
-                    }
-                    ooNet.setClasses(localClasses);
-                }
-                classes.putAll(localClasses);
-                Element xmlInstancesRoot = xmlOONRoot.getChild(XMLTags.INSTANCES.toString());
-                if (xmlInstancesRoot != null) {
-                    List<Element> xmlInstances = getXMLChildren(xmlInstancesRoot);
-                    for (Element xmlInstance : xmlInstances) {
-                        String name = xmlInstance.getAttributeValue("name");
-                        boolean isInput = Boolean.parseBoolean(xmlInstance.getAttributeValue("isInput"));
-                        String folder = new File(netName).getParent();
-                        String className = xmlInstance.getAttributeValue("class");
-                        if (!classes.containsKey(className)) {
-                            classes.put(className, loadProbNetInfo(folder + "\\" + className).getProbNet());
-                        }
-                        ProbNet classNet = classes.get(className);
-                        List<Node> instanceNodes = new ArrayList<Node>();
-                        // build this list from current node list and classNet
-                        for (Node node : classNet.getNodes()) {
-                            instanceNodes.add(probNet.getNode(name + "." + node.getName()));
-                        }
-                        Instance instance = new Instance(name, classNet, instanceNodes, isInput);
-                        try {
-                            ooNet.addInstance(instance);
-                        } catch (DoEditException.InstanceAlreadyExists e) {
-                            throw new UnreacheableException(e);
-                        }
-                        if (xmlInstance.getAttributeValue("arity") != null) {
-                            Instance.ParameterArity arity =
-                                    Instance.ParameterArity.parseArity(xmlInstance.getAttributeValue("arity"));
-                            instance.setArity(arity);
-                        }
-                    }
-                    Element xmlReferenceLinksRoot = xmlOONRoot.getChild(XMLTags.REFERENCE_LINKS.toString());
-                    if (xmlReferenceLinksRoot != null) {
-                        List<Element> xmlReferenceLinks = getXMLChildren(xmlReferenceLinksRoot);
-                        for (Element xmlReferenceLink : xmlReferenceLinks) {
-                            String source = xmlReferenceLink.getAttributeValue("source");
-                            String destination = xmlReferenceLink.getAttributeValue("destination");
-                            String type = xmlReferenceLink.getAttributeValue("type");
-                            ReferenceLink link = null;
-                            if (type.equalsIgnoreCase("instance")) {
-                                String paramName = xmlReferenceLink.getAttributeValue("parameter");
-                                link =
-                                        new InstanceReferenceLink(ooNet.getInstances().get(source),
-                                                                  ooNet.getInstances().get(destination),
-                                                                  ooNet.getInstances()
-                                                                       .get(destination)
-                                                                       .getSubInstances()
-                                                                       .get(paramName));
-                            } else if (type.equalsIgnoreCase("node")) {
-                                link =
-                                        new NodeReferenceLink(ooNet.getNode(source), ooNet.getNode(destination));
-                            }
-                            ooNet.addReferenceLink(link);
-                        }
-                    }
-                }
-            }
-        }
-    }
     // OOPN end
     
     /**
