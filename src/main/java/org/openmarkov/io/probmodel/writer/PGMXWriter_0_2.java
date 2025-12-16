@@ -1130,15 +1130,15 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             minThresholdElement.setAttribute(XMLAttributes.VALUE.toString(),
                                              String.valueOf(branch.getLowerBound().getLimit()));
             minThresholdElement.setAttribute(XMLAttributes.BELONGS_TO.toString(),
-                                             branch.getLowerBound()
-                                                   .belongsToLeft() ? XMLValues.LEFT.toString() : XMLValues.RIGHT.toString());
+                                             (branch.getLowerBound()
+                                                    .belongsToLeft() ? XMLValues.LEFT : XMLValues.RIGHT).toString());
             intervalElement.addContent(minThresholdElement);
             Element maxThresholdElement = new Element(XMLTags.THRESHOLD.toString());
             maxThresholdElement.setAttribute(XMLAttributes.VALUE.toString(),
                                              String.valueOf(branch.getUpperBound().getLimit()));
             maxThresholdElement.setAttribute(XMLAttributes.BELONGS_TO.toString(),
-                                             branch.getUpperBound()
-                                                   .belongsToLeft() ? XMLValues.LEFT.toString() : XMLValues.RIGHT.toString());
+                                             (branch.getUpperBound()
+                                                    .belongsToLeft() ? XMLValues.LEFT : XMLValues.RIGHT).toString());
             intervalElement.addContent(maxThresholdElement);
             
             // Append the information to the element to be exported

@@ -262,8 +262,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     protected static void getTemporaUnit(Element xMLProbNet, ProbNet probNet) {
         Element temporalUnit = xMLProbNet.getChild(XMLTags.TIME_UNIT.toString());
+        CycleLength temporalUnitProbNet = new CycleLength();
         if (temporalUnit != null) {
-            CycleLength temporalUnitProbNet = new CycleLength();
             try {
                 String scaleAttribute = temporalUnit.getAttributeValue(XMLTags.VALUE.toString());
                 if (scaleAttribute != null) {
@@ -278,13 +278,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 CycleLength.Unit unit = CycleLength.Unit.valueOf(unitAttribute);
                 temporalUnitProbNet.setUnit(unit);
             }
-            
-            probNet.setCycleLength(temporalUnitProbNet);
-        } else {
-            CycleLength defaultTemporalUnit = new CycleLength();
-            probNet.setCycleLength(defaultTemporalUnit);
-            
         }
+        probNet.setCycleLength(temporalUnitProbNet);
         
     }
     
@@ -1534,21 +1529,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
         } else if (sXmlPotentialType.equals(PotentialManager.getPotentialName(SameAsPrevious.class))) {
             potential = getSameAsPrevious(xmlPotential, variables);
         } else if (sXmlPotentialType.equals(PotentialManager.getPotentialName(SumPotential.class))) {
-            if (utilityVariableElement) {
-                potentialRole = PotentialRole.UNSPECIFIED;
-                potential = getSumPotential(potentialRole, variables);
-            } else {
-                potentialRole = PotentialRole.CONDITIONAL_PROBABILITY;
-                potential = getSumPotential(potentialRole, variables);
-            }
+            potentialRole = utilityVariableElement ? PotentialRole.UNSPECIFIED : PotentialRole.CONDITIONAL_PROBABILITY;
+            potential = getSumPotential(potentialRole, variables);
         } else if (sXmlPotentialType.equals(PotentialManager.getPotentialName(ProductPotential.class))) {
-            if (utilityVariableElement) {
-                potentialRole = PotentialRole.UNSPECIFIED;
-                potential = getProductPotential(xmlPotential, probNet, potentialRole, variables);
-            } else {
-                potentialRole = PotentialRole.CONDITIONAL_PROBABILITY;
-                potential = getProductPotential(xmlPotential, probNet, potentialRole, variables);
-            }
+            potentialRole = utilityVariableElement ? PotentialRole.UNSPECIFIED : PotentialRole.CONDITIONAL_PROBABILITY;
+            potential = getProductPotential(xmlPotential, probNet, potentialRole, variables);
         } else if (sXmlPotentialType.equals("ICIModel")) {
             potential = getICIPotential(xmlPotential, probNet, potentialRole, variables);
         } else if (sXmlPotentialType.equals(PotentialManager.getPotentialName(WeibullHazardPotential.class))) {

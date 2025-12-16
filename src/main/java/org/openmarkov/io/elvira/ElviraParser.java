@@ -385,13 +385,12 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
                 double max = Double.parseDouble(infoNode.get("Max"));
                 double precision = Double.parseDouble(infoNode.get("Precision"));
                 variable = new Variable(variableName, true, min, max, true, precision);
-				node = probNet.addNode(variable, nodeType);
-			} else { // default states
+            } else { // default states
 				State[] statesNames = probNet.getDefaultStates();
 				variable = new Variable(variableName, statesNames);
-				node = probNet.addNode(variable, nodeType);
-			}
-		}
+            }
+            node = probNet.addNode(variable, nodeType);
+        }
 		int coordX = (infoNode.containsKey("CoordinateX")) ? Integer.parseInt(infoNode.get("CoordinateX")) : 150;
 		int coordY = (infoNode.containsKey("CoordinateY")) ? Integer.parseInt(infoNode.get("CoordinateY")) : 50;
 		node.setCoordinateX(coordX);
