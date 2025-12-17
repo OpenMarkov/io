@@ -1107,7 +1107,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param xmlElement
      */
     protected static void writeVariableName(Variable variable, Element xmlElement) {
-        xmlElement.setAttribute(XMLAttributes.NAME.toString(), variable.getBaseName());
+        xmlElement.setAttribute(XMLAttributes.NAME.toString(), variable.getName());
         if (variable.getTimeSlice() >= 0) {
             xmlElement.setAttribute(XMLAttributes.TIME_SLICE.toString(), String.valueOf(variable.getTimeSlice()));
         }
