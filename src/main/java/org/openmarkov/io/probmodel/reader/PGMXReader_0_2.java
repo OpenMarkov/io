@@ -15,9 +15,9 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.located.LocatedJDOMFactory;
 import org.openmarkov.core.exception.*;
+import org.openmarkov.core.inference.TemporalOptions;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
-import org.openmarkov.core.inference.TransitionTime;
 import org.openmarkov.core.io.ProbNetInfo;
 import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatManager;
@@ -512,7 +512,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             Element transition = temporalOptions.getChild(XMLTags.TRANSITION.toString());
             probNet.getInferenceOptions()
                    .getTemporalOptions()
-                   .setTransition(TransitionTime.valueOf(transition.getText()));
+                   .setTransition(TemporalOptions.TransitionTime.valueOf(transition.getText()));
             
             Element discountsTag = temporalOptions.getChild(XMLTags.DISCOUNT_RATES.toString());
             List<Element> discounts = getXMLChildren(discountsTag);
@@ -1145,7 +1145,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     protected void getRevelationConditions(Element root, Link<Node> link)
             throws PGMXParserException.InvalidState {
-        Node node = link.getNode1();
+        Node node = link.getFrom();
         Variable variable = node.getVariable();
         List<Element> xmlStates = root.getChildren(XMLTags.STATE.toString());
         for (Element elementState : xmlStates) {

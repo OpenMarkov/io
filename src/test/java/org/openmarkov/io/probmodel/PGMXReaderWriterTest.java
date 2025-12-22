@@ -160,7 +160,7 @@ public class PGMXReaderWriterTest {
         nodeB.addPotential(potential);
         probNet.addPotential(potential);
         for (Link<Node> link : links) {
-            if (link.getNode1().getVariable().equals(varA)) {
+            if (link.getFrom().getVariable().equals(varA)) {
                 link.initializesRestrictionsPotential();
                 link.setCompatibilityValue(stateA[0], stateB[0], 0);
                 link.addRevealingState(stateA[0]);

@@ -576,10 +576,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             for (Link<Node> link : links) {
                 Element linkElement = new Element(XMLTags.LINK.toString());
                 Element variableElement1 = new Element(XMLTags.VARIABLE.toString());
-                Variable variable1 = link.getNode1().getVariable();
+                Variable variable1 = link.getFrom().getVariable();
                 writeVariableName(variable1, variableElement1);
                 Element variableElement2 = new Element(XMLTags.VARIABLE.toString());
-                Variable variable2 = link.getNode2().getVariable();
+                Variable variable2 = link.getTo().getVariable();
                 writeVariableName(variable2, variableElement2);
                 linkElement.addContent(variableElement1);
                 linkElement.addContent(variableElement2);
@@ -613,7 +613,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param linkElement
      */
     protected static void getRevelationConditions(Link<Node> link, Element linkElement) {
-        Node node = link.getNode1();
+        Node node = link.getFrom();
         VariableType varType = node.getVariable().getVariableType();
         Element revelationConditions = new Element(XMLTags.REVELATION_CONDITIONS.toString());
         if (varType == VariableType.NUMERIC) {
