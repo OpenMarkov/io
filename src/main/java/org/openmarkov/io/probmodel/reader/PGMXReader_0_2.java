@@ -1384,10 +1384,16 @@ public class PGMXReader_0_2 implements ProbNetReader {
     protected TablePotential getTablePotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                List<Variable> variables) {
         Element xmlRootTable = getXMLRootTable(xmlPotential);
-        double[] table = parseDoubles(xmlRootTable.getTextNormalize());
-        TablePotential tablePotential = new TablePotential(variables, xmlRole, table);
+        TablePotential tablePotential = null;
+        if (xmlRootTable != null) {
+            double[] table = parseDoubles(xmlRootTable.getTextNormalize());
+            tablePotential = new TablePotential(variables, xmlRole, table);
+        }else {
+            tablePotential = new TablePotential(variables, xmlRole);
+        }
+
         
-        Element xmlRootUncertainValues = xmlPotential.getChild(XMLTags.UNCERTAIN_VALUES.toString());
+        Element xmlRootUncertainValues = xmlPotential.getChild(XMLTags.UNCERTAIN_PARAMETERS.toString());
         if (xmlRootUncertainValues != null) {
             tablePotential.setUncertainValues(getUncertainValues(xmlRootUncertainValues));
         }
@@ -1408,7 +1414,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         double[] table = parseDoubles(xmlRootTable.getTextNormalize());
         ExactDistrPotential exactDistrPotential = new ExactDistrPotential(variables, xmlRole, table);
         
-        Element xmlRootUncertainValues = xmlPotential.getChild(XMLTags.UNCERTAIN_VALUES.toString());
+        Element xmlRootUncertainValues = xmlPotential.getChild(XMLTags.UNCERTAIN_PARAMETERS.toString());
         if (xmlRootUncertainValues != null) {
             exactDistrPotential.setUncertainValues(getUncertainValues(xmlRootUncertainValues));
         }

@@ -742,8 +742,11 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
                 getUtilityElement(potentialElement, utilityVariable);
             }
         }
-        
+
         String potentialType = potential.getClass().getAnnotation(PotentialType.class).name();
+        if (potential instanceof AugmentedProbTablePotential || (potential.getClass() == TablePotential.class)) {
+            potentialType = "Table";
+        }
         potentialElement.setAttribute(XMLAttributes.TYPE.toString(), potentialType);
         
         // TODO add function attribute
@@ -837,6 +840,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             getDeltaPotential(potentialElement, potential);
         } else if (potential instanceof BinomialPotential) {
             getBinomialPotential(potentialElement, potential);
+        }else if (potential instanceof AugmentedProbTablePotential) {
+            getAugmentedProbTablePotential(potentialElement, ((AugmentedProbTablePotential) potential).getAugmentedProbTable());
         }
     }
     
@@ -979,7 +984,23 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         thetaElement.setText(String.valueOf(binomialPotential.gettheta()));
         potentialElement.addContent(thetaElement);
     }
-    
+
+    protected void getAugmentedProbTablePotential(Element xmlElement, AugmentedProbTable AugmentedProbTable) {
+        Element parametersElement = new Element(XMLTags.UNCERTAIN_PARAMETERS.toString());
+
+        String[] functionValues = AugmentedProbTable.getFunctionValues();
+        for (String function:functionValues){
+            Element uncertParamElement = new Element(XMLTags.PARAM.toString());
+            uncertParamElement.setAttribute( XMLAttributes.TYPE.toString(), XMLTags.FUNCTION.toString());
+            uncertParamElement.addContent( function );
+            parametersElement.addContent( uncertParamElement);
+        }
+        // Write table values to the XML file
+        xmlElement.addContent(parametersElement);
+    }
+
+
+
     /**
      * @param coefficients
      * @return new Element
@@ -1053,7 +1074,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @return Element
      */
     protected static Element getUncertainValuesElement(Potential potential) {
-        Element uncertainValuesElement = new Element(XMLTags.UNCERTAIN_VALUES.toString());
+        Element uncertainValuesElement = new Element(XMLTags.UNCERTAIN_PARAMETERS.toString());
         UncertainValue[] table = ((TablePotential) potential).getUncertainValues();
         int size = table.length;
         for (int i = 0; i < size; i++) {

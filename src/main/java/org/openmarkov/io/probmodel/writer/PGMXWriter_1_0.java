@@ -172,13 +172,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 		 * exactDistrPotential.getTablePotential(); } Potential wrapped = tablePotential
 		 * == null ? potential : tablePotential;
 		 */
-		Potential wrapped = potential;
 
-		Class<? extends Potential> class1 = wrapped.getClass();
+		Class<? extends Potential> class1 = potential.getClass();
 		String potentialType = class1.getAnnotation(PotentialType.class).name();
-		if (potentialType.equals("AugmentedTable") || (class1 == TablePotential.class)){
-			potentialType = "ProbTable";
-		}
+
 		
 		if (class1 == ExactDistrPotential.class) {
 			potentialType = "UnivariateDistr";
@@ -191,7 +188,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
 		// TODO add function attribute
 
-		getPotentialComment(wrapped, potentialElement);
+		getPotentialComment(potential, potentialElement);
 
 		// TODO add aditionalProperties child
 
@@ -220,8 +217,6 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 		super.getPotentialBody(probNet, potential, potentialElement);
 		if (potential instanceof UnivariateDistrPotential) { // New from the previous version of the writer
 			getUnivariateDistrPotential(potentialElement, (UnivariateDistrPotential) potential);
-		} else if (potential instanceof AugmentedTablePotential) { // New from the previous version of the writer
-			getAugmentedTablePotential(potentialElement, ((AugmentedTablePotential) potential).getAugmentedTable());
 		}
 	}
 
@@ -230,12 +225,12 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	 * @param xmlElement 
 	 * @param potential
 	 */
-    protected static void getUnivariateDistrPotential(Element xmlElement, UnivariateDistrPotential potential) {
+    protected void getUnivariateDistrPotential(Element xmlElement, UnivariateDistrPotential potential) {
 		xmlElement.setAttribute(XMLAttributes.DISTRIBUTION.toString(), potential.getProbDensFunctionUnivariateName());
 		xmlElement.setAttribute(XMLAttributes.PARAMETRIZATION.toString(), potential.getProbDensFunctionParametrizationName());
 		Element parametersElement = new Element(XMLTags.PARAMETERS.toString());
 		parametersElement.setText(getValuesInAString(potential.getDistributionTable().getValues()));
-		getAugmentedTablePotential(xmlElement, potential.getAugmentedTable());
+		getAugmentedProbTablePotential(xmlElement, potential.getAugmentedProbTable());
 		// Write table values to the XML file
 		xmlElement.addContent(parametersElement);		
 	}
@@ -243,20 +238,17 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	/**
 	 *
 	 * @param xmlElement
-	 * @param augmentedTable
+	 * @param AugmentedProbTable
 	 */
-    protected static void getAugmentedTablePotential(Element xmlElement, AugmentedTable augmentedTable) {
-        Element parametersElement = new Element(XMLTags.UNCERTAIN_VALUES.toString());
-        
-        String[] functionValues = augmentedTable.getFunctionValues();
-        for (String function:functionValues){
-            Element uncertParamElement = new Element(XMLTags.UNCERT_PARAM.toString());
-            uncertParamElement.setAttribute( XMLAttributes.TYPE.toString(), XMLTags.FUNCTION.toString());
-            uncertParamElement.addContent( function );
-            parametersElement.addContent( uncertParamElement);
-        }
-        // Write table values to the XML file
-        xmlElement.addContent(parametersElement);       
-    }
+	@Override protected void getAugmentedProbTablePotential(Element xmlElement, AugmentedProbTable AugmentedProbTable) {
+		Element parametersElement = new Element(XMLTags.FUNCTIONS.toString());
+
+		String[] functionValues = AugmentedProbTable.getFunctionValues();
+		for (String function:functionValues){
+			parametersElement.addContent("\""+function+"\" ");
+		}
+		// Write table values to the XML file
+		xmlElement.addContent(parametersElement);
+	}
 
 }

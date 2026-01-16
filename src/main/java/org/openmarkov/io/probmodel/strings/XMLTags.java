@@ -87,15 +87,16 @@ public enum XMLTags implements Serializable {
 	TIME_VARIABLE("TimeVariable"),
 	TOP_VARIABLE("TopVariable"),
 	TRANSITION("Transition"),
-	UNCERTAIN_VALUES("UncertainValues"),
-	UNCERT_PARAM("UncertParam"),
+	UNCERTAIN_PARAMETERS("UncertainParameters"),
+	PARAM("Param"),
 	UNICRITERION("Unicriterion"),
 	UNIT("Unit"),
 	UTILITY_VARIABLE("UtilityVariable"),
 	VALUE("Value"),
 	VALUES("Values"),
 	VARIABLE("Variable"),
-    VARIABLES("Variables")
+    VARIABLES("Variables"),
+	FUNCTIONS("Functions")
 	;
     
     private final String name;
