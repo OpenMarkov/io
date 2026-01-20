@@ -60,7 +60,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
         if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(UniformPotential.class))) {
             potential = getUniformPotential(eXMLPotential, probNet, potentialRole, variables);
             //} else if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(TablePotential.class))) {
-        } else if (sXMLPotentialType.equalsIgnoreCase("ProbTable")) {
+        } else if (sXMLPotentialType.equalsIgnoreCase("ProbTable")||sXMLPotentialType.equalsIgnoreCase("Table")) {
             //TODO Manolo> Until it is clarified the design of tables, I leave commented a part of this code and use the same function
             //of PGMXReader_0_2 for reading probability tables, as it is more stable and this is a critical part of OpenMarkov
             /*
