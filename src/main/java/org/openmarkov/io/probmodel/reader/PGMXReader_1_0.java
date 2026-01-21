@@ -157,13 +157,12 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
         double[] table = parseDoubles(xmlRootTable.getTextNormalize());
         
         UnivariateDistrPotential potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
-        List<Variable> parameterVariables = potential.getParameterVariables();
-        
+
         List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
         vDistributionTable.add(0, potential.getPseudoVariableDistribution());
         potential.getAugmentedProbTable().setValues(table);
         potential.setDistributionTable(
-                getAugmentedProbTable(xmlPotential, xmlRole, vDistributionTable, parameterVariables));
+                getAugmentedProbTable(xmlPotential, xmlRole, vDistributionTable));
         
         return potential;
         
@@ -180,10 +179,9 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
                                                           List<Variable> variables) {
         
         AugmentedProbTablePotential potential = new AugmentedProbTablePotential(variables, xmlRole);
-        List<Variable> parameterVariables = potential.getParameterVariables();
         List<Variable> finiteStatesVariables = potential.getFiniteStatesVariables();
         
-        potential.setAugmentedProbTable(getAugmentedProbTable(xmlPotential, xmlRole, finiteStatesVariables, parameterVariables));
+        potential.setAugmentedProbTable(getAugmentedProbTable(xmlPotential, xmlRole, finiteStatesVariables));
         return potential;
     }
     
@@ -191,12 +189,10 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
      * @param xmlPotential          {@code Element}
      * @param xmlRole               {@code PotentialRole}
      * @param finiteStatesVariables {@code List} of {@code Variable} of the potential
-     * @param parameterVariables    {@code List} of {@code Variable}
      * @return AugmentedProbTable
      */
-    // TODO parameterVariables is not used. Remove or use it
     protected static AugmentedProbTable getAugmentedProbTable(Element xmlPotential, PotentialRole xmlRole,
-                                                      List<Variable> finiteStatesVariables, List<Variable> parameterVariables) {
+                                                      List<Variable> finiteStatesVariables) {
 
         String functionsValue =  xmlPotential.getChild(XMLTags.FUNCTIONS.toString()).getValue();
 

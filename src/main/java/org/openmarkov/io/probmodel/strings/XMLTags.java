@@ -89,6 +89,10 @@ public enum XMLTags implements Serializable {
 	TRANSITION("Transition"),
 	UNCERTAIN_PARAMETERS("UncertainParameters"),
 	PARAM("Param"),
+	//temporal
+	UNCERTAIN_VALUES("UncertainValues"),
+	UNCERT_PARAM("UncertParam"),
+	//
 	UNICRITERION("Unicriterion"),
 	UNIT("Unit"),
 	UTILITY_VARIABLE("UtilityVariable"),
