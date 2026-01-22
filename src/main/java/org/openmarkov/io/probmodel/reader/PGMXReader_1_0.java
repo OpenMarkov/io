@@ -108,11 +108,10 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 implements ProbNetReader {
             potential = getExponentialPotential(eXMLPotential, probNet, potentialRole, variables);
         } else if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(BinomialPotential.class))) {
             potential = getBinomialPotential(eXMLPotential, probNet, potentialRole, variables);
-        } else if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(ExactDistrPotential.class))
-                || sXMLPotentialType
-                .equalsIgnoreCase(PotentialManager.getPotentialName(UnivariateDistrPotential.class))) {
+        } else if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(ExactDistrPotential.class))) {
             potential = getExactDistrPotential(eXMLPotential, probNet, potentialRole, variables);
-            
+        } else if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(UnivariateDistrPotential.class))) {
+            potential = getUnivariateDistrPotential(eXMLPotential, potentialRole, variables);
         } else if (sXMLPotentialType.equalsIgnoreCase(PotentialManager.getPotentialName(AugmentedProbTablePotential.class))) {
             potential = getAugmentedProbTablePotential(eXMLPotential,potentialRole,variables);
         }else {
