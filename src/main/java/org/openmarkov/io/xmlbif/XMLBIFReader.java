@@ -17,7 +17,7 @@ import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.VariableType;
 import org.openmarkov.core.model.network.potential.PotentialRole;
 import org.openmarkov.core.model.network.potential.TablePotential;
-import org.openmarkov.core.model.network.potential.plugin.PotentialManager;
+import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.xmlbif.strings.XMLBIFTags;
 
@@ -80,7 +80,7 @@ public class XMLBIFReader extends PGMXReader_0_2 {
 
 	@Override
 	protected String getStringXMLPotentialType(Element xmlPotential) {
-		return PotentialManager.getPotentialName(TablePotential.class);
+        return PotentialUtils.getPotentialName(TablePotential.class);
 	}
 
 	@Override

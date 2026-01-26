@@ -13,6 +13,7 @@ import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.network.potential.*;
 import org.openmarkov.core.model.network.potential.plugin.PotentialType;
+import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 
@@ -111,7 +112,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 		if (hasRestriction) {
 			Potential potential = link.getRestrictionsPotential();
 			Element restrictionPotential = new Element(XMLTags.POTENTIAL.toString());
-			String potentialType = potential.getClass().getAnnotation(PotentialType.class).name();
+            String potentialType = PotentialUtils.getPotentialName(potential.getClass());
 			restrictionPotential.setAttribute(XMLAttributes.TYPE.toString(), potentialType);
 			Element variables = new Element(XMLTags.VARIABLES.toString());
 			Element variable1 = new Element(XMLTags.VARIABLE.toString());
@@ -172,12 +173,9 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 		 * exactDistrPotential.getTablePotential(); } Potential wrapped = tablePotential
 		 * == null ? potential : tablePotential;
 		 */
-
-		Class<? extends Potential> class1 = potential.getClass();
-		String potentialType = class1.getAnnotation(PotentialType.class).name();
-
-		
-		if (class1 == ExactDistrPotential.class) {
+        
+        String potentialType = PotentialUtils.getPotentialName(potential.getClass());
+        if (potential.getClass() == ExactDistrPotential.class) {
 			potentialType = "UnivariateDistr";
 			String distribution = "Exact";
 			potentialElement.setAttribute(XMLAttributes.TYPE.toString(), potentialType);

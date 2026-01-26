@@ -21,6 +21,7 @@ import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.probmodel.writer.PGMXWriter_0_2;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class PGMXReaderWriterTest {
         // Read test network
         String testNetworkName = rootPath + "/test-ici-reading.pgmx";
         
-        ProbNet readProbNet = reader.loadProbNet(testNetworkName);
+        ProbNet readProbNet = reader.loadProbNet(testNetworkName, new FileInputStream(testNetworkName));
         
         Assertions.assertNotNull(readProbNet);
         Assertions.assertEquals(9, readProbNet.getNumNodes());

@@ -7,11 +7,7 @@
 
 package org.openmarkov.io.elvira;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StreamTokenizer;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +51,10 @@ public class ElviraScanner {
         return elviraScanner;
     }
     
-    public void initializeScanner(String fileName) throws FileNotFoundException {
+    public void initializeScanner(String fileName, InputStream fileInputStream) {
         this.fileName = fileName;
         streamTokenizer = new StreamTokenizer(
-                new InputStreamReader(new FileInputStream(fileName), Charset.forName("windows-1252")));
+                new InputStreamReader(fileInputStream, Charset.forName("windows-1252")));
         streamTokenizer.resetSyntax();
         streamTokenizer.wordChars('a', 'z');
         streamTokenizer.wordChars('A', 'Z');

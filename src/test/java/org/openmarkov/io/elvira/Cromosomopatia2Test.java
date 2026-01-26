@@ -16,11 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
+import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Node;
 import org.openmarkov.core.model.network.State;
@@ -40,7 +42,9 @@ public class Cromosomopatia2Test {
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws ParserException, IOException {
 			URL url = this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv");
-			probNet = new ElviraParser().loadProbNet(url.getFile());
+        ProbNetReader probNetReader = new ElviraParser();
+        String netName = url.getFile();
+        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
 	}
 
 	@Test public void testCromosopatia() {

@@ -7,6 +7,7 @@
 
 package org.openmarkov.io.elvira;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openmarkov.core.exception.ConstraintViolatedException;
-import org.openmarkov.core.exception.InvalidNetworkTypeException;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.exception.UnreacheableException;
 import org.openmarkov.core.io.ProbNetInfo;
@@ -164,50 +164,33 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	}
 
 	@Override
-	public ProbNetInfo loadProbNetInfo(String netName, InputStream file) {
-		return null;
+    public ProbNetInfo loadProbNetInfo(String netName, InputStream file) throws ParserException, IOException {
+        this.fileName = netName;
+        scanner.initializeScanner(netName, file);
+        // Load probNet
+        probNet = new ProbNet();
+        getConstraints();
+        ElviraToken token;
+        try {
+            token = getGeneralInfo();
+            token = getNodes(token);
+            if (token.getReservedWord() == ReservedWord.LINK) {
+                token = getLinks(token);
+            }
+            getPotentials(token);
+            ElviraUtil.swapNameAndTitle(probNet);
+        } catch (ParserException e) {
+            e.setFilename(netName);
+            e.setLineNumber(scanner.lineno());
+            throw e;
+        }
+        addSubPotentials(); // Only for canonical models
+        return new ProbNetInfo(probNet, null);
 	}
-
-	/** Reads the probNet type, creates the right compound constraint and
-     *  associate that constraint to {@code probNet}
-	 * @throws ParserException */
-
-	@Override public ProbNetInfo loadProbNetInfo(String fileName) throws ParserException, IOException {
-		this.fileName = fileName;
-			scanner.initializeScanner(fileName);
-		// Load probNet
-		probNet = new ProbNet();
-		getConstraints();
-		ElviraToken token;
-		try {
-			token = getGeneralInfo();
-			token = getNodes(token);
-			if (token.getReservedWord() == ReservedWord.LINK) {
-				token = getLinks(token);
-			}
-			getPotentials(token);
-			ElviraUtil.swapNameAndTitle(probNet);
-		} catch (ParserException e) {
-			e.setFilename(fileName);
-			e.setLineNumber(scanner.lineno());
-			throw e;
-		}
-
-		addSubPotentials(); // Only for canonical models
-
-		return new ProbNetInfo(probNet, null);
-	}
-
-
-
-
-	@Override public ProbNet loadProbNet(String netName, InputStream file) {
+    
+    
+    @Override public ProbNet loadProbNet(String netName, InputStream file) throws ParserException, IOException {
 		return loadProbNetInfo(netName, file).getProbNet();
-	}
-
-	@Override
-	public ProbNet loadProbNet(String netName) throws IOException, ParserException {
-		return loadProbNetInfo(netName).getProbNet();
 	}
 
 	/**

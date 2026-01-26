@@ -17,6 +17,7 @@ import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
+import org.openmarkov.core.model.network.Properties;
 import org.openmarkov.core.model.network.constraint.OnlyAtemporalVariables;
 import org.openmarkov.core.model.network.constraint.PNConstraint;
 import org.openmarkov.core.model.network.modelUncertainty.ProbDensFunction;
@@ -24,21 +25,23 @@ import org.openmarkov.core.model.network.modelUncertainty.ProbDensFunctionType;
 import org.openmarkov.core.model.network.modelUncertainty.UncertainValue;
 import org.openmarkov.core.model.network.potential.*;
 import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
-import org.openmarkov.core.model.network.potential.plugin.PotentialType;
+import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDBranch;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.core.model.network.type.NetworkType;
 import org.openmarkov.core.model.network.type.plugin.NetworkTypeManager;
+import org.openmarkov.io.probmodel.reader.PotentialReaderMethod;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
+import org.openmarkov.java.classUtils.ClassUtils;
+import org.openmarkov.plugin.PluginSearch;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Manuel Arias
@@ -63,7 +66,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param netName = path + network name + extension {@code String}
      * @param probNet {@code ProbNet}
      */
-    @Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
+    @Override
+    public void writeProbNet(String netName, ProbNet probNet) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
         writeProbNet(netName, probNet, null);
     }
     
@@ -73,8 +77,14 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param evidences list of evidence cases. {@code ArrayList} of {@code EvidenceCase}
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
-    @Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
-        UtilParameters.manageParametersWriter(netName, probNet);
+    @Override
+    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
+        if (probNet == null) {
+            throw new WriterException.TryingToWriteANullProbNet();
+        }
+        if (netName == null) {
+            throw new WriterException.TryingToWriteAProbNetWithoutName(probNet);
+        }
         // PrintWriter out = new PrintWriter(new FileOutputStream(netName));
         Element root = new Element("ProbModelXML");
         root.setAttribute(XMLAttributes.FORMAT_VERSION.toString(), formatVersion);
@@ -298,6 +308,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param properties
+     *
      * @return Element
      */
     protected Element getPropertiesElement(Properties properties) {
@@ -657,7 +668,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         if (hasRestriction) {
             Potential potential = link.getRestrictionsPotential();
             Element restrictionPotential = new Element(XMLTags.POTENTIAL.toString());
-            String potentialType = potential.getClass().getAnnotation(PotentialType.class).name();
+            String potentialType = PotentialUtils.getPotentialName(potential.getClass());
             PotentialRole potentialRole = PotentialRole.LINK_RESTRICTION;
             restrictionPotential.setAttribute(XMLAttributes.TYPE.toString(), potentialType);
             restrictionPotential.setAttribute(XMLAttributes.ROLE.toString(), potentialRole.toString());
@@ -742,8 +753,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
                 getUtilityElement(potentialElement, utilityVariable);
             }
         }
-
-        String potentialType = potential.getClass().getAnnotation(PotentialType.class).name();
+        
+        String potentialType = PotentialUtils.getPotentialName(potential.getClass());
         if (potential instanceof AugmentedProbTablePotential || (potential.getClass() == TablePotential.class)) {
             potentialType = "Table";
         }
@@ -840,7 +851,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             getDeltaPotential(potentialElement, potential);
         } else if (potential instanceof BinomialPotential) {
             getBinomialPotential(potentialElement, potential);
-        }else if (potential instanceof AugmentedProbTablePotential) {
+        } else if (potential instanceof AugmentedProbTablePotential) {
             getAugmentedProbTablePotential(potentialElement, ((AugmentedProbTablePotential) potential).getAugmentedProbTable());
         }
     }
@@ -889,7 +900,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         potentialElement.setAttribute(XMLAttributes.TYPE.toString(), "ICIModel");
         // Model Element
         Element modelElement = new Element(XMLTags.MODEL.toString());
-        modelElement.setText(iciPotential.getClass().getAnnotation(PotentialType.class).name());
+        modelElement.setText(PotentialUtils.getPotentialName(iciPotential.getClass()));
         potentialElement.addContent(modelElement);
         // Subpotentials element
         Element subpotentialsElement = new Element(XMLTags.SUBPOTENTIALS.toString());
@@ -984,25 +995,25 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         thetaElement.setText(String.valueOf(binomialPotential.gettheta()));
         potentialElement.addContent(thetaElement);
     }
-
+    
     protected void getAugmentedProbTablePotential(Element xmlElement, AugmentedProbTable AugmentedProbTable) {
         Element parametersElement = new Element(XMLTags.UNCERTAIN_PARAMETERS.toString());
-
+        
         String[] functionValues = AugmentedProbTable.getFunctionValues();
-        for (String function:functionValues){
+        for (String function : functionValues) {
             Element uncertParamElement = new Element(XMLTags.PARAM.toString());
-            uncertParamElement.setAttribute( XMLAttributes.TYPE.toString(), XMLTags.FUNCTION.toString());
-            uncertParamElement.addContent( function );
-            parametersElement.addContent( uncertParamElement);
+            uncertParamElement.setAttribute(XMLAttributes.TYPE.toString(), XMLTags.FUNCTION.toString());
+            uncertParamElement.addContent(function);
+            parametersElement.addContent(uncertParamElement);
         }
         // Write table values to the XML file
         xmlElement.addContent(parametersElement);
     }
-
-
-
+    
+    
     /**
      * @param coefficients
+     *
      * @return new Element
      */
     protected static Element getCoefficientsElement(double[] coefficients) {
@@ -1013,6 +1024,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param covariates
+     *
      * @return new Element
      */
     protected static Element getCovariatesElement(String[] covariates) {
@@ -1027,6 +1039,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param function
+     *
      * @return new Element
      */
     protected static Element getFunctionElement(String function) {
@@ -1037,6 +1050,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param covarianceMatrix
+     *
      * @return
      */
     protected static Element getCovarianceMatrixElement(double[] covarianceMatrix) {
@@ -1047,6 +1061,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param choleskyDecomposition
+     *
      * @return
      */
     protected static Element getCholeskyDecompositionElement(double[] choleskyDecomposition) {
@@ -1071,6 +1086,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param potential
+     *
      * @return Element
      */
     protected static Element getUncertainValuesElement(Potential potential) {
@@ -1087,6 +1103,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param uncertainValue
+     *
      * @return Element
      */
     protected static Element getUncertainValueElement(UncertainValue uncertainValue) {
@@ -1137,6 +1154,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * @param branch
      * @param topVariable
+     *
      * @return Element
      */
     protected Element getTreeADDBranch(TreeADDBranch branch, Variable topVariable, ProbNet probNet) {
@@ -1318,6 +1336,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param table array of double
+     *
      * @return String
      */
     protected static String getValuesInAString(double[] table) {
@@ -1330,6 +1349,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * @param probNet
+     *
      * @return String
      */
     protected static String getXMLNetworkType(ProbNet probNet) {
@@ -1350,7 +1370,5 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         result = result.replaceAll(">", "SymbolGT");
         return result;
     }
-    
-    // TODO OOPN end
     
 }

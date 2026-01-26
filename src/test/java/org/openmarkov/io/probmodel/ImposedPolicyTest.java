@@ -8,6 +8,7 @@
 package org.openmarkov.io.probmodel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 
@@ -46,7 +47,7 @@ public class ImposedPolicyTest {
 		String rootPath = 
 				absolutePath.substring(0, absolutePath.length() - networkTestName.length());
 		String pathAndName = rootPath + networkTestName;
-		ProbNet probNet1 = reader.loadProbNet(pathAndName);
+        ProbNet probNet1 = reader.loadProbNet(pathAndName, new FileInputStream(pathAndName));
 
 		ProbNet imposedPolicyNet = Util.createTrivialID();
 	}

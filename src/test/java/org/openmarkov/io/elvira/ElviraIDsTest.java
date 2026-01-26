@@ -9,10 +9,12 @@ package org.openmarkov.io.elvira;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 
 import org.junit.jupiter.api.*;
+import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.model.network.ProbNet;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -29,7 +31,9 @@ public class ElviraIDsTest {
 		System.out.println(testFile);
 		System.out.println("-------------------------------------");
 		System.out.println();
-		probNet = new ElviraParser().loadProbNet(url.getFile());
+        ProbNetReader probNetReader = new ElviraParser();
+        String netName = url.getFile();
+        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
 	}
 
 	@Test public void test() {

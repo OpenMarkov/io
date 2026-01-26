@@ -10,6 +10,7 @@ package org.openmarkov.io.elvira;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.*;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.exception.WriterException;
+import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.model.network.NodeType;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.State;
@@ -134,7 +136,8 @@ public class ElviraWriterCanonicModelsTest {
 		String fullNetworkName = rootPath + "MiniICI.elv";
 		System.out.println(fullNetworkName);
 			new ElviraWriter().writeProbNet(fullNetworkName, miniICI);
-			new ElviraParser().loadProbNet(fullNetworkName);
-	}
+        ProbNetReader probNetReader = new ElviraParser();
+        probNetReader.loadProbNet(fullNetworkName, new FileInputStream(fullNetworkName));
+    }
 
 }

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 
@@ -37,7 +38,7 @@ public class ElviraScannerTest {
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws FileNotFoundException {
 			elviraScanner = ElviraScanner.getUniqueInstance();
 			URL url = this.getClass().getClassLoader().getResource(testFile);
-			elviraScanner.initializeScanner(url.getFile());
+		elviraScanner.initializeScanner(url.getFile(), new FileInputStream(url.getFile()));
 
 	}
 

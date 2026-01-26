@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 
@@ -42,7 +43,7 @@ public class XMLBIFReaderTest {
 		public void readNetworkTest() throws ParserException, FileNotFoundException {
 			ProbNet probNet1;
 				String pathAndName = rootPath + networkTestName;
-				probNet1 = reader.loadProbNet(pathAndName);
+            probNet1 = reader.loadProbNet(pathAndName, new FileInputStream(pathAndName));
 				assertNotNull(probNet1);
 				// TODO: Once the ProbNetTest class is available, remove the next line
 				//ProbNetTest.compareNetworks(probNet1,BNFactory.createBN_XY("class","Symptom",0.34375,0.75,0.681818181818));

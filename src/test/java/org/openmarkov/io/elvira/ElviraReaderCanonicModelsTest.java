@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -62,7 +63,8 @@ public class ElviraReaderCanonicModelsTest {
 	@Test public void testLoadElviraOr() throws ParserException, IOException {
 		String testFile = "puerta-or.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
-		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
+        String netName = url.getFile();
+        ProbNet probNet = elviraParser.loadProbNet(netName, new FileInputStream(netName));
 
 		// Test probNet
 		assertNotNull(probNet);
@@ -108,7 +110,7 @@ public class ElviraReaderCanonicModelsTest {
 		String testFile = "cataratas-NaN.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
 		String file = url.getFile();
-		ProbNet probNet = elviraParser.loadProbNet(file);
+        ProbNet probNet = elviraParser.loadProbNet(file, new FileInputStream(file));
 		// Test a canonical potential
 		assertNotNull(probNet); // Test NaN readed
 		Node nodeFPC = probNet.getNode("fv-pre-catar");
@@ -126,7 +128,8 @@ public class ElviraReaderCanonicModelsTest {
 	@Test public void testCataratas() throws ParserException, IOException {
 		String testFile = "cataratas-escenarios-091123.elv";
 		URL url = this.getClass().getClassLoader().getResource(testFile);
-		ProbNet probNet = elviraParser.loadProbNet(url.getFile());
+        String netName = url.getFile();
+        ProbNet probNet = elviraParser.loadProbNet(netName, new FileInputStream(netName));
 		// Test a normal node potential
 		Node nodeDCF = probNet.getNode("av_sin_catar");
 		assertEquals(1, nodeDCF.getPotentials().size());
