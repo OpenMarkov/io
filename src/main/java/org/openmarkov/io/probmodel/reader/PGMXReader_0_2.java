@@ -1458,10 +1458,13 @@ public class PGMXReader_0_2 implements ProbNetReader {
         if (potentialClass == null) {
             throw new PGMXParserException.PotentialTypeNotSupported(sXmlPotentialType, xmlPotential);
         }
+        Method generator = this.potentialGenerators.get(potentialClass);
+        if (generator == null) {
+            throw new PGMXParserException.PotentialTypeNotSupported(sXmlPotentialType, xmlPotential);
+        }
         try {
-            return (Potential) this.potentialGenerators.get(potentialClass)
-                                                       .invoke(this, xmlPotential, probNet, potentialRole, variables);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            return (Potential) generator.invoke(this, xmlPotential, probNet, potentialRole, variables);
+        } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {
             throw new UnreacheableException(e);
         }
     }
