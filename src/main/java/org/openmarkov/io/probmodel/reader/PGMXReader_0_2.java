@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
 @FormatType(name = "PGMXReader", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2", role = "Reader")
 public class PGMXReader_0_2 implements ProbNetReader {
     
-    protected final Map<Class<? extends Potential>, Method> potentialGenerators;
+    public final Map<Class<? extends Potential>, Method> potentialGenerators;
     
     public PGMXReader_0_2() {
         var accesibleClassesToReader = ClassUtils.extensionClassesOf(this.getClass());
