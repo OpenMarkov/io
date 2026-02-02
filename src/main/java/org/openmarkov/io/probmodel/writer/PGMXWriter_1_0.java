@@ -8,6 +8,7 @@
 package org.openmarkov.io.probmodel.writer;
 
 import org.openmarkov.core.exception.WriterException;
+import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
@@ -240,10 +241,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	 */
 	@Override protected void getAugmentedProbTablePotential(Element xmlElement, AugmentedProbTable AugmentedProbTable) {
 		Element parametersElement = new Element(XMLTags.FUNCTIONS.toString());
-
-		String[] functionValues = AugmentedProbTable.getFunctionValues();
-		for (String function:functionValues){
-			parametersElement.addContent("\""+function+"\" ");
+        
+        VariableExpression[] functionValues = AugmentedProbTable.getFunctionValues();
+        for (VariableExpression function : functionValues) {
+            parametersElement.addContent("\"" + function.asStringExpression() + "\" ");
 		}
 		// Write table values to the XML file
 		xmlElement.addContent(parametersElement);

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.jdom2.Element;
+import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
 import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
@@ -94,11 +95,11 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         
         UnivariateDistrPotential potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
         
-        List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
-        vDistributionTable.add(0, potential.getPseudoVariableDistribution());
+        List<Variable> variablesAccesibleToExpressions = new ArrayList<>(variables);
+        variablesAccesibleToExpressions.add(0, potential.getPseudoVariableDistribution());
         potential.getAugmentedProbTable().setValues(table);
         potential.setDistributionTable(
-                getAugmentedProbTable(xmlPotential, xmlRole, vDistributionTable));
+                getAugmentedProbTable(xmlPotential, xmlRole, variablesAccesibleToExpressions));
         
         return potential;
         
@@ -111,21 +112,19 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
                                                               List<Variable> variables) {
         
         AugmentedProbTablePotential potential = new AugmentedProbTablePotential(variables, xmlRole);
-        List<Variable> finiteStatesVariables = potential.getFiniteStatesVariables();
-        
-        potential.setAugmentedProbTable(getAugmentedProbTable(xmlPotential, xmlRole, finiteStatesVariables));
+        potential.setAugmentedProbTable(getAugmentedProbTable(xmlPotential, xmlRole, variables));
         return potential;
     }
     
     /**
      * @param xmlPotential          {@code Element}
      * @param xmlRole               {@code PotentialRole}
-     * @param finiteStatesVariables {@code List} of {@code Variable} of the potential
+     * @param variablesAccessibleToExpressions {@code List} of {@code Variable} of the potential
      *
      * @return AugmentedProbTable
      */
     protected static AugmentedProbTable getAugmentedProbTable(Element xmlPotential, PotentialRole xmlRole,
-                                                              List<Variable> finiteStatesVariables) {
+                                                              List<Variable> variablesAccessibleToExpressions) {
         
         String functionsValue = xmlPotential.getChild(XMLTags.FUNCTIONS.toString()).getValue();
         
@@ -135,12 +134,12 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
                                                       .results()
                                                       .map(m -> m.group(1))
                                                       .toList();
-        String[] functionValues = new String[uncertainParametersList.size()];
+        VariableExpression[] functionValues = new VariableExpression[uncertainParametersList.size()];
         int i = 0;
         for (String uncertainParameter : uncertainParametersList) {
-            functionValues[i++] = uncertainParameter;
+            functionValues[i++] = new VariableExpression(variablesAccessibleToExpressions, uncertainParameter);
         }
-        return new AugmentedProbTable(finiteStatesVariables, xmlRole, functionValues);
+        return new AugmentedProbTable(variablesAccessibleToExpressions, xmlRole, functionValues);
     }
     
 }

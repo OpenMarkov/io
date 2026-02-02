@@ -15,6 +15,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.located.LocatedJDOMFactory;
 import org.openmarkov.core.exception.*;
+import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.inference.TemporalOptions;
 import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
@@ -53,7 +54,6 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Manuel Arias
@@ -1596,7 +1596,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
         Element xmlLog = xmlPotential.getChild(XMLTags.LOG.toString());
         potential.setLog(xmlLog == null || Boolean.parseBoolean(xmlLog.getValue()));
-        getRegressionPotential(xmlPotential, potential);
+        getRegressionPotential(xmlPotential, potential, variables);
         return potential;
     }
     
@@ -1606,7 +1606,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         ExponentialHazardPotential potential = new ExponentialHazardPotential(variables, xmlRole);
         Element xmlLog = xmlPotential.getChild(XMLTags.LOG.toString());
         potential.setLog(xmlLog == null || Boolean.parseBoolean(xmlLog.getValue()));
-        getRegressionPotential(xmlPotential, potential);
+        getRegressionPotential(xmlPotential, potential, variables);
         return potential;
     }
     
@@ -1614,7 +1614,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     protected static Potential getExponentialPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                        List<Variable> variables) {
         ExponentialPotential potential = new ExponentialPotential(variables, xmlRole);
-        getRegressionPotential(xmlPotential, potential);
+        getRegressionPotential(xmlPotential, potential, variables);
         return potential;
     }
     
@@ -1622,17 +1622,17 @@ public class PGMXReader_0_2 implements ProbNetReader {
     protected static Potential getLinearRegressionPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                             List<Variable> variables) {
         LinearCombinationPotential potential = new LinearCombinationPotential(variables, xmlRole);
-        getRegressionPotential(xmlPotential, potential);
+        getRegressionPotential(xmlPotential, potential, variables);
         return potential;
     }
     
-    protected static void getRegressionPotential(Element xmlPotential, GLMPotential potential) {
+    protected static void getRegressionPotential(Element xmlPotential, GLMPotential potential, List<Variable> variables) {
         Element xmlCoefficients = xmlPotential.getChild(XMLTags.COEFFICIENTS.toString());
         potential.setCoefficients(parseDoubles(xmlCoefficients.getText()));
         
         Element xmlCovariates = xmlPotential.getChild(XMLTags.COVARIATES.toString());
         if (xmlCovariates != null) {
-            potential.setCovariates(getCovariates(xmlCovariates));
+            potential.setCovariates(PGMXReader_0_2.getCovariates(xmlCovariates, variables));
         }
         
         Element xmlCovarianceMatrix = xmlPotential.getChild(XMLTags.COVARIANCE_MATRIX.toString());
@@ -1650,7 +1650,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                                                     List<Variable> variables) {
         FunctionPotential potential = new FunctionPotential(variables, xmlRole);
         Element xmlFunction = xmlPotential.getChild(XMLTags.FUNCTION.toString());
-        potential.setFunction(xmlFunction.getText());
+        potential.setFunction(new VariableExpression(variables, xmlFunction.getText()));
         return potential;
     }
     
@@ -1774,11 +1774,19 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return table;
     }
     
-    protected static String[] getCovariates(Element xmlCovariates) {
-        String[] covariates = new String[xmlCovariates.getChildren().size()];
+    protected static VariableExpression[] getCovariates(Element xmlCovariates, List<Variable> variables) {
+        VariableExpression[] covariates = new VariableExpression[xmlCovariates.getChildren().size()];
         int i = 0;
         for (Element xmlCovariate : xmlCovariates.getChildren()) {
-            covariates[i++] = xmlCovariate.getText();
+            String xmlCovariateText = xmlCovariate.getText();
+            var variableCovariate = variables.stream()
+                                             .filter(var -> var.getName().equals(xmlCovariateText))
+                                             .findFirst();
+            if (variableCovariate.isPresent()) {
+                covariates[i++] = variableCovariate.get().asVariableExpression();
+            } else {
+                covariates[i++] = new VariableExpression(variables, xmlCovariateText);
+            }
         }
         return covariates;
     }

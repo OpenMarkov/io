@@ -13,6 +13,7 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.openmarkov.core.exception.WriterException;
+import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.graph.Link;
@@ -837,7 +838,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         } else if (potential instanceof ICIPotential) {
             getICIPotential((ICIPotential) potential, potentialElement);
         } else if (potential instanceof FunctionPotential) {
-            potentialElement.addContent(getFunctionElement(((FunctionPotential) potential).getFunction()));
+            potentialElement.addContent(getFunctionElement(((FunctionPotential) potential).getFunction()
+                                                                                          .asStringExpression()));
         } else if (potential instanceof GLMPotential) { // Another type of GLMPotential, distinct from FunctionPotential
             if (potential instanceof WeibullHazardPotential) {
                 if (potential instanceof ExponentialHazardPotential) {
@@ -999,11 +1001,11 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     protected void getAugmentedProbTablePotential(Element xmlElement, AugmentedProbTable AugmentedProbTable) {
         Element parametersElement = new Element(XMLTags.UNCERTAIN_PARAMETERS.toString());
         
-        String[] functionValues = AugmentedProbTable.getFunctionValues();
-        for (String function : functionValues) {
+        VariableExpression[] functionValues = AugmentedProbTable.getFunctionValues();
+        for (VariableExpression function : functionValues) {
             Element uncertParamElement = new Element(XMLTags.PARAM.toString());
             uncertParamElement.setAttribute(XMLAttributes.TYPE.toString(), XMLTags.FUNCTION.toString());
-            uncertParamElement.addContent(function);
+            uncertParamElement.addContent(function.asStringExpression());
             parametersElement.addContent(uncertParamElement);
         }
         // Write table values to the XML file
@@ -1027,11 +1029,11 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      *
      * @return new Element
      */
-    protected static Element getCovariatesElement(String[] covariates) {
+    protected static Element getCovariatesElement(VariableExpression[] covariates) {
         Element covariatesElement = new Element(XMLTags.COVARIATES.toString());
-        for (String covariate : covariates) {
+        for (VariableExpression covariate : covariates) {
             Element covariateElement = new Element(XMLTags.COVARIATE.toString());
-            covariateElement.setText(covariate);
+            covariateElement.setText(covariate.asStringExpression());
             covariatesElement.addContent(covariateElement);
         }
         return covariatesElement;
