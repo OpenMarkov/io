@@ -1466,6 +1466,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
             return (Potential) generator.invoke(this, xmlPotential, probNet, potentialRole, variables);
         } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {
             throw new UnreacheableException(e);
+        } catch (Exception e) {
+            throw e;
         }
     }
     

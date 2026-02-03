@@ -10,18 +10,15 @@ package org.openmarkov.io.probmodel.reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.jdom2.Element;
 import org.openmarkov.core.expression.VariableExpression;
-import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
-import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
-import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Variable;
 import org.openmarkov.core.model.network.potential.*;
-import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 
@@ -95,14 +92,13 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         
         UnivariateDistrPotential potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
         
-        List<Variable> variablesAccesibleToExpressions = new ArrayList<>(variables);
-        variablesAccesibleToExpressions.add(0, potential.getPseudoVariableDistribution());
+        List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
+        vDistributionTable.add(0, potential.getPseudoVariableDistribution());
         potential.getAugmentedProbTable().setValues(table);
         potential.setDistributionTable(
-                getAugmentedProbTable(xmlPotential, xmlRole, variablesAccesibleToExpressions));
+                getAugmentedProbTable(xmlPotential, xmlRole, vDistributionTable, variables));
         
         return potential;
-        
     }
     
     // TODO Remove?
@@ -112,23 +108,24 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
                                                               List<Variable> variables) {
         
         AugmentedProbTablePotential potential = new AugmentedProbTablePotential(variables, xmlRole);
-        potential.setAugmentedProbTable(getAugmentedProbTable(xmlPotential, xmlRole, variables));
+        List<Variable> parameterVariables = potential.getParameterVariables();
+        List<Variable> finiteStatesVariables = potential.getFiniteStatesVariables();
+        
+        potential.setAugmentedProbTable(getAugmentedProbTable(xmlPotential, xmlRole, finiteStatesVariables, parameterVariables));
         return potential;
     }
     
     /**
-     * @param xmlPotential          {@code Element}
-     * @param xmlRole               {@code PotentialRole}
-     * @param variablesAccessibleToExpressions {@code List} of {@code Variable} of the potential
+     * @param xmlPotential                     {@code Element}
+     * @param xmlRole                          {@code PotentialRole}
+     * @param vDistributionTable {@code List} of {@code Variable} of the potential
+     * @param variables
      *
      * @return AugmentedProbTable
      */
     protected static AugmentedProbTable getAugmentedProbTable(Element xmlPotential, PotentialRole xmlRole,
-                                                              List<Variable> variablesAccessibleToExpressions) {
-        
+                                                              List<Variable> vDistributionTable, List<Variable> variables) {
         String functionsValue = xmlPotential.getChild(XMLTags.FUNCTIONS.toString()).getValue();
-        
-        
         List<String> uncertainParametersList = Pattern.compile("\"(.*?)\"")
                                                       .matcher(functionsValue)
                                                       .results()
@@ -137,9 +134,11 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         VariableExpression[] functionValues = new VariableExpression[uncertainParametersList.size()];
         int i = 0;
         for (String uncertainParameter : uncertainParametersList) {
-            functionValues[i++] = new VariableExpression(variablesAccessibleToExpressions, uncertainParameter);
+            functionValues[i++] = new VariableExpression(
+                    Stream.concat(vDistributionTable.stream(), variables.stream()).distinct().toList(),
+                    uncertainParameter);
         }
-        return new AugmentedProbTable(variablesAccessibleToExpressions, xmlRole, functionValues);
+        return new AugmentedProbTable(vDistributionTable, xmlRole, functionValues);
     }
     
 }
