@@ -41,7 +41,7 @@ import org.openmarkov.core.model.network.potential.treeadd.Threshold;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDBranch;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.core.model.network.type.NetworkType;
-import org.openmarkov.core.model.network.type.plugin.NetworkTypeManager;
+import org.openmarkov.core.model.network.type.plugin.NetworkTypeUtils;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
@@ -583,12 +583,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
         if (sType == null || sType.isEmpty()) {
             throw new PGMXParserException.NoNetworkTypeFound(xMLProbNet);
         }
-        NetworkTypeManager networkTypeManager = new NetworkTypeManager();
-        NetworkType networkType = networkTypeManager.getNetworkType(sType);
-        if (networkType == null) {
+        Class<? extends NetworkType> networkClass = NetworkTypeUtils.getNetworkClassByName(sType);
+        if (networkClass == null) {
             throw new PGMXParserException.UnknownNetworkType(sType, xMLProbNet);
         }
-        return networkType;
+        return NetworkTypeUtils.safeInstanciate(networkClass);
     }
     
     /**

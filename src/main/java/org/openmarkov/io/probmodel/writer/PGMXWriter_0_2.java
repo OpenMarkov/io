@@ -30,19 +30,14 @@ import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDBranch;
 import org.openmarkov.core.model.network.potential.treeadd.TreeADDPotential;
 import org.openmarkov.core.model.network.type.NetworkType;
-import org.openmarkov.core.model.network.type.plugin.NetworkTypeManager;
-import org.openmarkov.io.probmodel.reader.PotentialReaderMethod;
+import org.openmarkov.core.model.network.type.plugin.NetworkTypeUtils;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
-import org.openmarkov.java.classUtils.ClassUtils;
-import org.openmarkov.plugin.PluginSearch;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Manuel Arias
@@ -1355,8 +1350,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @return String
      */
     protected static String getXMLNetworkType(ProbNet probNet) {
-        NetworkTypeManager networkTypeManager = new NetworkTypeManager();
-        return NetworkTypeManager.getName(probNet.getNetworkType());
+        return NetworkTypeUtils.getInfo(probNet.getNetworkType().getClass()).name();
     }
     
     /**
