@@ -7,6 +7,7 @@ open module org.openmarkov.io {
     requires jeval;
     requires org.jetbrains.annotations;
     requires org.openmarkov.annotation_processing;
+    requires org.openmarkov.inference;
     
     uses javax.swing.event.UndoableEditListener;
     uses org.xml.sax.InputSource;
