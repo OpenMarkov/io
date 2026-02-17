@@ -112,7 +112,6 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             for (Variable variable : evidenceVariables) {
                 if (!probNetVariables.contains(variable)) {
                     evidenceCase.removeFinding(variable.getName());
-                    
                 }
             }
         }

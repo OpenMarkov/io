@@ -447,7 +447,7 @@ public class ElviraWriter implements ProbNetWriter {
                 writeICIElviraPotentialBody(out, (ICIPotential) potential);
             } else {
                 try {
-                    elviraPotential = potential.tableProject(null, null).get(0);
+                    elviraPotential = potential.tableProject(null, null);
                 } catch (NonProjectablePotentialException e) {
                     throw new WriterException.NonProjectablePotentialException(e);
                 }
