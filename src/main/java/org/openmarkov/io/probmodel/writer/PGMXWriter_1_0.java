@@ -26,7 +26,7 @@ import org.jdom2.Element;
  * @author Manuel Arias
  * @version 0.5
  */
-@FormatType(name = "PGMXWriter0_5",  version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0", role = "Writer")
+@FormatType(name = "PGMXWriter0_5",  version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0")
 public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
 	// Methods
