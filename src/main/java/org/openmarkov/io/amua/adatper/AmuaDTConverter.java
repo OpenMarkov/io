@@ -1,0 +1,276 @@
+package org.openmarkov.io.amua.adatper;
+
+import org.openmarkov.core.model.network.*;
+import org.openmarkov.core.model.decisiontree.*;
+import org.openmarkov.inference.algorithm.decompositionIntoSymmetricDANs.core.EvaluationDecisionTreeNode;
+import org.openmarkov.inference.algorithm.decompositionIntoSymmetricDANs.core.CEADecisionTreeNode;
+import org.openmarkov.io.amua.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Converts OpenMarkov decision trees into Amua-compatible decision trees.
+ * An Amua decision tree is a series of linked nodes.
+ *
+ * @author Hugo Manuel
+ * @version 1.0
+ */
+
+public class AmuaDTConverter {
+    private final AmuaDTType amuaDTType;
+    private int index;
+
+    /**
+     * Creates a converter for the specified Amua tree type.
+     * @param amuaDTType the type of Amua decision tree
+     */
+    public AmuaDTConverter(AmuaDTType amuaDTType) {
+        this.amuaDTType = amuaDTType;
+    }
+
+
+    /**
+     * Converts an OpenMarkov decision tree into an Amua decision tree.
+     *
+     * @param root the root node of the OpenMarkov decision tree
+     * @return the root of the converted Amua tree
+     * @throws IllegalArgumentException if the root node is null
+     */
+    public AmuaDTNode<?> convertToAmuaTree(DecisionTreeNode<?> root) {
+        if (root == null) {
+            throw new IllegalArgumentException("Root node cannot be null.");
+        }
+
+        this.index = 0;
+        return convertToAmuaTree(root, null, null, 0);
+    }
+
+
+    /**
+     * Recursively converts an OpenMarkov decision tree node into an Amua node.
+     * @param decisionTreeNode the OpenMarkov node to convert
+     * @param branch the branch from the parent node, or null if root
+     * @param parent the parent Amua node, or null if root
+     * @param level the depth level in the Amua tree
+     * @return the corresponding Amua node
+     */
+    private AmuaDTNode<?> convertToAmuaTree(DecisionTreeNode<?> decisionTreeNode, DecisionTreeBranch branch, AmuaDTNode<?> parent, int level) {
+        // collapsed, visible, hasVarUpdates: default values
+        AmuaDTNode<?> amuaNode = createNodeInstance();
+
+        amuaNode.setIndex(index++);
+        amuaNode.setType(typeNode(decisionTreeNode.getNodeType()));
+        amuaNode.setLevel(level);
+
+        // Name
+        amuaNode.setName(branch == null ? "Root" : branch.getBranchState().getName());
+
+        // Probability
+        if (branch == null || typeNode(branch.getParent().getNodeType()) == 0) {
+            amuaNode.setProb(0);
+        } else {
+            amuaNode.setProb(branch.getBranchProbability());
+        }
+
+        // Parent
+        if (parent != null) {
+            amuaNode.setParentNode(parent);
+        }
+
+        // hasCost: PENDING TASK
+        // cost: PENDING TASK, in assignUtilies
+
+        assignUtilities(amuaNode, decisionTreeNode);
+
+        // recursive call
+        List<AmuaDTNode<?>> childrenNodes = new ArrayList<>();
+        for (DecisionTreeElement child : decisionTreeNode.getChildren()) {
+            if (child instanceof DecisionTreeBranch childBranch) {
+                DecisionTreeNode<?> childNode = childBranch.getChild();
+                AmuaDTNode<?> amuaChildNode = convertToAmuaTree(childNode, childBranch, amuaNode,level + 1);
+                childrenNodes.add(amuaChildNode);
+            }
+        }
+
+        amuaNode.setChildNodes(childrenNodes);
+
+        // position (xPos, yPos, parentX, parentY)
+        setGraphicInformation(amuaNode);
+
+        return amuaNode;
+    }
+
+
+    /**
+     * Factory method for Amua node creation.
+     */
+    private AmuaDTNode<?> createNodeInstance() {
+        return switch (amuaDTType) {
+            case COST_EFFECTIVENESS -> new AmuaDTCENode();
+            case UNICRITERIA -> new AmuaDTUnicriteriaNode();
+        };
+    }
+
+
+    /**
+     * Assigns payoff and partial utility values to an Amua node.
+     * @param amuaNode the Amua node to update
+     * @param node the OpenMarkov node to read utility values from
+     */
+    private void assignUtilities(AmuaDTNode<?> amuaNode, DecisionTreeNode<?> node) {
+
+        if (amuaNode instanceof AmuaDTCENode ceNode) {
+
+            double cost = getCEACost(node);
+            double eff = getCEAEffectiveness(node);
+
+            AmuaCEvalue payoffValues = new AmuaCEvalue(
+                amuaNode.getType() == 2 ? cost : 0,
+                amuaNode.getType() == 2 ? eff : 0
+            );
+
+            AmuaCEvalue partialValues = new AmuaCEvalue(
+                    amuaNode.getType() == 2 ? cost : 0,
+                    amuaNode.getType() == 2 ? eff : 0
+            );
+
+            ceNode.setPayoff(payoffValues);
+            ceNode.setPartialUtility(partialValues);
+
+        } else {
+            AmuaDTUnicriteriaNode unicriteriaNode = (AmuaDTUnicriteriaNode) amuaNode;
+
+            double utility = getUnicriteriaUtility(node);
+
+            unicriteriaNode.setPayoff(amuaNode.getType() == 2 ? utility : 0);
+            unicriteriaNode.setPartialUtility(utility);
+        }
+    }
+
+    /**
+     * Assigns the x and y position, and parent connection coordinates for a node.
+     * @param amuaNode the node whose position and parent coordinates are set
+     */
+    private void setGraphicInformation(AmuaDTNode<?> amuaNode) {
+        // width, height: default values
+        int margin = 48;
+        int xOffset = 5 * margin;
+        int yOffset = 2 * margin;
+
+        AmuaDTNode<?> parent = amuaNode.getParentNode();
+        if (parent == null) { // root position
+            amuaNode.setXPos(margin);
+            amuaNode.setYPos(margin);
+            return;
+        }
+
+        // xPos
+        amuaNode.setXPos(margin + amuaNode.getLevel() * xOffset);
+
+        // yPos
+        List<AmuaDTNode<?>> siblings = parent.getChildNodes();
+        if (siblings.indexOf(amuaNode) == 0) {
+            amuaNode.setYPos(parent.getYPos()); // first child aligns with parent
+        } else{
+            amuaNode.setYPos(getLastYPos(amuaNode, siblings) + yOffset);
+        }
+
+        // parentX
+        amuaNode.setParentX(parent.getXPos() + parent.getWidth());
+
+        // parentY
+        amuaNode.setParentY(parent.getYPos() + parent.getHeight()/2);
+    }
+
+
+    /**
+     * Returns the Y position of the previous sibling's last child for graphical layout.
+     * @param amuaNode the current node
+     * @param siblings the list of sibling nodes
+     * @return the last Y position
+     */
+    private int getLastYPos(AmuaDTNode<?> amuaNode, List<AmuaDTNode<?>> siblings) {
+        AmuaDTNode<?> previousSibling =  siblings.get(siblings.indexOf(amuaNode)-1);
+        int lastYpos;
+
+        if(amuaNode.getChildNodes() == null || amuaNode.getChildNodes().isEmpty()) { // utility node (leaf)
+            lastYpos = previousSibling.getYPos();
+        } else{
+            List<AmuaDTNode<?>> previousSiblingChildren = previousSibling.getChildNodes();
+            AmuaDTNode<?> lastChildOfPreviousSibling  = previousSiblingChildren.get(previousSiblingChildren.size()-1);
+            lastYpos = lastChildOfPreviousSibling.getYPos();
+        }
+        return lastYpos;
+    }
+
+
+    /**
+     * Retrieves the cost component of a Cost-Effectiveness decision tree
+     *
+     * @param node the decision tree node whose cost will be obtained.
+     * @return the cost value associated with the node
+     */
+    private double getCEACost(DecisionTreeNode<?> node) {
+        return getCEAUtility(node).getCost(0);
+    }
+
+
+    /**
+     * Retrieves the effectiveness component of a Cost-Effectiveness decision tree
+     *
+     * @param node the decision tree node whose effectiveness will be obtained.
+     * @return the effectiveness value associated with the node
+     */
+    private double getCEAEffectiveness(DecisionTreeNode<?> node) {
+        return getCEAUtility(node).getEffectiveness(0);
+    }
+
+
+    /**
+     * Retrieves the cost-effectivenes utility (CEP) associated with a given node
+     * of a Cost-Effectiveness decision tree
+     *
+     * @param node the decision tree node whose utility will be obtained.
+     * @return the CEP object containing cost and effectiveness values.
+     * @throws IllegalArgumentException if the tree type is not COST_EFFECTIVENESS
+     */
+    private CEP getCEAUtility(DecisionTreeNode<?> node) {
+        if (amuaDTType != AmuaDTType.COST_EFFECTIVENESS) {
+            throw new IllegalArgumentException("Invalid tree type for CEA utility.");
+        }
+        return ((CEADecisionTreeNode) node).getUtility();
+    }
+
+
+    /**
+     * Retrieves the utility of a unicriteria node.
+     * @param node the OpenMarkov evaluation node
+     * @return the utility value
+     * @throws IllegalArgumentException if the tree type is not UNICRITERIA
+     */
+    private double getUnicriteriaUtility(DecisionTreeNode<?> node) {
+        if (amuaDTType != AmuaDTType.UNICRITERIA) {
+            throw new IllegalArgumentException("Invalid tree type for unicriteria utility.");
+        }
+
+        return ((EvaluationDecisionTreeNode) node).getUtility();
+    }
+
+
+    /**
+     * Returns the type of the node in Amua format (int)
+     *
+     * @param nodeType the type of node in OpenMarkov format. It is transformed to Amua format
+     * @return the integer representation of the node type (Amua format)
+     * @throws IllegalArgumentException if the node type is not recognized by Amua.
+     */
+    private int typeNode(NodeType nodeType) {
+        return switch (nodeType) {
+            case DECISION -> 0;
+            case CHANCE -> 1;
+            case UTILITY -> 2;
+            default -> throw new IllegalArgumentException("Unsupported node type: " + nodeType);
+        };
+    }
+}
