@@ -25,7 +25,7 @@ import org.openmarkov.io.probmodel.strings.XMLTags;
 /**
  * @author Manuel Arias
  */
-@FormatType(name = "PGMXReader", version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0", role = "Reader")
+@FormatType(name = "PGMXReader", version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0")
 public class PGMXReader_1_0 extends PGMXReader_0_2 {
     
     public PGMXReader_1_0() {

@@ -46,7 +46,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
  * @author marias
  * @version 1.1 carmenyago - adapted parser to new IO methods for OpenMarkov 0.3.x by filling loadProbNetInfo(String netName, InputStream... file)
  */
-@FormatType(name = "ElviraParser", version = "0.1", extension = "elv", description = "Elvira", role = "Reader") public class ElviraParser
+@FormatType(name = "ElviraParser", version = "0.1", extension = "elv", description = "Elvira") public class ElviraParser
 		implements ProbNetReader {
 
 	// Attributes

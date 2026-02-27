@@ -43,7 +43,7 @@ import java.util.*;
  * @author Manuel Arias
  * @version 1.0
  */
-@FormatType(name = "PGMXWriter0_2", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2", role = "Writer")
+@FormatType(name = "PGMXWriter0_2", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2")
 public class PGMXWriter_0_2 implements ProbNetWriter {
     
     // Attributes

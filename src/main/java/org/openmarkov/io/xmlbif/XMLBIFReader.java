@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@FormatType(name = "XMLBIFReader", version = "", extension = "xml", description = "Weka", role = "Reader")
+@FormatType(name = "XMLBIFReader", version = "", extension = "xml", description = "Weka")
 public class XMLBIFReader extends PGMXReader_0_2 {
 
     @Override

@@ -58,7 +58,7 @@ import java.util.*;
 /**
  * @author Manuel Arias
  */
-@FormatType(name = "PGMXReader", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2", role = "Reader")
+@FormatType(name = "PGMXReader", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2")
 public class PGMXReader_0_2 implements ProbNetReader {
     
     public final Map<Class<? extends Potential>, Method> potentialGenerators;
