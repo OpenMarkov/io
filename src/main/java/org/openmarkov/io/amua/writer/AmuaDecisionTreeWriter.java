@@ -177,14 +177,14 @@ public class AmuaDecisionTreeWriter {
 
         addElement(nodeElem, "level", amuaNode.getLevel());
 
-        if (amuaNode.getProbability() != 0) {
-            addElement(nodeElem, "prob", amuaNode.getProbability());
-        }
-
         addElement(nodeElem, "hasCost", amuaNode.isHasCost());
         addElement(nodeElem, "hasVarUpdates", amuaNode.isHasVarUpdates());
         addElement(nodeElem, "visible", amuaNode.isVisible());
         addElement(nodeElem, "collapsed", amuaNode.isCollapsed());
+
+        if (amuaNode.getProbability() != 0) {
+            addElement(nodeElem, "prob", amuaNode.getProbability());
+        }
 
         // delegates to write the cost and payoff
         writeNodeCost(amuaNode, nodeElem);
