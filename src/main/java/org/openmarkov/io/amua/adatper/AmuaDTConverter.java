@@ -95,6 +95,20 @@ public class AmuaDTConverter {
 
         amuaNode.setChildNodes(childrenNodes);
 
+        if (amuaNode.getType() == 1) { // sum of probability must be 1
+            double sum = 0.0;
+            for (AmuaDTNode<?> child : childrenNodes) {
+                sum += child.getProbability();
+            }
+            if (Math.abs(sum - 1.0) > 1e-4) {
+                int size = childrenNodes.size();
+                double uniformProb = 1.0 / size;
+                for (int i = size - 1; i >= 0; i--) {
+                    childrenNodes.get(i).setProb(uniformProb);
+                }
+            }
+        }
+
         // position (xPos, yPos, parentX, parentY)
         setGraphicInformation(amuaNode);
 
