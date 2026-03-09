@@ -10,6 +10,7 @@ import static org.openmarkov.io.amua.model.AmuaConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Holds the dimensional and analysis information for an AMUA decision tree.
@@ -31,9 +32,9 @@ public class AmuaDTDimensions {
     private final int extendedDim;
 
     /**
-     * Private constructor. Instances are created via the {@link #assignDimensions} factory method.
+     * Public constructor.
      */
-    private AmuaDTDimensions(List<AmuaDimensionInfo> dimensions,
+    public AmuaDTDimensions(List<AmuaDimensionInfo> dimensions,
                           int analysisType,
                           int objective,
                           int objectiveDim,
@@ -76,6 +77,8 @@ public class AmuaDTDimensions {
      * @throws IllegalStateException if required criteria are missing or type is unsupported
      */
     public static AmuaDTDimensions assignDimensions(List<Criterion> criteria, AmuaDTType amuaDTType, AmuaDTNode<?> tree) {
+
+        Objects.requireNonNull(tree, "tree cannot be null");
 
         List<AmuaDimensionInfo> dimensions = new ArrayList<>();
         int analysisType;

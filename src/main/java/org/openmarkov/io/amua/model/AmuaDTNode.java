@@ -43,6 +43,8 @@ public abstract class AmuaDTNode<T> {
 
     protected T partialUtility;
 
+    public final int margin = 48;
+
     /** Default constructor. */
     public AmuaDTNode() {
     }
@@ -194,4 +196,5 @@ public abstract class AmuaDTNode<T> {
     public T getPartialUtility() { return partialUtility; }
     public void setPartialUtility(T partialUtility) { this.partialUtility = partialUtility; }
 
+    public int getMargin() { return margin; }
 }

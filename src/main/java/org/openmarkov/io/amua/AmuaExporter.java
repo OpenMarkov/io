@@ -61,7 +61,6 @@ public class AmuaExporter {
      * @throws Exception if validation fails or writing fails.
      */
     public void writeAmuaDT(File outputFile) throws Exception {
-
         if (!hasBeenValidatedDT) {
             isValidDT = isValidDTForAmua();
         }
