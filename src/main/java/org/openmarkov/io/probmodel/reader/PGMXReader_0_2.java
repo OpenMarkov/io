@@ -1729,6 +1729,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         return new CycleLengthShift(variables, probNet.getCycleLength());
     }
     
+    @PotentialReaderMethod(ConditionalGaussianPotential.class)
     protected static Potential getConditionalGaussianPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                                List<Variable> variables) {
         // TODO - Descomentar
@@ -1747,6 +1748,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         // return potential;
     }
     
+    @PotentialReaderMethod(DiscretizedCauchyPotential.class)
     protected static Potential getDiscretizedCauchyPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                              List<Variable> variables) {
         // TODO - Descomentar
