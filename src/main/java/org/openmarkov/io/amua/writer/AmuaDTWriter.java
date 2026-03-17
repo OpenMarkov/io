@@ -8,6 +8,7 @@ import org.openmarkov.io.amua.model.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -20,11 +21,13 @@ import java.util.List;
  * @version 3.0
  */
 
-public class AmuaDecisionTreeWriter {
+public class AmuaDTWriter {
     private final AmuaDTNode<?> amuaRootNode;
-    private final File outputFile;
     private final AmuaDTDimensions amuaDimInfo;
-    private final AmuaDTType amuaDTType;
+    private final AmuaModel amuaModel;
+    private final File outputFile;
+
+    private static final DecimalFormat df = new DecimalFormat("#.####");
 
 
     /**
@@ -32,13 +35,13 @@ public class AmuaDecisionTreeWriter {
      *
      * @param amuaRootNode root node of the decision tree in Amua format.
      * @param amuaDimInfo object with information about the tree's dimensions
-     * @param amuaDTType yype of Amua decision tree (COST_EFFECTIVENESS or UNICRITERIA).
+     * @param amuaModel yype of Amua decision tree (COST_EFFECTIVENESS or UNICRITERIA).
      * @param outputFile file to which the XML representation will be written.
      */
-    public AmuaDecisionTreeWriter(AmuaDTNode<?> amuaRootNode, AmuaDTDimensions amuaDimInfo, AmuaDTType amuaDTType, File outputFile) {
+    public AmuaDTWriter(AmuaDTNode<?> amuaRootNode, AmuaDTDimensions amuaDimInfo, AmuaModel amuaModel, File outputFile) {
         this.amuaRootNode = amuaRootNode;
         this.amuaDimInfo = amuaDimInfo;
-        this.amuaDTType = amuaDTType;
+        this.amuaModel = amuaModel;
         this.outputFile = outputFile;
     }
 
@@ -120,7 +123,7 @@ public class AmuaDecisionTreeWriter {
         addElement(dimInfo, "costDim", amuaDimInfo.getCostDim());
         addElement(dimInfo, "effectDim", amuaDimInfo.getEffectDim());
 
-        if (amuaDTType == AmuaDTType.COST_EFFECTIVENESS){ // only required by CEA
+        if (amuaModel == AmuaModel.COST_EFFECTIVENESS_DT){ // only required by CEA
             addElement(dimInfo, "baseScenario", amuaDimInfo.getBaseScenario());
         }
 
@@ -183,7 +186,7 @@ public class AmuaDecisionTreeWriter {
         addElement(nodeElem, "collapsed", amuaNode.isCollapsed());
 
         if (amuaNode.getProbability() != 0) {
-            addElement(nodeElem, "prob", amuaNode.getProbability());
+            addElement(nodeElem, "prob", df.format(amuaNode.getProbability()));
         }
 
         // delegates to write the cost and payoff
@@ -213,8 +216,8 @@ public class AmuaDecisionTreeWriter {
         } else if ( amuaNode instanceof AmuaDTCENode ceNode){
             AmuaCEvalue cost = ceNode.getCost();
             if(cost != null){
-                addElement(nodeElem, "cost", cost.getCost());
-                addElement(nodeElem, "cost", cost.getEffectiveness());
+                addElement(nodeElem, "cost", df.format(cost.getCost()));
+                addElement(nodeElem, "cost", df.format(cost.getEffectiveness()));
             }
         }
     }
@@ -232,8 +235,8 @@ public class AmuaDecisionTreeWriter {
         } else if ( amuaNode instanceof AmuaDTCENode ceNode){
             AmuaCEvalue payoff = ceNode.getPayoff();
             if (payoff != null) {
-                addElement(nodeElem, "payoff", payoff.getCost());
-                addElement(nodeElem, "payoff", payoff.getEffectiveness());
+                addElement(nodeElem, "payoff", df.format(payoff.getCost()));
+                addElement(nodeElem, "payoff", df.format(payoff.getEffectiveness()));
             }
         }
     }

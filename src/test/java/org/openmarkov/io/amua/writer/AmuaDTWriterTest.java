@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AmuaDecisionTreeWriterTest {
+class AmuaDTWriterTest {
 
     private static final int DECISION = 0;
     private static final int CHANCE = 1;
@@ -170,8 +170,8 @@ class AmuaDecisionTreeWriterTest {
 
 
     private void writeTree(AmuaDTNode<?> root, AmuaDTDimensions dimensions, File file) throws Exception {
-        AmuaDTType type = root instanceof AmuaDTUnicriteriaNode ? AmuaDTType.UNICRITERIA : AmuaDTType.COST_EFFECTIVENESS;
-        AmuaDecisionTreeWriter writer = new AmuaDecisionTreeWriter(root, dimensions, type, file);
+        AmuaModel type = root instanceof AmuaDTUnicriteriaNode ? AmuaModel.UNICRITERIA_DT : AmuaModel.COST_EFFECTIVENESS_DT;
+        AmuaDTWriter writer = new AmuaDTWriter(root, dimensions, type, file);
         writer.writeDT();
 
         assertTrue(file.exists());
