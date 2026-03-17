@@ -19,6 +19,7 @@ import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Variable;
 import org.openmarkov.core.model.network.potential.*;
+import org.openmarkov.core.model.network.modelUncertainty.ProbDensFunctionManager;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 
@@ -88,15 +89,26 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         String univariateName = xmlPotential.getAttributeValue(XMLAttributes.DISTRIBUTION.toString());
         String parametrization = xmlPotential.getAttributeValue(XMLAttributes.PARAMETRIZATION.toString());
         Element xmlRootTable = xmlPotential.getChild(XMLTags.PARAMETERS.toString());
+        if (xmlRootTable == null) {
+            xmlRootTable = xmlPotential.getChild(XMLTags.VALUES.toString());
+        }
         double[] table = parseDoubles(xmlRootTable.getTextNormalize());
         
-        UnivariateDistrPotential potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
+        UnivariateDistrPotential potential;
+        if (parametrization != null) {
+            potential = new UnivariateDistrPotential(variables, univariateName, parametrization, xmlRole);
+        } else {
+            var probDensFunctionClass = ProbDensFunctionManager.getUniqueInstance().getProbDensFunctionClass(univariateName);
+            potential = new UnivariateDistrPotential(variables, probDensFunctionClass, xmlRole);
+        }
         
         List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
         vDistributionTable.add(0, potential.getPseudoVariableDistribution());
         potential.getAugmentedProbTable().setValues(table);
-        potential.setDistributionTable(
-                getAugmentedProbTable(xmlPotential, xmlRole, vDistributionTable, variables));
+        if (xmlPotential.getChild(XMLTags.FUNCTIONS.toString()) != null) {
+            potential.setDistributionTable(
+                    getAugmentedProbTable(xmlPotential, xmlRole, vDistributionTable, variables));
+        }
         
         return potential;
     }
