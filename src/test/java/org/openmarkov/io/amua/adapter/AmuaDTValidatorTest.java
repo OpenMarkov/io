@@ -65,7 +65,7 @@ public class AmuaDTValidatorTest {
     @Test
     void determineCEValidTest() {
         AmuaDTValidator validator = new AmuaDTValidator(getCorrectCriteria());
-        assertEquals(AmuaDTType.COST_EFFECTIVENESS, validator.determineAmuaDTType(ceaRoot));
+        assertEquals(AmuaModel.COST_EFFECTIVENESS_DT, validator.determineAmuaDTType(ceaRoot));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class AmuaDTValidatorTest {
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validator.determineAmuaDTType(ceaRoot));
 
-        assertEquals("Tree type not supported by Amua.", exception.getMessage());
+        assertEquals("Amua supports only one decision node.", exception.getMessage());
     }
 
     @Test
@@ -100,13 +100,13 @@ public class AmuaDTValidatorTest {
         firstBranch.setChild(wrongChild);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validator.determineAmuaDTType(ceaRoot));
-        assertEquals("Tree type not supported by Amua.", exception.getMessage());
+        assertEquals("Invalid node type for Cost-Effectiveness tree.", exception.getMessage());
     }
 
     @Test
     void determineUnicriteriaTwoCriterionValidTest() {
         AmuaDTValidator validator = new AmuaDTValidator(getCorrectCriteria());
-        assertEquals(AmuaDTType.UNICRITERIA, validator.determineAmuaDTType(unicriteriaRoot));
+        assertEquals(AmuaModel.UNICRITERIA_DT, validator.determineAmuaDTType(unicriteriaRoot));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class AmuaDTValidatorTest {
         utility.setCECriterion(Criterion.CECriterion.Cost);
 
         AmuaDTValidator validator = new AmuaDTValidator(List.of(utility));
-        assertEquals(AmuaDTType.UNICRITERIA, validator.determineAmuaDTType(unicriteriaRoot));
+        assertEquals(AmuaModel.UNICRITERIA_DT, validator.determineAmuaDTType(unicriteriaRoot));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class AmuaDTValidatorTest {
         firstBranch.setChild(wrongChild);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validator.determineAmuaDTType(unicriteriaRoot));
-        assertEquals("Tree type not supported by Amua.", exception.getMessage());
+        assertEquals("Invalid node type for Cost-Effectiveness tree.", exception.getMessage());
     }
 
 
