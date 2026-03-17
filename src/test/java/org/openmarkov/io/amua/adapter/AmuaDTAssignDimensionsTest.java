@@ -3,7 +3,7 @@ package org.openmarkov.io.amua.adapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openmarkov.core.model.network.Criterion;
-import org.openmarkov.io.amua.adatper.AmuaDTDimensions;
+import org.openmarkov.io.amua.adatper.*;
 import org.openmarkov.io.amua.model.*;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AmuaDTDimensionsTest {
+public class AmuaDTAssignDimensionsTest {
 
     Double defaultWTP;
     private List<Criterion> criteria;
@@ -67,7 +67,8 @@ public class AmuaDTDimensionsTest {
 
     @Test
     void assignDimensionsUnicriteriaTest() {
-        AmuaDTDimensions result = AmuaDTDimensions.assignDimensions(criteria, AmuaModel.UNICRITERIA_DT, amuaUnicriteriaNode);
+        AmuaDTAssignDimensions dimAsssign = new AmuaDTAssignDimensions();
+        AmuaDTDimensions result = dimAsssign.assignDimensions(criteria, AmuaModel.UNICRITERIA_DT, amuaUnicriteriaNode);
 
         assertEquals(unicriteriaDimensions.get(0).getName(), result.getDimensions().get(0).getName());
         assertEquals(unicriteriaDimensions.get(0).getSymbols(), result.getDimensions().get(0).getSymbols());
@@ -83,7 +84,8 @@ public class AmuaDTDimensionsTest {
 
     @Test
     void assignDimensionsCETest() {
-        AmuaDTDimensions result = AmuaDTDimensions.assignDimensions(criteria, AmuaModel.COST_EFFECTIVENESS_DT, amuaDTCENode);
+        AmuaDTAssignDimensions dimAsssign = new AmuaDTAssignDimensions();
+        AmuaDTDimensions result = dimAsssign.assignDimensions(criteria, AmuaModel.COST_EFFECTIVENESS_DT, amuaDTCENode);
 
         for (int i = 0; i < criteria.size(); i++) {
             assertEquals(ceDimensions.get(i).getName(), result.getDimensions().get(i).getName());
@@ -91,7 +93,7 @@ public class AmuaDTDimensionsTest {
             assertEquals(ceDimensions.get(i).getDecimals(), result.getDimensions().get(i).getDecimals());
         }
         assertEquals(AmuaConstants.ANALYSIS_TYPE_CEA, result.getAnalysisType());
-        assertEquals(AmuaConstants.OBJECTIVE_MINIMIZE, result.getObjective());
+        assertEquals(AmuaConstants.OBJECTIVE_MAXIMIZE, result.getObjective());
         assertEquals(0, result.getCostDim());
         assertEquals(1, result.getEffectDim());
         assertEquals(0, result.getExtendedDim());
@@ -103,10 +105,11 @@ public class AmuaDTDimensionsTest {
         Criterion costCriterion = new Criterion("Cost", "$");
         costCriterion.setCECriterion(Criterion.CECriterion.Cost);
 
-        costCriterion.setUnicriterizationScale(100); // wtp
-        defaultWTP = costCriterion.getUnicriterizationScale();
         Criterion effectivenessCriterion = new Criterion("Effectiveness", "QALY");
         effectivenessCriterion.setCECriterion(Criterion.CECriterion.Effectiveness);
+
+        effectivenessCriterion.setUnicriterizationScale(100); // wtp
+        defaultWTP = effectivenessCriterion.getUnicriterizationScale();
 
         criteria = List.of(costCriterion, effectivenessCriterion);
     }
