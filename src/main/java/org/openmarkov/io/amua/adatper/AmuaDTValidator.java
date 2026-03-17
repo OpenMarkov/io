@@ -4,7 +4,7 @@ import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.decisiontree.*;
 import org.openmarkov.inference.algorithm.decompositionIntoSymmetricDANs.core.EvaluationDecisionTreeNode;
 import org.openmarkov.inference.algorithm.decompositionIntoSymmetricDANs.core.CEADecisionTreeNode;
-import org.openmarkov.io.amua.model.AmuaDTType;
+import org.openmarkov.io.amua.model.AmuaModel;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -30,23 +30,40 @@ public class AmuaDTValidator {
      *
      * @throws IllegalStateException if the decision tree type is not supported
      */
-    public AmuaDTType determineAmuaDTType(DecisionTreeNode<?> treeNode) {
+    public AmuaModel determineAmuaDTType(DecisionTreeNode<?> treeNode) {
         if (criteria == null || criteria.isEmpty()) {
             throw new IllegalStateException("The tree has no defined criteria.");
         }
 
         boolean hasCE = hasCECriteria();
 
-        // COST_EFFECTIVENESS
-        if (hasCE && hasValidStructure(treeNode, 1, true)) {
-            return AmuaDTType.COST_EFFECTIVENESS;
+        IllegalStateException ceError = null;
+
+        // Try COST_EFFECTIVENESS
+        if (hasCE) {
+            try {
+                decisionNodeCount = 0;
+                hasValidStructure(treeNode, 1, true);
+                return AmuaModel.COST_EFFECTIVENESS_DT;
+            } catch (IllegalStateException e) {
+                ceError = e;
+            }
         }
 
-        // UNICRITERIA
+        // Try UNICRITERIA
         // An inferred unicriteria tree may internally include cost-effectiveness criteria
         // (hasCECriteria == true), even if they are not explicitly displayed.
-        if ((criteria.size() == 1 || hasCE) && hasValidStructure(treeNode, 1, false)) {
-            return AmuaDTType.UNICRITERIA;
+        if (criteria.size() == 1 || hasCE) {
+            try {
+                decisionNodeCount = 0;
+                hasValidStructure(treeNode, 1, false);
+                return AmuaModel.UNICRITERIA_DT;
+            } catch (IllegalStateException e) {
+                if (ceError != null) {
+                    throw ceError;
+                }
+                throw e;
+            }
         }
 
         throw new IllegalStateException("Tree type not supported by Amua.");
@@ -62,13 +79,10 @@ public class AmuaDTValidator {
      * @return true if subtree is valid.
      */
     private boolean hasValidStructure(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE){
-        if (!isValidNode(node, maxDecisionNodes, isCE)) return false;
-
+        isValidNode(node, maxDecisionNodes, isCE);
         for (DecisionTreeElement child : node.getChildren()) {
             if (child instanceof DecisionTreeBranch branch) {
-                if (!hasValidStructure(branch.getChild(), maxDecisionNodes, isCE)) {
-                    return false;
-                }
+                hasValidStructure(branch.getChild(), maxDecisionNodes, isCE);
             }
         }
         return true;
@@ -83,21 +97,28 @@ public class AmuaDTValidator {
      * @param isCE whether CE structure is expected.
      * @return true if node is valid.
      */
-    private boolean isValidNode(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE){
+    private boolean isValidNode(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE) {
         // validate node class type
-        if (isCE && !(node instanceof CEADecisionTreeNode)) return false;
-        if (!isCE && !(node instanceof EvaluationDecisionTreeNode)) return false;
+        if (isCE && !(node instanceof CEADecisionTreeNode)) {
+            throw new IllegalStateException("Invalid node type for Cost-Effectiveness tree.");
+        }
+
+        if (!isCE && !(node instanceof EvaluationDecisionTreeNode)) {
+            throw new IllegalStateException("Invalid node type for Unicriteria tree.");
+        }
 
         NodeType type = node.getNodeType();
+
         if (type != NodeType.UTILITY && type != NodeType.CHANCE && type != NodeType.DECISION) {
-            return false;
+            throw new IllegalStateException("Unsupported node type: " + type);
         }
 
         if (type == NodeType.DECISION) {
             decisionNodeCount++;
-            return decisionNodeCount <= maxDecisionNodes;
+            if (decisionNodeCount > maxDecisionNodes) {
+                throw new IllegalStateException("Amua supports only one decision node.");
+            }
         }
-
         return true;
     }
 
