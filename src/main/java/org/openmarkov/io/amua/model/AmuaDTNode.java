@@ -14,29 +14,29 @@ import java.util.List;
 
 public abstract class AmuaDTNode<T> {
 
-    protected int index;
-    protected int type;
-    protected int level;
+    private int index;
+    private int type;
+    private int level;
 
-    protected double probability;
+    private double probability;
 
-    protected String name;
+    private String name;
 
-    protected int xPos;
-    protected int yPos;
-    protected int parentX;
-    protected int parentY;
+    private int xPos;
+    private int yPos;
+    private int parentX;
+    private int parentY;
 
     private List<AmuaDTNode<?>> childNodes = new ArrayList<>();
-    protected AmuaDTNode<?> parentNode;
+    private AmuaDTNode<?> parentNode;
 
-    protected boolean collapsed = false; // default
-    protected boolean visible = true; // default
-    protected boolean hasCost;
-    protected boolean hasVarUpdates = false; // default
+    private boolean collapsed = false; // default
+    private boolean visible = true; // default
+    private boolean hasCost;
+    private boolean hasVarUpdates = false; // default
 
-    protected int width = 24; // default
-    protected int height = 24; // default
+    private int width = 24; // default
+    private int height = 24; // default
 
     protected T cost;
     protected T payoff;
@@ -46,8 +46,7 @@ public abstract class AmuaDTNode<T> {
     public final int margin = 48;
 
     /** Default constructor. */
-    public AmuaDTNode() {
-    }
+    public AmuaDTNode() {}
 
     // getters and setters...
 
