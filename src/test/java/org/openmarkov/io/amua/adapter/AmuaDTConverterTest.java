@@ -23,7 +23,7 @@ class AmuaDTConverterTest {
 
         DecisionTreeNode<?> treeNode = new EvaluationDecisionTreeNode(root, net);
 
-        AmuaDTConverter converter = new AmuaDTConverter(AmuaDTType.UNICRITERIA);
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.UNICRITERIA_DT);
         AmuaDTUnicriteriaNode amuaNode = (AmuaDTUnicriteriaNode) converter.convertToAmuaTree(treeNode);
 
         assertNotNull(amuaNode);
@@ -41,7 +41,7 @@ class AmuaDTConverterTest {
         CEADecisionTreeNode treeNode = new CEADecisionTreeNode(root, net);
         treeNode.setUtility(new CEP.CEPBuilder().build(null, 0.0, 10.0));
 
-        AmuaDTConverter converter = new AmuaDTConverter(AmuaDTType.COST_EFFECTIVENESS);
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.COST_EFFECTIVENESS_DT);
         AmuaDTCENode amuaNode = (AmuaDTCENode) converter.convertToAmuaTree(treeNode);
 
         assertNotNull(amuaNode);
@@ -57,7 +57,7 @@ class AmuaDTConverterTest {
         ProbNet net = new ProbNet();
         DecisionTreeNode<?> root = createSimpleDTDU(net);
 
-        AmuaDTConverter converter = new AmuaDTConverter(AmuaDTType.UNICRITERIA);
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.UNICRITERIA_DT);
         AmuaDTNode<?> amuaRoot = converter.convertToAmuaTree(root);
 
         assertEquals(2, amuaRoot.getChildNodes().size());
@@ -72,7 +72,7 @@ class AmuaDTConverterTest {
         ProbNet net = new ProbNet();
         CEADecisionTreeNode root = createTwoTherapiesTree(net);
 
-        AmuaDTConverter converter = new AmuaDTConverter(AmuaDTType.COST_EFFECTIVENESS);
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.COST_EFFECTIVENESS_DT);
         AmuaDTNode<?> amuaRoot = converter.convertToAmuaTree(root);
 
         assertNotNull(amuaRoot);
