@@ -6,8 +6,8 @@ import org.openmarkov.io.amua.adatper.AmuaDTConverter;
 import org.openmarkov.io.amua.adatper.AmuaDTDimensions;
 import org.openmarkov.io.amua.adatper.AmuaDTValidator;
 import org.openmarkov.io.amua.model.AmuaDTNode;
-import org.openmarkov.io.amua.model.AmuaDTType;
-import org.openmarkov.io.amua.writer.AmuaDecisionTreeWriter;
+import org.openmarkov.io.amua.model.AmuaModel;
+import org.openmarkov.io.amua.writer.AmuaDTWriter;
 
 import java.io.File;
 import java.util.List;
@@ -23,11 +23,13 @@ public class AmuaExporter {
 
     private final DecisionTreeNode<?> treeNode;
     private final List<Criterion> criteria;
-    private AmuaDTType amuaDTType;
+    private AmuaModel amuaModel;
     private AmuaDTNode<?> amuaTreeNode;
+    private AmuaDTDimensions amuaDimInfo;
 
     private boolean isValidDT;
     private boolean hasBeenValidatedDT;
+    private String validationErrorMessage;
 
 
     /**
@@ -66,12 +68,10 @@ public class AmuaExporter {
         }
 
         if (!isValidDT) {
-            throw new IllegalStateException("The decision tree is not valid for export to Amua.");
+            throw new IllegalStateException("NOT VALID: \n" + validationErrorMessage);
         }
 
-        AmuaDTDimensions amuaDimInfo = assignDimensions(criteria, amuaDTType, amuaTreeNode);
-
-        AmuaDecisionTreeWriter writer = new AmuaDecisionTreeWriter(amuaTreeNode, amuaDimInfo, amuaDTType, outputFile);
+        AmuaDTWriter writer = new AmuaDTWriter(amuaTreeNode, amuaDimInfo, amuaModel, outputFile);
         writer.writeDT();
     }
 
@@ -82,13 +82,15 @@ public class AmuaExporter {
      *
      * @return true if valid, false otherwise
      */
-    private boolean isValidDTForAmua() {
+    public boolean isValidDTForAmua() {
         try { // if no exception is thrown is valid
             AmuaDTValidator validator = new AmuaDTValidator(criteria);
-            amuaDTType = validator.determineAmuaDTType(treeNode);
+            amuaModel = validator.determineAmuaDTType(treeNode);
 
-            AmuaDTConverter converter = new AmuaDTConverter(amuaDTType);
+            AmuaDTConverter converter = new AmuaDTConverter(amuaModel);
             amuaTreeNode = converter.convertToAmuaTree(treeNode);
+
+            amuaDimInfo = assignDimensions(criteria, amuaModel, amuaTreeNode);
 
             hasBeenValidatedDT = true;
             isValidDT = true;
@@ -96,7 +98,18 @@ public class AmuaExporter {
         } catch (IllegalStateException e) {
             hasBeenValidatedDT = true;
             isValidDT = false;
+            validationErrorMessage = e.getMessage();
             return false;
         }
+    }
+
+
+    /**
+     * This message indicates whether the decision tree is valid for Amua export.
+     *
+     * @return the validation error message
+     */
+    public String getValidationErrorMessage() {
+        return validationErrorMessage;
     }
 }
