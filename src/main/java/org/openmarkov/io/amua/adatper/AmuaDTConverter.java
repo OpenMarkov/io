@@ -20,19 +20,18 @@ import java.util.Map;
  */
 
 public class AmuaDTConverter {
-    private final AmuaDTType amuaDTType;
+    private final AmuaModel amuaModel;
     private int index;
 
     private final Map<AmuaDTNode<?>, Integer> childPositionCounter = new HashMap<>();
-    // mapa para almacenar el último hijo de cada padre
     private final Map<AmuaDTNode<?>, AmuaDTNode<?>> lastChildMap = new HashMap<>();
 
     /**
      * Creates a converter for the specified Amua tree type.
-     * @param amuaDTType the type of Amua decision tree
+     * @param amuaModel the type of Amua decision tree
      */
-    public AmuaDTConverter(AmuaDTType amuaDTType) {
-        this.amuaDTType = amuaDTType;
+    public AmuaDTConverter(AmuaModel amuaModel) {
+        this.amuaModel = amuaModel;
     }
 
 
@@ -108,9 +107,6 @@ public class AmuaDTConverter {
         // position (xPos, yPos, parentX, parentY)
         setGraphicInformation(amuaNode);
 
-        // hasCost: PENDING TASK
-        // cost: PENDING TASK, in assignUtilies
-
         assignUtilities(amuaNode, decisionTreeNode);
 
         // recursive call
@@ -147,9 +143,10 @@ public class AmuaDTConverter {
      * Factory method for Amua node creation.
      */
     private AmuaDTNode<?> createNodeInstance() {
-        return switch (amuaDTType) {
-            case COST_EFFECTIVENESS -> new AmuaDTCENode();
-            case UNICRITERIA -> new AmuaDTUnicriteriaNode();
+        return switch (amuaModel) {
+            case COST_EFFECTIVENESS_DT -> new AmuaDTCENode();
+            case UNICRITERIA_DT -> new AmuaDTUnicriteriaNode();
+            default -> throw new IllegalStateException("Unsupported AMUA model: " + amuaModel + " during tree conversion.");
         };
     }
 
@@ -210,16 +207,15 @@ public class AmuaDTConverter {
         amuaNode.setXPos(margin + amuaNode.getLevel() * xOffset);
 
         // yPos
-        int index = getNodeIndex(amuaNode, parent);
+        int index = getNodeIndex(parent);
         if (index == 0) {
             amuaNode.setYPos(parent.getYPos()); // first child aligns with parent
         } else {
-            AmuaDTNode<?> previousSibling = lastChildMap.get(parent); // último hijo agregado
+            AmuaDTNode<?> previousSibling = lastChildMap.get(parent);
             int lastYPos = getMaxYPos(previousSibling);
             amuaNode.setYPos(lastYPos + yOffset);
         }
 
-        // actualizamos el último hijo del padre
         lastChildMap.put(parent, amuaNode);
 
         // parentX
@@ -230,21 +226,27 @@ public class AmuaDTConverter {
     }
 
 
-    // PENDING TASK => doc
-    private int getNodeIndex(AmuaDTNode<?> node, AmuaDTNode<?> parent) {
-        if (parent == null) return 0; // root siempre 0
-
-        // Si el nodo aún no tiene índice asignado, usamos el contador del padre
+    /**
+     * Calculates the position index of a node among its siblings.
+     *
+     * @param parent the parent node of the current node
+     * @return the zero-based index of the node among the parent's children
+     */
+    private int getNodeIndex(AmuaDTNode<?> parent) {
+        if (parent == null) return 0;
         int index = childPositionCounter.getOrDefault(parent, 0);
-
-        // Actualizamos el contador del padre para el siguiente hijo
         childPositionCounter.put(parent, index + 1);
-
         return index;
     }
 
 
-    // PENDING TASK => doc
+    /**
+     * Computes the maximum Y position in the subtree rooted at the
+     * specified node.
+     *
+     * @param node the root node of the subtree to inspect
+     * @return the maximum Y coordinate found in the subtree
+     */
     private int getMaxYPos(AmuaDTNode<?> node) {
         int maxY = node.getYPos(); // inicia con el nodo actual
         for (AmuaDTNode<?> child : node.getChildNodes()) {
@@ -287,7 +289,7 @@ public class AmuaDTConverter {
      * @throws IllegalArgumentException if the tree type is not COST_EFFECTIVENESS
      */
     private CEP getCEAUtility(DecisionTreeNode<?> node) {
-        if (amuaDTType != AmuaDTType.COST_EFFECTIVENESS) {
+        if (amuaModel != AmuaModel.COST_EFFECTIVENESS_DT) {
             throw new IllegalArgumentException("Invalid tree type for CEA utility.");
         }
         if (!(node instanceof CEADecisionTreeNode ceaNode)) {
@@ -304,7 +306,7 @@ public class AmuaDTConverter {
      * @throws IllegalArgumentException if the tree type is not UNICRITERIA
      */
     private double getUnicriteriaUtility(DecisionTreeNode<?> node) {
-        if (amuaDTType != AmuaDTType.UNICRITERIA) {
+        if (amuaModel != AmuaModel.UNICRITERIA_DT) {
             throw new IllegalArgumentException("Invalid tree type for unicriteria utility.");
         }
 
