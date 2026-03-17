@@ -4,7 +4,7 @@ import org.openmarkov.core.model.network.Criterion;
 import org.openmarkov.core.model.network.Criterion.CECriterion;
 import org.openmarkov.io.amua.model.AmuaDTCENode;
 import org.openmarkov.io.amua.model.AmuaDTNode;
-import org.openmarkov.io.amua.model.AmuaDTType;
+import org.openmarkov.io.amua.model.AmuaModel;
 import org.openmarkov.io.amua.model.AmuaDimensionInfo;
 import static org.openmarkov.io.amua.model.AmuaConstants.*;
 
@@ -71,12 +71,12 @@ public class AmuaDTDimensions {
      * Creates an AmuaDTDimensions instance based on the provided criteria, tree type, and root node.
      *
      * @param criteria list of decision criteria associated with the tree
-     * @param amuaDTType type of AMUA tree (UNICRITERIA or COST_EFFECTIVENESS)
+     * @param amuaModel type of AMUA tree (UNICRITERIA or COST_EFFECTIVENESS)
      * @param tree root node of the decision tree
      * @return fully populated AmuaDTDimensions instance
      * @throws IllegalStateException if required criteria are missing or type is unsupported
      */
-    public static AmuaDTDimensions assignDimensions(List<Criterion> criteria, AmuaDTType amuaDTType, AmuaDTNode<?> tree) {
+    public static AmuaDTDimensions assignDimensions(List<Criterion> criteria, AmuaModel amuaModel, AmuaDTNode<?> tree) {
 
         Objects.requireNonNull(tree, "tree cannot be null");
 
@@ -88,9 +88,9 @@ public class AmuaDTDimensions {
         int objectiveDim = 0;
         int extendedDim = 0;
 
-        switch (amuaDTType) {
+        switch (amuaModel) {
 
-            case COST_EFFECTIVENESS:
+            case COST_EFFECTIVENESS_DT:
                 for (int i = 0; i < criteria.size(); i++) {
                     Criterion c = criteria.get(i);
                     dimensions.add(new AmuaDimensionInfo(c.getCriterionName(), c.getCriterionUnit(), DEFAULT_DECIMALS));
@@ -107,10 +107,10 @@ public class AmuaDTDimensions {
                 }
 
                 analysisType = ANALYSIS_TYPE_CEA;
-                objective = OBJECTIVE_MINIMIZE;
+                objective = OBJECTIVE_MAXIMIZE;
                 break;
 
-            case UNICRITERIA:
+            case UNICRITERIA_DT:
                 dimensions.add(new AmuaDimensionInfo("Utility", "u", DEFAULT_DECIMALS));
                 analysisType = ANALYSIS_TYPE_EV;
                 objective = OBJECTIVE_MAXIMIZE;
@@ -119,11 +119,11 @@ public class AmuaDTDimensions {
                 break;
 
             default:
-                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaDTType);
+                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaModel);
         }
 
-        String baseScenario = (amuaDTType == AmuaDTType.COST_EFFECTIVENESS) ? calcBaseScenario(amuaDTType, tree) : null;
-        double WTP = calcWTP(amuaDTType, criteria);
+        String baseScenario = (amuaModel == AmuaModel.COST_EFFECTIVENESS_DT) ? calcBaseScenario(amuaModel, tree) : null;
+        double WTP = calcWTP(amuaModel, criteria);
 
         return new AmuaDTDimensions(
                 dimensions,
@@ -147,18 +147,18 @@ public class AmuaDTDimensions {
      *
      * @throws IllegalStateException if the AmuaDTType is unsupported.
      */
-    private static double calcWTP(AmuaDTType amuaDTType, List<Criterion> criteria) {
-        switch (amuaDTType) { // only works with Cost-Effectiveness Tree
-            case COST_EFFECTIVENESS:
+    private static double calcWTP(AmuaModel amuaModel, List<Criterion> criteria) {
+        switch (amuaModel) { // only works with Cost-Effectiveness Tree
+            case COST_EFFECTIVENESS_DT:
                 for (Criterion criterion : criteria) {
-                    if (criterion.getCECriterion() == CECriterion.Cost) {
+                    if (criterion.getCECriterion() == CECriterion.Effectiveness) {
                         return criterion.getUnicriterizationScale();
                     }
                 }
-            case UNICRITERIA:
+            case UNICRITERIA_DT:
                 return 0;
             default:
-                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaDTType);
+                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaModel);
         }
     }
 
@@ -169,9 +169,9 @@ public class AmuaDTDimensions {
      * @return the name of the base scenario.
      * @throws IllegalStateException if no decision node is found or if the AmuaDTType is unsupported.
      */
-    private static String calcBaseScenario(AmuaDTType amuaDTType, AmuaDTNode<?> tree) {
-        switch(amuaDTType) { // only works with Cost-Effectiveness Tree
-            case COST_EFFECTIVENESS:
+    private static String calcBaseScenario(AmuaModel amuaModel, AmuaDTNode<?> tree) {
+        switch(amuaModel) { // only works with Cost-Effectiveness Tree
+            case COST_EFFECTIVENESS_DT:
                 double bestCost = Double.POSITIVE_INFINITY;
                 double bestEffectiveness = Double.NEGATIVE_INFINITY;
                 AmuaDTCENode decisionNode = (AmuaDTCENode) getDecisionNode(tree);
@@ -193,11 +193,11 @@ public class AmuaDTDimensions {
                 if (bestScenario == null) {throw new IllegalArgumentException("Base Scenario was not found");}
                 return bestScenario.getName(); // return baseScenario
 
-            case UNICRITERIA:
+            case UNICRITERIA_DT:
                 return null;
 
             default:
-                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaDTType);
+                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaModel);
         }
     }
 

@@ -67,7 +67,7 @@ public class AmuaDTDimensionsTest {
 
     @Test
     void assignDimensionsUnicriteriaTest() {
-        AmuaDTDimensions result = AmuaDTDimensions.assignDimensions(criteria, AmuaDTType.UNICRITERIA, amuaUnicriteriaNode);
+        AmuaDTDimensions result = AmuaDTDimensions.assignDimensions(criteria, AmuaModel.UNICRITERIA_DT, amuaUnicriteriaNode);
 
         assertEquals(unicriteriaDimensions.get(0).getName(), result.getDimensions().get(0).getName());
         assertEquals(unicriteriaDimensions.get(0).getSymbols(), result.getDimensions().get(0).getSymbols());
@@ -83,7 +83,7 @@ public class AmuaDTDimensionsTest {
 
     @Test
     void assignDimensionsCETest() {
-        AmuaDTDimensions result = AmuaDTDimensions.assignDimensions(criteria, AmuaDTType.COST_EFFECTIVENESS, amuaDTCENode);
+        AmuaDTDimensions result = AmuaDTDimensions.assignDimensions(criteria, AmuaModel.COST_EFFECTIVENESS_DT, amuaDTCENode);
 
         for (int i = 0; i < criteria.size(); i++) {
             assertEquals(ceDimensions.get(i).getName(), result.getDimensions().get(i).getName());
