@@ -2,7 +2,7 @@ package org.openmarkov.io.amua.writer;
 
 import org.jdom2.*;
 import org.jdom2.output.*;
-import org.openmarkov.io.amua.adatper.AmuaDTDimensions;
+import org.openmarkov.io.amua.adatper.*;
 import org.openmarkov.io.amua.model.*;
 
 import java.io.File;

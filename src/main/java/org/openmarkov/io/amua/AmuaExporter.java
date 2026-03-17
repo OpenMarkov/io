@@ -2,17 +2,12 @@ package org.openmarkov.io.amua;
 
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.decisiontree.*;
-import org.openmarkov.io.amua.adatper.AmuaDTConverter;
-import org.openmarkov.io.amua.adatper.AmuaDTDimensions;
-import org.openmarkov.io.amua.adatper.AmuaDTValidator;
-import org.openmarkov.io.amua.model.AmuaDTNode;
-import org.openmarkov.io.amua.model.AmuaModel;
-import org.openmarkov.io.amua.writer.AmuaDTWriter;
+import org.openmarkov.io.amua.adatper.*;
+import org.openmarkov.io.amua.model.*;
+import org.openmarkov.io.amua.writer.*;
 
 import java.io.File;
 import java.util.List;
-
-import static org.openmarkov.io.amua.adatper.AmuaDTDimensions.assignDimensions;
 
 /**
  * @author Hugo Manuel
@@ -90,7 +85,8 @@ public class AmuaExporter {
             AmuaDTConverter converter = new AmuaDTConverter(amuaModel);
             amuaTreeNode = converter.convertToAmuaTree(treeNode);
 
-            amuaDimInfo = assignDimensions(criteria, amuaModel, amuaTreeNode);
+            AmuaDTAssignDimensions dimAssigner = new AmuaDTAssignDimensions();
+            amuaDimInfo = dimAssigner.assignDimensions(criteria, amuaModel, amuaTreeNode);
 
             hasBeenValidatedDT = true;
             isValidDT = true;

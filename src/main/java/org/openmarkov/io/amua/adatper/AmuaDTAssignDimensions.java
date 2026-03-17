@@ -1,10 +1,10 @@
 package org.openmarkov.io.amua.adatper;
 
 import org.openmarkov.core.model.network.Criterion;
-import org.openmarkov.core.model.network.Criterion.CECriterion;
 import org.openmarkov.io.amua.model.AmuaDTCENode;
 import org.openmarkov.io.amua.model.AmuaDTNode;
 import org.openmarkov.io.amua.model.AmuaModel;
+import org.openmarkov.io.amua.model.AmuaDTDimensions;
 import org.openmarkov.io.amua.model.AmuaDimensionInfo;
 import static org.openmarkov.io.amua.model.AmuaConstants.*;
 
@@ -12,60 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Holds the dimensional and analysis information for an AMUA decision tree.
- *
- * @author Hugo Manuel
- * @version 1.0
- */
-
-public class AmuaDTDimensions {
-
-    private final List<AmuaDimensionInfo> dimensions; // name, symbols, decimals
-    private final int analysisType;
-    private final int objective;
-    private final int objectiveDim;
-    private final int costDim;
-    private final int effectDim;
-    private final String baseScenario;
-    private final double WTP;
-    private final int extendedDim;
-
-    /**
-     * Public constructor.
-     */
-    public AmuaDTDimensions(List<AmuaDimensionInfo> dimensions,
-                          int analysisType,
-                          int objective,
-                          int objectiveDim,
-                          int costDim,
-                          int effectDim,
-                          String baseScenario,
-                          double WTP,
-                          int extendedDim) {
-        this.dimensions = dimensions;
-        this.analysisType = analysisType;
-        this.objective = objective;
-        this.objectiveDim = objectiveDim;
-        this.costDim = costDim;
-        this.effectDim = effectDim;
-        this.baseScenario = baseScenario;
-        this.WTP = WTP;
-        this.extendedDim = extendedDim;
-    }
-
-    // getters...
-    public List<AmuaDimensionInfo> getDimensions() { return dimensions; }
-    public int getAnalysisType() { return analysisType; }
-    public int getObjective() { return objective; }
-    public int getObjectiveDim() { return objectiveDim; }
-    public int getCostDim() { return costDim; }
-    public int getEffectDim() { return effectDim; }
-    public String getBaseScenario() { return baseScenario; }
-    public double getWTP() { return WTP; }
-    public int getExtendedDim() { return extendedDim; }
-
-
+public class AmuaDTAssignDimensions {
 
     /**
      * Creates an AmuaDTDimensions instance based on the provided criteria, tree type, and root node.
@@ -76,7 +23,7 @@ public class AmuaDTDimensions {
      * @return fully populated AmuaDTDimensions instance
      * @throws IllegalStateException if required criteria are missing or type is unsupported
      */
-    public static AmuaDTDimensions assignDimensions(List<Criterion> criteria, AmuaModel amuaModel, AmuaDTNode<?> tree) {
+    public AmuaDTDimensions assignDimensions(List<Criterion> criteria, AmuaModel amuaModel, AmuaDTNode<?> tree) {
 
         Objects.requireNonNull(tree, "tree cannot be null");
 
@@ -95,9 +42,9 @@ public class AmuaDTDimensions {
                     Criterion c = criteria.get(i);
                     dimensions.add(new AmuaDimensionInfo(c.getCriterionName(), c.getCriterionUnit(), DEFAULT_DECIMALS));
 
-                    if (c.getCECriterion() == CECriterion.Cost) {
+                    if (c.getCECriterion() == Criterion.CECriterion.Cost) {
                         costDim = i;
-                    } else if (c.getCECriterion() == CECriterion.Effectiveness) {
+                    } else if (c.getCECriterion() == Criterion.CECriterion.Effectiveness) {
                         effectDim = i;
                     }
                 }
@@ -151,7 +98,7 @@ public class AmuaDTDimensions {
         switch (amuaModel) { // only works with Cost-Effectiveness Tree
             case COST_EFFECTIVENESS_DT:
                 for (Criterion criterion : criteria) {
-                    if (criterion.getCECriterion() == CECriterion.Effectiveness) {
+                    if (criterion.getCECriterion() == Criterion.CECriterion.Effectiveness) {
                         return criterion.getUnicriterizationScale();
                     }
                 }
