@@ -7,8 +7,6 @@
 
 package org.openmarkov.io.elvira;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,8 +32,9 @@ public class ElviraWriterCanonicModelsTest {
 	private ProbNet miniICI;
 
 	// Methods
+	/** Creates a small ProbNet */
 	@BeforeEach
-	/** Creates a small ProbNet */ public void setUp() {
+	public void setUp() {
 		//probNet small					
 		//Variables
 		String y = new String("Y");
@@ -76,20 +75,20 @@ public class ElviraWriterCanonicModelsTest {
 
 		// Create Potentials
 		// X1 Potential
-		ArrayList<Variable> X1Variables = new ArrayList<Variable>();
+		ArrayList<Variable> X1Variables = new ArrayList<>();
 		X1Variables.add(variableX1);
 		double[] tableX1 = { 0.33333, 0.33333, 0.33333 };
 		TablePotential X1Potential = new TablePotential(X1Variables, PotentialRole.CONDITIONAL_PROBABILITY, tableX1);
 
 		// X2 Potential
-		ArrayList<Variable> X2Variables = new ArrayList<Variable>();
+		ArrayList<Variable> X2Variables = new ArrayList<>();
 		X2Variables.add(variableX2);
 		double[] tableX2 = { 0.5, 0.5 };
 		TablePotential X2Potential = new TablePotential(X2Variables, PotentialRole.CONDITIONAL_PROBABILITY, tableX2);
 
 		// MaxPotential
 		// Variables
-		ArrayList<Variable> maxPotentialVariables = new ArrayList<Variable>();
+		ArrayList<Variable> maxPotentialVariables = new ArrayList<>();
 		maxPotentialVariables.add(variableY);
 		maxPotentialVariables.add(variableX1);
 		maxPotentialVariables.add(variableX2);
@@ -125,7 +124,8 @@ public class ElviraWriterCanonicModelsTest {
 
 	}
 
-	@Test public final void testWriteProbNet() throws ParserException, IOException, WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+	@Test
+	public final void testWriteProbNet() throws ParserException, IOException, WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
 		URL url = this.getClass().getClassLoader().getResource("trivial3jensen.elv");
 		String rootPath = url.getPath();
 		File file = new File(rootPath);

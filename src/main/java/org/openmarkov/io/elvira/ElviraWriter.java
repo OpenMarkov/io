@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openmarkov.core.exception.NonProjectablePotentialException;
 import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
@@ -89,7 +88,7 @@ public class ElviraWriter implements ProbNetWriter {
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override
-    public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+    public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
         if (probNet.additionalProperties.get("hasElviraProperties") == null) {
             generateElviraProperties(probNet);
         }
@@ -110,7 +109,7 @@ public class ElviraWriter implements ProbNetWriter {
      *
      * @throws WriterException
      */
-    private static void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+    private static void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
         writeElviraPreamble(out, probNet);
         writeElviraNodes(out, probNet);
         writeElviraLinks(out, probNet);
@@ -418,7 +417,7 @@ public class ElviraWriter implements ProbNetWriter {
      *
      * @throws WriterException
      */
-    private static void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+    private static void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira {
         // relations comment
         out.println("//		Network Relationships:");
         out.println();
@@ -438,7 +437,7 @@ public class ElviraWriter implements ProbNetWriter {
      *
      * @throws WriterException
      */
-    private static void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+    private static void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira {
         writeCommonElviraPotentialPreamble(out, potential);
         TablePotential elviraPotential;
         if (potential.getClass() != TablePotential.class) {
@@ -446,11 +445,7 @@ public class ElviraWriter implements ProbNetWriter {
                 writeICIElviraPotentialPreamble(out, potential.getVariables());
                 writeICIElviraPotentialBody(out, (ICIPotential) potential);
             } else {
-                try {
-                    elviraPotential = potential.tableProject(null, null);
-                } catch (NonProjectablePotentialException e) {
-                    throw new WriterException.NonProjectablePotentialException(e);
-                }
+                elviraPotential = potential.tableProject(null, null);
                 writeElviraTable(out, openMarkov2ElviraPotential(elviraPotential));
             }
         } else {
@@ -692,7 +687,7 @@ public class ElviraWriter implements ProbNetWriter {
      * Ignores evidence, as evidence is stores in another file in Elvira
      */
     @Override
-    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, WriterException.NonProjectablePotentialException {
+    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
         writeProbNet(netName, probNet);
     }
     
