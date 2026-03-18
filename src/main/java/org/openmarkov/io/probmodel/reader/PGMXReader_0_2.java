@@ -537,7 +537,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException
      */
     protected List<EvidenceCase> getEvidence(Element root, ProbNet probNet)
-            throws PGMXParserException.EvidenceIsIncompatibleWithOther {
+            throws PGMXParserException.EvidenceIncompatibleInFile {
         Element xMLEvidence = root.getChild(XMLTags.EVIDENCE.toString());
         List<EvidenceCase> evidence = new ArrayList<>();
         if (xMLEvidence != null) {
@@ -558,7 +558,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         }
                         evidenceCase.addFinding(finding);
                     } catch (IncompatibleEvidenceException.EvidenceIsIncompatibleWithOther e) {
-                        throw new PGMXParserException.EvidenceIsIncompatibleWithOther(e, xmlFinding);
+                        throw new PGMXParserException.EvidenceIncompatibleInFile(e, xmlFinding);
                     }
                 }
                 evidence.add(evidenceCase);
@@ -1464,7 +1464,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         try {
             return (Potential) generator.invoke(this, xmlPotential, probNet, potentialRole, variables);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new UnreacheableException(e);
+            throw new UnreachableException(e);
         } catch (Exception e) {
             throw e;
         }
@@ -1710,9 +1710,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     @PotentialReaderMethod(SameAsPrevious.class)
     protected static SameAsPrevious getSameAsPrevious(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                       List<Variable> variables)
-            throws PGMXParserException.CannotAsignPotentialToStaticVariable {
+            throws PGMXParserException.CannotAssignPotentialToStaticVariable {
         if (!variables.get(0).isTemporal()) {
-            throw new PGMXParserException.CannotAsignPotentialToStaticVariable("SameAsPrevious", xmlPotential);
+            throw new PGMXParserException.CannotAssignPotentialToStaticVariable("SameAsPrevious", xmlPotential);
         }
         return new SameAsPrevious(variables);
     }
@@ -1720,11 +1720,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
     @PotentialReaderMethod(CycleLengthShift.class)
     protected static CycleLengthShift getCycleLengthShiftPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                                    List<Variable> variables)
-            throws PGMXParserException.CannotAsignPotentialToStaticVariable {
+            throws PGMXParserException.CannotAssignPotentialToStaticVariable {
         
         Variable variable = variables.get(0);
         if (!variable.isTemporal()) {
-            throw new PGMXParserException.CannotAsignPotentialToStaticVariable("CycleLengthShift", xmlPotential);
+            throw new PGMXParserException.CannotAssignPotentialToStaticVariable("CycleLengthShift", xmlPotential);
         }
         return new CycleLengthShift(variables, probNet.getCycleLength());
     }

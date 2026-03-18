@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.openmarkov.core.exception.ConstraintViolatedException;
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.exception.UnreacheableException;
+import org.openmarkov.core.exception.UnreachableException;
 import org.openmarkov.core.io.ProbNetInfo;
 import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatType;
@@ -224,7 +224,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				throw new ParserException.ProbabilisticNetworkTypeNotRecognized(token.getReservedWord().toString());
 			}
         } catch (ConstraintViolatedException e) {
-            throw new UnreacheableException(e);
+            throw new UnreachableException(e);
         }
     }
 

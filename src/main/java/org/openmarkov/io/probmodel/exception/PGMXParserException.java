@@ -69,8 +69,8 @@ public abstract sealed class PGMXParserException extends ParserException {
         public final String reason;
     }
     
-    public static final class EvidenceIsIncompatibleWithOther extends PGMXParserException {
-        public EvidenceIsIncompatibleWithOther(IncompatibleEvidenceException.EvidenceIsIncompatibleWithOther sourceException, Element element) {
+    public static final class EvidenceIncompatibleInFile extends PGMXParserException {
+        public EvidenceIncompatibleInFile(IncompatibleEvidenceException.EvidenceIsIncompatibleWithOther sourceException, Element element) {
             super(element);
             this.sourceException = sourceException;
         }
@@ -142,8 +142,8 @@ public abstract sealed class PGMXParserException extends ParserException {
         public final PotentialRole role;
     }
     
-    public static final class CannotAsignPotentialToStaticVariable extends PGMXParserException {
-        public CannotAsignPotentialToStaticVariable(String potentialType, Element element) {
+    public static final class CannotAssignPotentialToStaticVariable extends PGMXParserException {
+        public CannotAssignPotentialToStaticVariable(String potentialType, Element element) {
             super(element);
             this.potentialType = potentialType;
         }
