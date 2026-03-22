@@ -242,11 +242,11 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		ReservedWord reservedWord = token.getReservedWord();
 		while (token.getReservedWord() != ReservedWord.NODE) {
 			if (reservedWord == ReservedWord.KIND_OF_NODE) {
-				probNet.additionalProperties.put("KindOfGraph", token.getStringValue1());
+				probNet.putAdditionalProperty("KindOfGraph", token.getStringValue1());
 			} else if (reservedWord == ReservedWord.VISUALPRECISION) {
-				probNet.additionalProperties.put("VisualPrecision", Double.toString(token.getDoubleValue()));
+				probNet.putAdditionalProperty("VisualPrecision", Double.toString(token.getDoubleValue()));
 			} else if (reservedWord == ReservedWord.VERSION) {
-				probNet.additionalProperties.put("Version", Double.toString(token.getDoubleValue()));
+				probNet.putAdditionalProperty("Version", Double.toString(token.getDoubleValue()));
 			} else if (reservedWord == ReservedWord.DEFAULT) {
 				String[] reverseOrderStatesNames = token.getStringListValue();
 				int numStates = reverseOrderStatesNames.length;
@@ -256,13 +256,13 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				}
 				probNet.setDefaultStates(states);
 			} else if (reservedWord == ReservedWord.KIND_OF_GRAPH) {
-				probNet.additionalProperties.put("KindOfGraph", token.getStringValue1());
+				probNet.putAdditionalProperty("KindOfGraph", token.getStringValue1());
 			} else if (reservedWord == ReservedWord.TITLE) {
-				probNet.additionalProperties.put("TitleNet", token.getStringValue1());
+				probNet.putAdditionalProperty("TitleNet", token.getStringValue1());
 			} else if (reservedWord == ReservedWord.WHENCHANGED) {
-				probNet.additionalProperties.put("WhenChanged", token.getStringValue1());
+				probNet.putAdditionalProperty("WhenChanged", token.getStringValue1());
 			} else if (reservedWord == ReservedWord.WHOCHANGED) {
-				probNet.additionalProperties.put("WhoChanged", token.getStringValue1());
+				probNet.putAdditionalProperty("WhoChanged", token.getStringValue1());
 			}
 			token = scanner.getNextToken();
 			reservedWord = token.getReservedWord();
@@ -386,13 +386,13 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		if (infoNode.get("Relevance") != null)
 			node.setRelevance(Double.parseDouble(infoNode.get("Relevance")));
 		if (infoNode.get("Min") != null)
-			node.additionalProperties.put("Min", infoNode.get("Min"));
+			node.putAdditionalProperty("Min", infoNode.get("Min"));
 		if (infoNode.get("Max") != null)
-			node.additionalProperties.put("Max", infoNode.get("Max"));
+			node.putAdditionalProperty("Max", infoNode.get("Max"));
 		if (infoNode.get("Precision") != null)
-			node.additionalProperties.put("Precision", infoNode.get("Precision"));
+			node.putAdditionalProperty("Precision", infoNode.get("Precision"));
 		if (infoNode.get("Title") != null) {
-			node.additionalProperties.put("Title", infoNode.get("Title"));
+			node.putAdditionalProperty("Title", infoNode.get("Title"));
 		}
 		return token;
 	}

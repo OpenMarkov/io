@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +90,7 @@ public class ElviraWriter implements ProbNetWriter {
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override
     public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
-        if (probNet.additionalProperties.get("hasElviraProperties") == null) {
+        if (probNet.getAdditionalProperties().get("hasElviraProperties") == null) {
             generateElviraProperties(probNet);
         }
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(netName), Charset.forName("windows-1252"))))) {
@@ -153,7 +154,7 @@ public class ElviraWriter implements ProbNetWriter {
         out.println();
         
         //kindofgraph = "...";
-        Object objKindOfGraph = probNet.additionalProperties.get("KindOfGraph");
+        Object objKindOfGraph = probNet.getAdditionalProperties().get("KindOfGraph");
         if (objKindOfGraph != null) {
             String kindOfGraph = objKindOfGraph.toString();
             out.println("kindofgraph = " + '"' + kindOfGraph + '"' + ';');
@@ -332,8 +333,8 @@ public class ElviraWriter implements ProbNetWriter {
             if (variableKind != VariableType.NUMERIC) {
                 int numStates = node.getVariable().getNumStates();
                 boolean defaultStates = false;
-                if ((node.additionalProperties.get("UseDefaultStates") != null) && Boolean
-                        .parseBoolean(node.additionalProperties.get("UseDefaultStates"))) {
+                if ((node.getAdditionalProperties().get("UseDefaultStates") != null) && Boolean
+                        .parseBoolean(node.getAdditionalProperties().get("UseDefaultStates"))) {
                     defaultStates = true;
                     out.print("//");
                 }
@@ -362,15 +363,15 @@ public class ElviraWriter implements ProbNetWriter {
                     }
                 }
             } else {
-                String min = node.additionalProperties.get("Min");
+                String min = node.getAdditionalProperties().get("Min");
                 if (min != null) {
                     out.println("min = " + min + ";");
                 }
-                String max = node.additionalProperties.get("Max");
+                String max = node.getAdditionalProperties().get("Max");
                 if (max != null) {
                     out.println("max = " + max + ";");
                 }
-                String precision = node.additionalProperties.get("Precision");
+                String precision = node.getAdditionalProperties().get("Precision");
                 if (precision != null) {
                     out.println("precision = " + precision + ";");
                 }
@@ -642,14 +643,12 @@ public class ElviraWriter implements ProbNetWriter {
         List<Node> nodes = probNet.getNodes();
         for (Node node : nodes) {
             // sets the known node additionalProperties
-            Map<String, String> infoNode = node.additionalProperties;
-            //Variable fsVariable = (Variable) node.getVariable();
-            //String[] states = fsVariable.getStates();
             ArrayList<String> statesNames = new ArrayList<String>();
             State[] states = node.getVariable().getStates();
             for (int i = 0; i < states.length; i++) {
                 statesNames.add(states[i].getName());
             }
+            Map<String, String> infoNode = new LinkedHashMap<>(node.getAdditionalProperties());
             ElviraUtil.putPropertyArray(infoNode, "NodeStates", statesNames);
             NodeType nodeType = node.getNodeType();
             infoNode.put("NodeType", nodeType.toString());
@@ -658,6 +657,7 @@ public class ElviraWriter implements ProbNetWriter {
             } else {
                 infoNode.put("TypeOfVariable", VariableType.FINITE_STATES.toString());
             }
+            node.setAdditionalProperties(infoNode);
         }
     }
     

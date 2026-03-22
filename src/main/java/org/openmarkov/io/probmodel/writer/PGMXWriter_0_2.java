@@ -213,9 +213,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      */
     protected static void getAdditionalProperties(ProbNet probNet, Element probNetElement) {
         Element propertiesElement = new Element(XMLTags.ADDITIONAL_PROPERTIES.toString());
-        Set<String> additionalProperties = probNet.additionalProperties.keySet();
+        Set<String> additionalProperties = probNet.getAdditionalProperties().keySet();
         if (!additionalProperties.isEmpty()) {
-            for (Map.Entry<String, String> entry : probNet.additionalProperties.entrySet()) {
+            for (Map.Entry<String, String> entry : probNet.getAdditionalProperties().entrySet()) {
                 if (entry.getValue() == null) {
                     continue;
                 }
@@ -365,9 +365,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param languageElement
      */
     protected static void getLanguage(ProbNet probNet, Element probNetElement, Element languageElement) {
-        if (probNet.additionalProperties.get(XMLTags.LANGUAGE.toString()) != null)
+        if (probNet.getAdditionalProperties().get(XMLTags.LANGUAGE.toString()) != null)
             probNetElement.addContent(
-                    languageElement.setText(probNet.additionalProperties.get(XMLTags.LANGUAGE.toString())));
+                    languageElement.setText(probNet.getAdditionalProperties().get(XMLTags.LANGUAGE.toString())));
     }
     
     /**
@@ -526,8 +526,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             propertyElement.setAttribute(XMLAttributes.VALUE.toString(), String.valueOf(node.getRelevance()));
             additionalElement.addContent(propertyElement);
         }
-        for (String propertyKey : node.additionalProperties.keySet()) {
-            String propertyValue = node.additionalProperties.get(propertyKey);
+        for (String propertyKey : node.getAdditionalProperties().keySet()) {
+            String propertyValue = node.getAdditionalProperties().get(propertyKey);
             Element propertyElement = new Element(XMLTags.PROPERTY.toString());
             propertyElement.setAttribute(XMLAttributes.NAME.toString(), propertyKey);
             propertyElement.setAttribute(XMLAttributes.VALUE.toString(), propertyValue);

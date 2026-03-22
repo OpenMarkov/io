@@ -24,12 +24,12 @@ public class ElviraUtil {
 	public static void swapNameAndTitle(ProbNet probNet) {
 		List<Node> nodes = probNet.getNodes();
 		for (Node node : nodes) {
-			String title = node.additionalProperties.get("Title");
+			String title = node.getAdditionalProperties().get("Title");
             if ((title != null) && (!title.isEmpty())) {
 				Variable variable = node.getVariable();
 				String variableName = variable.getName();
 				variable.setName(title);
-				node.additionalProperties.put("Title", variableName);
+				node.putAdditionalProperty("Title", variableName);
 			}
 		}
 	}

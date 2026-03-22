@@ -318,7 +318,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 for (Element propertyElement : propertiesListElement) {
                     String propertyName = getElementName(propertyElement);
                     String propertyValue = propertyElement.getAttributeValue(XMLAttributes.VALUE.toString());
-                    probNet.additionalProperties.put(propertyName, propertyValue);
+                    probNet.putAdditionalProperty(propertyName, propertyValue);
                 }
             }
         }
@@ -329,7 +329,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 for (Element propertyElement : propertiesListElement) {
                     String propertyName = getElementName(propertyElement);
                     String propertyValue = propertyElement.getAttributeValue(XMLAttributes.VALUE.toString());
-                    probNet.additionalProperties.put(propertyName, propertyValue);
+                    probNet.putAdditionalProperty(propertyName, propertyValue);
                 }
             }
         }
@@ -814,7 +814,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             node.getVariable().setPrecision(precision);
         }
         for (String key : new ArrayList<>(properties.keySet())) {
-            node.additionalProperties.put(key, properties.get(key));
+            node.putAdditionalProperty(key, properties.get(key));
         }
     }
     

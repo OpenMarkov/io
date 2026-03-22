@@ -56,10 +56,10 @@ public class ElviraParserTest {
 	}
 
 	@Test public void getGeneralInfo() {
-		String kindOfGraph = (String) probNet.additionalProperties.get("KindOfGraph");
+		String kindOfGraph = (String) probNet.getAdditionalProperties().get("KindOfGraph");
 		assertNotNull(kindOfGraph);
 		assertTrue(kindOfGraph.contentEquals("mixed"));
-		Double version = Double.parseDouble(probNet.additionalProperties.get("Version"));
+		Double version = Double.parseDouble(probNet.getAdditionalProperties().get("Version"));
 		assertEquals(1.0, version.doubleValue(), maxError);
 		State[] defaultNodeStates = probNet.getDefaultStates();
 		assertNotNull(defaultNodeStates);

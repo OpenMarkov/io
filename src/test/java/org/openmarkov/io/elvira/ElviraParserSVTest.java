@@ -53,7 +53,7 @@ public class ElviraParserSVTest {
 		//String kindOfGraph = (String)probNet.properties.get("KindOfGraph");
 		//assertNotNull(kindOfGraph);
 		//assertTrue(kindOfGraph.contentEquals("directed"));
-		Double version = Double.parseDouble(probNet.additionalProperties.get("Version"));
+		Double version = Double.parseDouble(probNet.getAdditionalProperties().get("Version"));
 		assertEquals(1.0, version.doubleValue(), maxError);
 		State[] defaultNodeStates = (State[]) probNet.getDefaultStates();
 		assertNotNull(defaultNodeStates);
