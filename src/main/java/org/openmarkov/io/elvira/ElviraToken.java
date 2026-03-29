@@ -291,8 +291,11 @@ public class ElviraToken {
 	}
 
 	/**
-     * @param token {@code ElviraToken}
-	 * @return boolean
+	 * Checks whether the given token is equivalent to the current token.
+	 * Note: this method currently always returns false (stub implementation).
+	 *
+     * @param token the {@code ElviraToken} to compare
+	 * @return {@code true} if the tokens are equivalent, {@code false} otherwise
 	 */
     public static boolean sameToken(ElviraToken token) {
 		/*

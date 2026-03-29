@@ -20,7 +20,11 @@ import org.openmarkov.core.model.network.Variable;
  */
 public class ElviraUtil {
 
-	/**  */
+	/**
+	 * Swaps the variable name and the "Title" additional property for each node in the network.
+	 *
+	 * @param probNet the probabilistic network whose nodes will be modified
+	 */
 	public static void swapNameAndTitle(ProbNet probNet) {
 		List<Node> nodes = probNet.getNodes();
 		for (Node node : nodes) {
@@ -38,8 +42,9 @@ public class ElviraUtil {
 	 * Puts a property A that is an array as a set of additionalProperties with
 	 * names A[0], A[1],...
 	 *
-     * @param key    . {@code String}
-     * @param values . {@code List} of {@code String}
+	 * @param properties the property map to add entries to
+     * @param key        the base key name for the array property
+     * @param values     the list of values to store as indexed properties
 	 */
 	public static void putPropertyArray(Map<String, String> properties, String key, List<String> values) {
 		if (values != null) {
@@ -53,8 +58,9 @@ public class ElviraUtil {
 	/**
 	 * Gets a multi-valued property as a List.
 	 *
-     * @param key . {@code String}
-     * @return {@code List} of {@code String}
+	 * @param properties the property map to read from
+     * @param key        the base key name for the array property
+     * @return list of values, or {@code null} if the property does not exist
 	 */
 	public static List<String> getPropertyArray(Map<String, String> properties, String key) {
 		List<String> values = new ArrayList<String>();

@@ -23,9 +23,10 @@ public class ReservedWordTokens {
 	private static boolean hastablePresent = false;
 
 	/**
-     * @param word {@code String}
-	 * @return The enum that corresponds to the reserved word if it exists.
-     * {@code ReservedWord}.
+	 * Looks up the reserved word enum constant corresponding to the given string.
+	 *
+     * @param word the string representation of a potential reserved word
+	 * @return the matching {@code ReservedWord}, or {@code null} if not found
 	 */
 	public static ReservedWord getReservedWord(String word) {
 		if (!hastablePresent) {

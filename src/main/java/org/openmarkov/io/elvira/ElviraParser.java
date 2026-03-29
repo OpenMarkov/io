@@ -79,7 +79,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	// Constructor
 
 	/**
-     * @param scanner {@code ElviraScanner}
+	 * Creates a parser using the specified scanner.
+	 *
+     * @param scanner the Elvira lexical scanner to use
 	 */
 	public ElviraParser(ElviraScanner scanner) {
 		this.scanner = scanner;
@@ -90,6 +92,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		decisionCriterion = new Criterion("Effectiveness", "Eff-Unit");
 	}
 
+	/** Creates a parser with a default scanner instance. */
 	public ElviraParser() {
 		this(ElviraScanner.getUniqueInstance());
 	}
@@ -153,6 +156,13 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		return openMarkovPotential;
 	}
 
+	/**
+	 * Reverses the order of variables from Elvira convention (conditioned variable last)
+	 * to OpenMarkov convention (conditioned variable first).
+	 *
+	 * @param elviraVariables the variables in Elvira order
+	 * @return the variables in OpenMarkov order
+	 */
 	static List<Variable> elvira2OpenMarkovVariables(List<Variable> elviraVariables) {
 		int numVariables = elviraVariables.size();
 		List<Variable> auxVariables = new ArrayList<Variable>();

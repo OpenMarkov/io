@@ -31,8 +31,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
 	// Methods
 	/**
-	 * @param netName = path + network name + extension
-	 * @param probNet
+	 * Writes the probabilistic network in PGMX 1.0 format.
+	 *
+	 * @param netName path + network name + extension
+	 * @param probNet the probabilistic network to write
 	 */
 	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
 		formatVersion= "1.0.0";
@@ -40,9 +42,11 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
-	 * @param netName = path + network name + extension
-	 * @param probNet
-	 * @param evidences list of evidence cases
+	 * Writes the probabilistic network with evidence in PGMX 1.0 format.
+	 *
+	 * @param netName   path + network name + extension
+	 * @param probNet   the probabilistic network to write
+	 * @param evidences list of evidence cases to include
 	 */
 	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
 		formatVersion= "1.0.0";
@@ -50,10 +54,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 	
 	/**
-	 * @param probNet
-     *            . {@code ProbNet}
-	 * @param probNetElement
-     *            . {@code Element}
+	 * Builds all child XML elements of the ProbNet element for version 1.0 format.
+	 *
+	 * @param probNet        the probabilistic network
+	 * @param probNetElement the parent XML element to populate
 	 */
 	@Override protected void getProbNetChildren(ProbNet probNet, Element probNetElement) {
 		getAdditionalConstraints(probNet, probNetElement, new Element(XMLTags.ADDITIONAL_CONSTRAINTS.toString()));
@@ -78,8 +82,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
     
 	/**
-	 * @param properties
-	 * @return Element
+	 * Converts a {@code Properties} object into an XML element containing property sub-elements.
+	 *
+	 * @param properties the properties to serialize
+	 * @return the XML element representing the additional properties
 	 */
 	@Override protected Element getPropertiesElement(Properties properties) {
 		Element additionalPropertiesElement = new Element(XMLTags.ADDITIONAL_PROPERTIES.toString());
@@ -95,10 +101,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
 
 	/**
-	 * Writes the link restriction
-	 * 
-	 * @param link
-	 * @param linkElement
+	 * Writes the link restriction potential as an XML sub-element if the link has restrictions.
+	 *
+	 * @param link        the link whose restriction is checked
+	 * @param linkElement the XML element to attach the restriction to
 	 */
 	@Override protected void getLinkRestriction(Link<Node> link, Element linkElement) {
 		double[] table = ((TablePotential) link.getRestrictionsPotential()).values;
@@ -131,9 +137,11 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
-	 * @param probNet
-	 * @param probNetElement
-	 * @param potentialsElement
+	 * Writes all potentials (excluding decision node policies) to the XML structure.
+	 *
+	 * @param probNet           the probabilistic network
+	 * @param probNetElement    the parent ProbNet XML element
+	 * @param potentialsElement the potentials container XML element
 	 */
 	@Override protected void getPotentials(ProbNet probNet, Element probNetElement, Element potentialsElement) {
 		// HashMap of declared TablePotentials
@@ -152,9 +160,11 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
-	 * @param potential
-	 * @param potentialElement
-	 * @param potentialElement
+	 * Writes a single potential's attributes, variables, and body to the XML element.
+	 *
+	 * @param probNet          the probabilistic network context
+	 * @param potential        the potential to serialize
+	 * @param potentialElement the XML element to populate
 	 */
 	@Override protected void getPotential(ProbNet probNet, Potential potential, Element potentialElement) {
 		getPotentialAttributesAndVariables(potential, potentialElement);
@@ -162,9 +172,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
+	 * Sets the potential type attribute and writes the variables element for a potential.
 	 *
-	 * @param potential
-	 * @param potentialElement
+	 * @param potential        the potential whose attributes are written
+	 * @param potentialElement the XML element to populate
 	 */
     protected static void getPotentialAttributesAndVariables(Potential potential, Element potentialElement) {
 		/*
@@ -195,9 +206,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
+	 * Writes the variables sub-element for a potential if it has any variables.
 	 *
-	 * @param potential
-	 * @param potentialElement
+	 * @param potential        the potential whose variables are written
+	 * @param potentialElement the XML element to attach the variables to
 	 */
     protected static void getPotentialVariables(Potential potential, Element potentialElement) {
 		List<Variable> potentialVariables = potential.getVariables();
@@ -207,10 +219,11 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
+	 * Writes the body of a potential, including univariate distribution potentials.
 	 *
-	 * @param probNet
-	 * @param potential
-	 * @param potentialElement
+	 * @param probNet          the probabilistic network context
+	 * @param potential        the potential whose body is written
+	 * @param potentialElement the XML element to populate
 	 */
 	@Override protected void getPotentialBody(ProbNet probNet, Potential potential, Element potentialElement) {
 		super.getPotentialBody(probNet, potential, potentialElement);
@@ -220,9 +233,11 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
-	 * Adds an UnivariateDistrPotential to the XML structure
-	 * @param xmlElement 
-	 * @param potential
+	 * Adds a UnivariateDistrPotential to the XML structure, including distribution
+	 * parameters and function expressions.
+	 *
+	 * @param xmlElement the XML element to attach the distribution data to
+	 * @param potential  the univariate distribution potential to serialize
 	 */
     protected void getUnivariateDistrPotential(Element xmlElement, UnivariateDistrPotential potential) {
 		xmlElement.setAttribute(XMLAttributes.DISTRIBUTION.toString(), potential.getProbDensFunctionUnivariateName());
@@ -235,9 +250,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
+	 * Writes the function expressions of an augmented probability table to the XML structure.
 	 *
-	 * @param xmlElement
-	 * @param AugmentedProbTable
+	 * @param xmlElement         the XML element to attach the functions to
+	 * @param AugmentedProbTable the augmented probability table containing function values
 	 */
 	@Override protected void getAugmentedProbTablePotential(Element xmlElement, AugmentedProbTable AugmentedProbTable) {
 		Element parametersElement = new Element(XMLTags.FUNCTIONS.toString());

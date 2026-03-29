@@ -100,10 +100,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * Removes from {@code evidence} the variables that are no longer
-     * present in {@code probNet}
+     * present in {@code probNet}.
      *
-     * @param probNet  . {@code ProbNet}
-     * @param evidence . {@code EvidenceCase}
+     * @param probNet  the probabilistic network to check variables against
+     * @param evidence the list of evidence cases to clean up
      */
     protected static void removeMissingVariablesFromEvidence(ProbNet probNet, List<EvidenceCase> evidence) {
         HashSet<Variable> probNetVariables = new HashSet<Variable>(probNet.getVariables());

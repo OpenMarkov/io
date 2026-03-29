@@ -23,10 +23,11 @@ public class ElviraEvidenceWriter {
     // Methods
     
     /**
-     * @param fileName = path + network name + extension.
-     * @param evidence {@code EvidenceCase} evidence case
+     * Writes an evidence case to a file in Elvira format.
      *
-     * @throws IOException
+     * @param fileName path + network name + extension
+     * @param evidence the evidence case to write
+     * @throws IOException if an I/O error occurs while writing
      */
     public static void writeEvidenceCase(String fileName, EvidenceCase evidence) throws IOException {
         FileWriter writer = new FileWriter(fileName);
