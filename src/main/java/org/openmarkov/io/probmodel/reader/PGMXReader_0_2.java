@@ -152,8 +152,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param inputStream InputStream[] of the network
      *
      * @return network version in a String
-     *
-     * @throws ParserException if the file is not found
      */
     public static String getVersion(String netName, InputStream inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
         Element root = getRootElement(getStream(netName, inputStream), netName);
@@ -533,8 +531,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param probNet ProbNet
      *
      * @return List of evidence case
-     *
-     * @throws PGMXParserException
      */
     protected List<EvidenceCase> getEvidence(Element root, ProbNet probNet)
             throws PGMXParserException.EvidenceIncompatibleInFile {
@@ -646,8 +642,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @param root    {@code Element}
      * @param probNet {@code ProbNet}
-     *
-     * @throws PGMXParserException
      */
     protected void getVariables(Element root, ProbNet probNet) throws PGMXParserException.VariableHasNoStates {
         Element xmlVariablesRoot = getXMLVariables(root);
@@ -692,8 +686,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param variableType
      * @param nodeType
      * @param variableName
-     *
-     * @throws PGMXParserException
      */
     @SuppressWarnings("unlikely-arg-type")
     protected void loadVariableAdvancedInformation(
@@ -1284,7 +1276,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return
      *
-     * @throws PGMXParserException
      * @author myebra
      */
     protected List<Threshold> getThresholds(Element xmlBranch)
@@ -1320,8 +1311,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param topVariable {@code Variable}
      *
      * @return {@code List} of {@code State}
-     *
-     * @throws PGMXParserException if there is one state that is not in the topVariable
      */
     protected List<State> getBranchStates(Element xmlBranch, Variable topVariable)
             throws PGMXParserException.FoundUnknownState {

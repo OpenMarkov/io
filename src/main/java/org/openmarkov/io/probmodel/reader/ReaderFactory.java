@@ -20,8 +20,6 @@ public class ReaderFactory {
      * @param strVersion, read from the PGXM file. {@code String}
      *
      * @return PGMXReader 0_2 or newer
-     *
-     * @throws ParserException when the version is missing.
      */
     public static PGMXReader_0_2 getReader(String strVersion) throws ParserException.WrongVersion {
         Version version = Arrays.stream(Version.values())
