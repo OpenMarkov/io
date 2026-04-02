@@ -73,9 +73,9 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	}
 
 	/**
-	 * @param probNet
+	 * @param probNet the prob net
      *            . {@code ProbNet}
-	 * @param probNetElement
+	 * @param probNetElement the prob net element
      *            . {@code Element}
 	 */
 

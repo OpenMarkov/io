@@ -95,7 +95,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param netName     = path + network name + extension. {@code String}
      * @param inputStream InputStream[]
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     @Override
     public ProbNet loadProbNet(String netName, InputStream inputStream) throws ParserException, FileNotFoundException {
@@ -166,7 +166,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return root Element
      *
-     * @throws ParserException
+     * @throws ParserException if parser occurs
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private static Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
@@ -211,7 +211,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return ProbNet or null
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     public ProbNet getProbNet(Element root, String netName) throws FileNotFoundException, ParserException {
         return getProbNet(root, netName, new HashMap<>());
@@ -224,7 +224,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return ProbNet or null
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     protected ProbNet getProbNet(Element root, String netName, Map<String, ProbNet> classes) throws FileNotFoundException, ParserException {
         Element xMLProbNet = root.getChild(getStringTagNetwork());
@@ -243,7 +243,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param xMLProbNet Root element
      * @param probNet    ProbNet
      * @param netName    Network name
-     * @param classes
+     * @param classes the classes
      *
      */
     protected void getNetworkAdvancedInformation(Element xMLProbNet, ProbNet probNet, String netName,
@@ -681,11 +681,11 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param variableElement
-     * @param probNet
-     * @param variableType
-     * @param nodeType
-     * @param variableName
+     * @param variableElement the variable element
+     * @param probNet the prob net
+     * @param variableType the variable type
+     * @param nodeType the node type
+     * @param variableName the variable name
      */
     @SuppressWarnings("unlikely-arg-type")
     protected void loadVariableAdvancedInformation(
@@ -1039,7 +1039,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param states
+     * @param states the states
      * @param variableElement . {@code Element}
      * @param variableName    . {@code String}
      *
@@ -1161,7 +1161,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param root    . {@code Element}
      * @param probNet . {@code ProbNet}
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     protected void getPotentials(Element root, ProbNet probNet)
             throws PGMXParserException {
@@ -1206,12 +1206,12 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlPotential
-     * @param probNet
+     * @param xmlPotential the xml potential
+     * @param probNet the prob net
      *
-     * @return
+     * @return the result
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      * @author myebra
      */
     protected List<TreeADDBranch> getTreeADDBranches(Element xmlPotential, ProbNet probNet, Variable rootVariable,
@@ -1269,9 +1269,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlBranch
+     * @param xmlBranch the xml branch
      *
-     * @return
+     * @return the result
      *
      * @author myebra
      */
@@ -1329,18 +1329,18 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     
     /**
-     * @param xmlPotential
+     * @param xmlPotential the xml potential
      *
-     * @return
+     * @return the result
      */
     protected Element getXMLRootTable(Element xmlPotential) {
         return xmlPotential.getChild(XMLTags.VALUES.toString());
     }
     
     /**
-     * @param xmlRootUncertainTable
+     * @param xmlRootUncertainTable the xml root uncertain table
      *
-     * @return
+     * @return the result
      */
     protected static UncertainValue[] getUncertainValues(Element xmlRootUncertainTable) {
         List<Element> values = xmlRootUncertainTable.getChildren();
@@ -1354,9 +1354,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlUncertainValue
+     * @param xmlUncertainValue the xml uncertain value
      *
-     * @return
+     * @return the result
      */
     protected static UncertainValue getUncertainValue(Element xmlUncertainValue) {
         UncertainValue auxUncertainValue = null;
@@ -1381,7 +1381,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return {@code Potential}
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     protected Potential getPotential(Element xmlPotential, ProbNet probNet)
             throws PGMXParserException {
@@ -1389,9 +1389,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * @param xmlPotential
+     * @param xmlPotential the xml potential
      *
-     * @return
+     * @return the result
      */
     protected PotentialRole getPotentialRole(Element xmlPotential) {
         String xmlPotentialRole = xmlPotential.getAttributeValue(XMLAttributes.ROLE.toString());
@@ -1410,7 +1410,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return {@code Potential}
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     protected Potential getPotential(Element xmlPotential, ProbNet probNet, PotentialRole potentialRole)
             throws PGMXParserException {
@@ -1533,7 +1533,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param root    {@code Element}
      * @param probNet {@code ProbNet}
      *
-     * @throws PGMXParserException
+     * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     protected void getPolicies(Element root, ProbNet probNet)
             throws PGMXParserException {

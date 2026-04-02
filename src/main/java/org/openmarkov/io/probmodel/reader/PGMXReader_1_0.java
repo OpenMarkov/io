@@ -139,7 +139,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
      * @param xmlPotential                     {@code Element}
      * @param xmlRole                          {@code PotentialRole}
      * @param vDistributionTable {@code List} of {@code Variable} of the potential
-     * @param variables
+     * @param variables the variables
      *
      * @return AugmentedProbTable
      */

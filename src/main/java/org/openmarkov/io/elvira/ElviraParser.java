@@ -207,7 +207,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * Reads the probNet type, creates the right compound constraint and
      * associate that constraint to {@code probNet}
 	 *
-	 * @throws ParserException
+	 * @throws ParserException if parser occurs
 	 */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private void getConstraints() throws ParserException {
@@ -244,7 +244,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
 	 * @return Next token corresponding to a node (end of general information).
      * {@code ElviraToken}
-	 * @throws ParserException
+	 * @throws ParserException if parser occurs
 	 */
 	private ElviraToken getGeneralInfo() throws IOException, ParserException {
 
@@ -284,8 +284,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * Reads nodes (variables)
 	 *
      * @param token {@code ElviraToken}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private ElviraToken getNodes(ElviraToken token) throws IOException, ParserException {
 		do {
@@ -297,8 +297,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
      * @param token {@code ElviraToken}
      * @return token. {@code ElviraToken}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private ElviraToken getNode(ElviraToken token) throws IOException, ParserException {
 		Node node = null;
@@ -412,8 +412,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
      * @param token {@code ElviraToken}
      * @return token. {@code ElviraToken}
-	 * @throws IOException
-	 * @throws ParserException
+	 * @throws IOException if an I/O error occurs
+	 * @throws ParserException if parser occurs
 	 */
 	private ElviraToken getLinks(ElviraToken token) throws IOException, ParserException {
 		do {
@@ -433,8 +433,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * Reads potentials information and create potentials.
 	 *
      * @param token {@code ElviraToken}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private void getPotentials(ElviraToken token) throws IOException, ParserException {
 		do {
@@ -457,8 +457,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
      * @param variables {@code ArrayList} of {@code Variable}
      * @return potential. {@code Potential}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private Potential getPotential(List<Variable> variables) throws IOException, ParserException {
         boolean isUtilityPotential = variables.get(0).getVariableType() == VariableType.NUMERIC;

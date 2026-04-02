@@ -346,7 +346,7 @@ public class ElviraScanner {
      *
      * @param streamTokenizer {@code StreamTokenizer}
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     private void readToken(StreamTokenizer streamTokenizer) throws IOException {
         if (readNextToken) {
@@ -361,7 +361,7 @@ public class ElviraScanner {
      * @param streamTokenizer      {@code StreamTokenizer}
      * @param reservedWordExpected {@code ReservedWord}
      *
-     * @throws ParserException
+     * @throws ParserException if parser occurs
      */
     private static void checkToken(StreamTokenizer streamTokenizer, ReservedWord reservedWordExpected)
             throws IOException, ParserException.MismatchedToken {
@@ -405,7 +405,7 @@ public class ElviraScanner {
      *
      * @return Readed double. {@code double}
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     private static double readDouble(StreamTokenizer streamTokenizer, boolean skipNextToken) throws IOException {
         streamTokenizer.nextToken();
@@ -424,7 +424,7 @@ public class ElviraScanner {
      *
      * @return Readed int. {@code int}
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     private static int readInt(StreamTokenizer streamTokenizer, boolean skipNextToken) throws IOException {
         streamTokenizer.nextToken();
