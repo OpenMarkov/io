@@ -37,16 +37,16 @@ public class Util {
         aVariable.add(A);
         TablePotential pA = new TablePotential(aVariable,
 				PotentialRole.CONDITIONAL_PROBABILITY);
-		pA.values[0] = 0.9;
-		pA.values[1] = 0.1;
+		pA.getValues()[0] = 0.9;
+		pA.getValues()[1] = 0.1;
         
         // TablePotential B
         List<Variable> bVariable = new ArrayList<Variable>(1);
         bVariable.add(B);
 		TablePotential pB = new TablePotential(aVariable,
 				PotentialRole.CONDITIONAL_PROBABILITY);
-		pB.values[0] = 0.8;
-		pB.values[1] = 0.2;
+		pB.getValues()[0] = 0.8;
+		pB.getValues()[1] = 0.2;
         
         //ICI Potential
         List<Variable> iciVariables = new ArrayList<Variable>(3);
@@ -88,18 +88,18 @@ public class Util {
 		xVariable.add(X);
 		TablePotential pX = new TablePotential(xVariable,
 				PotentialRole.CONDITIONAL_PROBABILITY);
-		pX.values[0] = 0.9;
-		pX.values[1] = 0.1;
+		pX.getValues()[0] = 0.9;
+		pX.getValues()[1] = 0.1;
 		// TablePotential YX
 		List<Variable> yxVariables = new ArrayList<Variable>(2);
 		yxVariables.add(Y);
 		yxVariables.add(X);
 		TablePotential pYX = new TablePotential(yxVariables,
 				PotentialRole.CONDITIONAL_PROBABILITY);
-		pYX.values[0] = 0.2;
-		pYX.values[1] = 0.8;
-		pYX.values[2] = 0.9;
-		pYX.values[3] = 0.1;
+		pYX.getValues()[0] = 0.2;
+		pYX.getValues()[1] = 0.8;
+		pYX.getValues()[2] = 0.9;
+		pYX.getValues()[3] = 0.1;
 		// Utility potential DX
 		List<Variable> dxVariables = new ArrayList<Variable>(2);
 		dxVariables.add(U);
@@ -107,10 +107,10 @@ public class Util {
 		dxVariables.add(X);
 		ExactDistrPotential pDX = new ExactDistrPotential(dxVariables,
 				PotentialRole.CONDITIONAL_PROBABILITY);
-		pDX.getTablePotential().values[0] = 3.0;
-		pDX.getTablePotential().values[1] = 1.0;
-		pDX.getTablePotential().values[2] = 0.0;
-		pDX.getTablePotential().values[3] = 2.0;
+		pDX.getTablePotential().getValues()[0] = 3.0;
+		pDX.getTablePotential().getValues()[1] = 1.0;
+		pDX.getTablePotential().getValues()[2] = 0.0;
+		pDX.getTablePotential().getValues()[3] = 2.0;
 
 		// Add potentials. Do not add links because addPotential do it.
 		probNet.addPotential(pX);

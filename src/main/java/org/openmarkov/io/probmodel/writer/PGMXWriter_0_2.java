@@ -651,7 +651,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param linkElement
      */
     protected void getLinkRestriction(Link<Node> link, Element linkElement) {
-        double[] table = ((TablePotential) link.getRestrictionsPotential()).values;
+        double[] table = ((TablePotential) link.getRestrictionsPotential()).getValues();
         
         boolean hasRestriction = false;
         for (int i = 0; i < table.length; i++) {
@@ -675,7 +675,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             variables.addContent(variable1);
             variables.addContent(variable2);
             Element valuesElement = new Element(XMLTags.VALUES.toString())
-                    .setText(getValuesInAString(((TablePotential) link.getRestrictionsPotential()).values));
+                    .setText(getValuesInAString(((TablePotential) link.getRestrictionsPotential()).getValues()));
             restrictionPotential.addContent(variables);
             restrictionPotential.addContent(valuesElement);
             linkElement.addContent(restrictionPotential);
@@ -859,7 +859,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      */
     protected static void getValuesTablePotential(TablePotential potential, Element potentialElement) {
         Element valuesElement = new Element(XMLTags.VALUES.toString());
-        valuesElement.setText(getValuesInAString(potential.values));
+        valuesElement.setText(getValuesInAString(potential.getValues()));
         // Write table values to the XML file
         potentialElement.addContent(valuesElement);
         if (potential.getUncertainValues() != null) {

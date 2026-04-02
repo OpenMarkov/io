@@ -106,7 +106,7 @@ class AmuaDTConverterTest {
         net.addNode(U, NodeType.UTILITY);
 
         TablePotential pA = new TablePotential(List.of(A), PotentialRole.CONDITIONAL_PROBABILITY);
-        pA.values[0] = 0.6; pA.values[1] = 0.4;
+        pA.getValues()[0] = 0.6; pA.getValues()[1] = 0.4;
 
         ExactDistrPotential pU = new ExactDistrPotential(List.of(U,A,D), PotentialRole.CONDITIONAL_PROBABILITY);
         pU.setValues(new double[]{10,5,15,20});

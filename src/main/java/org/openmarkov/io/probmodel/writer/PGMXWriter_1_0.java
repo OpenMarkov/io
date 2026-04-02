@@ -107,7 +107,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	 * @param linkElement the XML element to attach the restriction to
 	 */
 	@Override protected void getLinkRestriction(Link<Node> link, Element linkElement) {
-		double[] table = ((TablePotential) link.getRestrictionsPotential()).values;
+		double[] table = ((TablePotential) link.getRestrictionsPotential()).getValues();
 
 		boolean hasRestriction = false;
 		for (int i = 0; i < table.length; i++) {
@@ -129,7 +129,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 			variables.addContent(variable1);
 			variables.addContent(variable2);
 			Element valuesElement = new Element(XMLTags.VALUES.toString())
-					.setText(getValuesInAString(((TablePotential) link.getRestrictionsPotential()).values));
+					.setText(getValuesInAString(((TablePotential) link.getRestrictionsPotential()).getValues()));
 			restrictionPotential.addContent(variables);
 			restrictionPotential.addContent(valuesElement);
 			linkElement.addContent(restrictionPotential);

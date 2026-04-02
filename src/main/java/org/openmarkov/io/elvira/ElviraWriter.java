@@ -69,7 +69,7 @@ public class ElviraWriter implements ProbNetWriter {
         TablePotential elviraPotential = (TablePotential) openMarkovPotential.reorder(elviraVariables);
         
         // Invert potential values
-        double[] table = elviraPotential.values;
+        double[] table = elviraPotential.getValues();
         double aux;
         int sizePotential = table.length, halfPotential = sizePotential / 2;
         for (int i = 0; i < halfPotential; i++) {
@@ -537,7 +537,7 @@ public class ElviraWriter implements ProbNetWriter {
         }
         
         // write table
-        writeElviraTable(out, null, elviraPotential.values);
+        writeElviraTable(out, null, elviraPotential.getValues());
         out.println();
     }
     
@@ -546,7 +546,7 @@ public class ElviraWriter implements ProbNetWriter {
             TablePotential openMarkovPotential = new TablePotential(variables, PotentialRole.CONDITIONAL_PROBABILITY,
                                                                     values);
             TablePotential elviraPotential = openMarkov2ElviraPotential(openMarkovPotential);
-            values = elviraPotential.values;
+            values = elviraPotential.getValues();
         }
         out.print("values = table(");
         for (int i = 0; i < values.length; i++) {

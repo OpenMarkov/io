@@ -108,10 +108,10 @@ public class ElviraParserSVTest {
 				assertEquals(U1Variable, variables.get(0));*/
 		// Test potential table
 		//System.out.println(U1Potential.table[1]);
-		assertEquals(0.0, U1Potential.values[0], maxError);
-		assertEquals(1.0, U1Potential.values[1], maxError);
-		assertEquals(3.0, U1Potential.values[2], maxError);
-		assertEquals(2.0, U1Potential.values[3], maxError);
+		assertEquals(0.0, U1Potential.getValues()[0], maxError);
+		assertEquals(1.0, U1Potential.getValues()[1], maxError);
+		assertEquals(3.0, U1Potential.getValues()[2], maxError);
+		assertEquals(2.0, U1Potential.getValues()[3], maxError);
 		//			}
 	}
 }

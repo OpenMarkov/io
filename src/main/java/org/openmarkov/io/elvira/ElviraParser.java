@@ -111,7 +111,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		List<Variable> auxVariables = elvira2OpenMarkovVariables(elviraVariables);
 
 		// Invert potential values
-		double[] table = elviraPotential.values;
+		double[] table = elviraPotential.getValues();
 		double aux;
 		int sizePotential = table.length, halfPotential = sizePotential / 2;
 		for (int i = 0; i < halfPotential; i++) {
@@ -521,7 +521,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				}
 				variables = elvira2OpenMarkovVariables(variables);
 				TablePotential tablePotential = new TablePotential(variables, role);
-				tablePotential.values = token.getDoublesTableValue();
+				tablePotential.setValues(token.getDoublesTableValue());
 				tablePotential = elvira2OpenMarkovPotential(tablePotential);
 
 				tablePotential.properties = properties;
@@ -562,9 +562,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
                 }
                 if (subPotential.getVariables().size() > 1) {
                     potential.setNoisyParameters(subPotential.getVariable(1), //parent
-                                                 subPotential.values);
+                                                 subPotential.getValues());
                 } else {
-                    potential.setLeakyParameters(subPotential.values);
+                    potential.setLeakyParameters(subPotential.getValues());
                 }
                 subPotentials.remove(relation);
                 
