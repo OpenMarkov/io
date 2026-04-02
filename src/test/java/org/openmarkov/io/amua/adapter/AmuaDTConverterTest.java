@@ -17,6 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class AmuaDTConverterTest {
 
     @Test
+    void convertNullNodeThrowsTest() {
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.UNICRITERIA_DT);
+        assertThrows(IllegalArgumentException.class, () -> converter.convertToAmuaTree(null));
+    }
+
+    @Test
     void convertUnicriteriaSingleNodeTest() {
         ProbNet net = createSimpleProbNet();
         Variable root = net.getVariables().getFirst();
@@ -31,6 +37,30 @@ class AmuaDTConverterTest {
         assertEquals(0, amuaNode.getType());
         assertEquals(0, amuaNode.getChildNodes().size());
         assertEquals(0.0, amuaNode.getPayoff());
+        assertEquals(0, amuaNode.getLevel());
+        assertTrue(amuaNode.getXPos() >= 0);
+        assertTrue(amuaNode.getYPos() >= 0);
+    }
+
+    @Test
+    void convertRootUtilityNodeTest() {
+        ProbNet net = new ProbNet();
+        Variable U = new Variable("U");
+        net.addNode(U, NodeType.UTILITY);
+
+        EvaluationDecisionTreeNode root = new EvaluationDecisionTreeNode(U, net);
+
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.UNICRITERIA_DT);
+        AmuaDTUnicriteriaNode amuaRoot = (AmuaDTUnicriteriaNode) converter.convertToAmuaTree(root);
+
+        assertNotNull(amuaRoot);
+        assertEquals("Root", amuaRoot.getName());
+        assertEquals(2, amuaRoot.getType());
+        assertEquals(0, amuaRoot.getChildNodes().size());
+        assertEquals(0.0, amuaRoot.getPayoff());
+        assertEquals(0, amuaRoot.getLevel());
+        assertTrue(amuaRoot.getXPos() >= 0);
+        assertTrue(amuaRoot.getYPos() >= 0);
     }
 
     @Test
@@ -50,6 +80,79 @@ class AmuaDTConverterTest {
         assertEquals(0, amuaNode.getChildNodes().size());
         assertEquals(0.0, amuaNode.getPayoff().getCost());
         assertEquals(0.0, amuaNode.getPayoff().getEffectiveness());
+        assertEquals(0, amuaNode.getLevel());
+        assertTrue(amuaNode.getXPos() >= 0);
+        assertTrue(amuaNode.getYPos() >= 0);
+    }
+
+
+    @Test
+    void chanceNodeProbabilitiesCorrectionTest() {
+        ProbNet net = new ProbNet();
+        Variable D = new Variable("Decision", 2);
+        Variable C = new Variable("Chance", 2);
+        Variable U = new Variable("U");
+        net.addNode(D, NodeType.DECISION);
+        net.addNode(C, NodeType.CHANCE);
+        net.addNode(U, NodeType.UTILITY);
+
+        EvaluationDecisionTreeNode root = new EvaluationDecisionTreeNode(D, net);
+        EvaluationDecisionTreeNode chanceNode = new EvaluationDecisionTreeNode(C, net);
+        EvaluationDecisionTreeNode utilityNode = new EvaluationDecisionTreeNode(U, net);
+        utilityNode.setUtility(10.0);
+
+        root.addChild(branch(net, D, D.getStates()[0], chanceNode));
+        chanceNode.addChild(branch(net, C, C.getStates()[0], utilityNode, 0.7));
+        chanceNode.addChild(branch(net, C, C.getStates()[1], utilityNode, 0.4));
+
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.UNICRITERIA_DT);
+        AmuaDTNode<?> amuaRoot = converter.convertToAmuaTree(root);
+
+        AmuaDTNode<?> amuaChance = amuaRoot.getChildNodes().get(0);
+        double sumProb = 0.0;
+        for (AmuaDTNode<?> child : amuaChance.getChildNodes()) {
+            sumProb += child.getProbability();
+        }
+        assertEquals(1.0, sumProb, 1e-4);
+
+        AmuaDTNode<?> leaf0 = amuaChance.getChildNodes().get(0);
+        AmuaDTNode<?> leaf1 = amuaChance.getChildNodes().get(1);
+        assertEquals(2, amuaChance.getChildNodes().size());
+        assertTrue(leaf0.getProbability() > 0);
+        assertTrue(leaf1.getProbability() > 0);
+    }
+
+
+    @Test
+    void CEAWithMissingUtilitiesTest() {
+        ProbNet net = new ProbNet();
+        Variable D = new Variable("Decision", 2);
+        Variable C = new Variable("Chance", 2);
+        net.addNode(D, NodeType.DECISION);
+        net.addNode(C, NodeType.CHANCE);
+        CEADecisionTreeNode root = new CEADecisionTreeNode(D, net);
+        CEADecisionTreeNode chanceNode = new CEADecisionTreeNode(C, net);
+        root.addChild(branch(net, D, D.getStates()[0], chanceNode));
+        root.addChild(branch(net, D, D.getStates()[1], chanceNode));
+        AmuaDTConverter converter = new AmuaDTConverter(AmuaModel.COST_EFFECTIVENESS_DT);
+        AmuaDTNode<?> amuaRoot = converter.convertToAmuaTree(root);
+
+        for (AmuaDTNode<?> decisionChild : amuaRoot.getChildNodes()) {
+            if (decisionChild instanceof AmuaDTCENode) {
+                AmuaDTCENode ceNode = (AmuaDTCENode) decisionChild;
+                assertNotNull(ceNode.getPayoff());
+                assertEquals(0.0, ceNode.getPayoff().getCost());
+                assertEquals(0.0, ceNode.getPayoff().getEffectiveness());
+            } else {
+                for (AmuaDTNode<?> child : decisionChild.getChildNodes()) {
+                    assertInstanceOf(AmuaDTCENode.class, child);
+                    AmuaDTCENode ceNode = (AmuaDTCENode) child;
+                    assertNotNull(ceNode.getPayoff());
+                    assertEquals(0.0, ceNode.getPayoff().getCost());
+                    assertEquals(0.0, ceNode.getPayoff().getEffectiveness());
+                }
+            }
+        }
     }
 
     @Test
@@ -61,10 +164,14 @@ class AmuaDTConverterTest {
         AmuaDTNode<?> amuaRoot = converter.convertToAmuaTree(root);
 
         assertEquals(2, amuaRoot.getChildNodes().size());
-        for (AmuaDTNode<?> child : amuaRoot.getChildNodes()) {
-            assertNotNull(child.getPayoff());
-            assertInstanceOf(Double.class, child.getPayoff());
-        }
+
+        AmuaDTNode<?> child0 = amuaRoot.getChildNodes().get(0);
+        assertNotNull(child0.getPayoff());
+        assertInstanceOf(Double.class, child0.getPayoff());
+
+        AmuaDTNode<?> child1 = amuaRoot.getChildNodes().get(1);
+        assertNotNull(child1.getPayoff());
+        assertInstanceOf(Double.class, child1.getPayoff());
     }
 
     @Test
@@ -78,19 +185,20 @@ class AmuaDTConverterTest {
         assertNotNull(amuaRoot);
         assertEquals(3, amuaRoot.getChildNodes().size());
 
-        for (AmuaDTNode<?> decisionNode : amuaRoot.getChildNodes()) {
-            assertNotNull(decisionNode.getChildNodes());
-            assertEquals(2, decisionNode.getChildNodes().size());
+        AmuaDTNode<?> decision0 = amuaRoot.getChildNodes().get(0);
+        assertEquals(2, decision0.getChildNodes().size());
 
-            for (AmuaDTNode<?> chanceNode : decisionNode.getChildNodes()) {
-                assertInstanceOf(AmuaDTCENode.class, chanceNode);
-                assertNotNull(((AmuaDTCENode) chanceNode).getPayoff());
-                double cost = ((AmuaDTCENode) chanceNode).getPayoff().getCost();
-                double eff = ((AmuaDTCENode) chanceNode).getPayoff().getEffectiveness();
-                assertTrue(cost >= 0);
-                assertTrue(eff >= 0);
-            }
-        }
+        AmuaDTNode<?> chanceNode0 = decision0.getChildNodes().get(0);
+        assertInstanceOf(AmuaDTCENode.class, chanceNode0);
+        assertNotNull(((AmuaDTCENode) chanceNode0).getPayoff());
+        assertTrue(((AmuaDTCENode) chanceNode0).getPayoff().getCost() >= 0);
+        assertTrue(((AmuaDTCENode) chanceNode0).getPayoff().getEffectiveness() >= 0);
+
+        AmuaDTNode<?> chanceNode1 = decision0.getChildNodes().get(1);
+        assertInstanceOf(AmuaDTCENode.class, chanceNode1);
+        assertNotNull(((AmuaDTCENode) chanceNode1).getPayoff());
+        assertTrue(((AmuaDTCENode) chanceNode1).getPayoff().getCost() >= 0);
+        assertTrue(((AmuaDTCENode) chanceNode1).getPayoff().getEffectiveness() >= 0);
     }
 
 
