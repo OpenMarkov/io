@@ -28,6 +28,26 @@ public class AmuaDTAssignDimensionsTest {
     }
 
     @Test
+    void ceMissingCriterionThrows() {
+        List<Criterion> wrongCriteria = List.of(new Criterion("Effectiveness", "QALY"));
+        AmuaDTAssignDimensions dimAssign = new AmuaDTAssignDimensions();
+        assertThrows(IllegalStateException.class, () -> dimAssign.assignDimensions(wrongCriteria, AmuaModel.COST_EFFECTIVENESS_DT, amuaDTCENode));
+    }
+
+    @Test
+    void decisionNodeNotFoundThrows() {
+        AmuaDTAssignDimensions dimAssign = new AmuaDTAssignDimensions();
+        AmuaDTCENode nodeWithoutDecision = new AmuaDTCENode();
+        assertThrows(IllegalArgumentException.class, () -> dimAssign.assignDimensions(criteria, AmuaModel.COST_EFFECTIVENESS_DT, nodeWithoutDecision));
+    }
+
+    @Test
+    void unsupportedModelThrows() {
+        AmuaDTAssignDimensions dimAssign = new AmuaDTAssignDimensions();
+        assertThrows(NullPointerException.class, () -> dimAssign.assignDimensions(criteria, null, amuaDTCENode));
+    }
+
+    @Test
     void dimensionConstructorTest() {
         List<AmuaDimensionInfo> dimensions = new ArrayList<>();
         dimensions.add(new AmuaDimensionInfo("Cost", "$", 2));
