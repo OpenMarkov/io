@@ -29,7 +29,8 @@ class AmuaDTWriterTest {
         root.setCost(15.0);
         root.setPayoff(11.0);
 
-        File file = new File("UnicriteriaSingleNodeTest.amua");
+        File file = File.createTempFile("UnicriteriaSingleNodeTest", ".amua");
+        file.deleteOnExit();
         writeTree(root, unicriteriaDimensions(), file);
         Document doc = loadXML(file);
 
@@ -64,7 +65,8 @@ class AmuaDTWriterTest {
         child2.setChildNodes(List.of(terminal2));
         root.setChildNodes(List.of(child1, child2));
 
-        File file = new File("UnicriteriaTree.amua");
+        File file = File.createTempFile("UnicriteriaSingleNodeTest", ".amua");
+        file.deleteOnExit();
         writeTree(root, unicriteriaDimensions(), file);
 
         Document doc = loadXML(file);
@@ -98,7 +100,8 @@ class AmuaDTWriterTest {
         root.setCost(new AmuaCEvalue(1000, 5));
         root.setPayoff(new AmuaCEvalue(2000, 10));
 
-        File file = new File("CESingleNodeTest.amua");
+        File file = File.createTempFile("CESingleNodeTest", ".amua");
+        file.deleteOnExit();
 
         writeTree(root, ceDimensions(), file);
 
@@ -135,7 +138,8 @@ class AmuaDTWriterTest {
         child2.setChildNodes(List.of(terminal2));
         root.setChildNodes(List.of(child1, child2));
 
-        File file = new File("CETreeTest.amua");
+        File file = File.createTempFile("CETreeTest", ".amua");
+        file.deleteOnExit();
 
         writeTree(root, ceDimensions(), file);
 
