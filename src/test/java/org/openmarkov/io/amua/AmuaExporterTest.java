@@ -30,7 +30,8 @@ public class AmuaExporterTest {
         EvaluationDecisionTreeNode ddtuRoot = buildDTDUTree();
         amuaExporter = new AmuaExporter(ddtuRoot);
 
-        File file = new File("Exporter_DTDU-test.amua");
+        File file = File.createTempFile("Exporter_DTDU-test", ".amua");
+        file.deleteOnExit();
         amuaExporter.writeAmuaDT(file);
         assertTrue(file.exists());
         assertTrue(file.length() > 0);
@@ -42,7 +43,8 @@ public class AmuaExporterTest {
         CEADecisionTreeNode dan2Root = buildDAN2TherapiesTree();
         amuaExporter = new AmuaExporter(dan2Root);
 
-        File file = new File("Exporter_DAN2Therapies-test.amua");
+        File file = File.createTempFile("Exporter_DAN2Therapies-test", ".amua");
+        file.deleteOnExit();
         amuaExporter.writeAmuaDT(file);
         assertTrue(file.exists());
         assertTrue(file.length() > 0);
@@ -53,7 +55,8 @@ public class AmuaExporterTest {
         CEADecisionTreeNode danRoot = buildDANangioTree();
         amuaExporter = new AmuaExporter(danRoot);
 
-        File file = new File("Exporter_DAN-Angio-one-decision.amua");
+        File file = File.createTempFile("Exporter_DAN-Angio-one-decision", ".amua");
+        file.deleteOnExit();
         amuaExporter.writeAmuaDT(file);
         assertTrue(file.exists());
         assertTrue(file.length() > 0);
