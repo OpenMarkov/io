@@ -63,6 +63,22 @@ public class AmuaDTValidatorTest {
     }
 
     @Test
+    void exceptionWhenTwoCriteriaButNotCE() {
+        Criterion c1 = new Criterion("c1");
+        Criterion c2 = new Criterion("c2");
+
+        AmuaDTValidator validator = new AmuaDTValidator(List.of(c1, c2));
+        assertThrows(IllegalStateException.class, () -> validator.determineAmuaDTType(ceaRoot));
+    }
+
+    @Test
+    void validatorShouldBeReusable() {
+        AmuaDTValidator validator = new AmuaDTValidator(getCorrectCriteria());
+        assertDoesNotThrow(() -> validator.determineAmuaDTType(ceaRoot));
+        assertDoesNotThrow(() -> validator.determineAmuaDTType(ceaRoot));
+    }
+
+    @Test
     void determineCEValidTest() {
         AmuaDTValidator validator = new AmuaDTValidator(getCorrectCriteria());
         assertEquals(AmuaModel.COST_EFFECTIVENESS_DT, validator.determineAmuaDTType(ceaRoot));
@@ -130,9 +146,8 @@ public class AmuaDTValidatorTest {
         firstBranch.setChild(wrongChild);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validator.determineAmuaDTType(unicriteriaRoot));
-        assertEquals("Invalid node type for Cost-Effectiveness tree.", exception.getMessage());
+        assertEquals("Invalid node type for Unicriteria tree.", exception.getMessage());
     }
-
 
 
     private ProbNet createSimpleNet() throws Exception {
