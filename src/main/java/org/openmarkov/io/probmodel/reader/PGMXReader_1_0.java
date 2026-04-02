@@ -19,6 +19,8 @@ import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.Variable;
 import org.openmarkov.core.model.network.potential.*;
+
+import java.util.Map;
 import org.openmarkov.core.model.network.modelUncertainty.ProbDensFunctionManager;
 import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
@@ -83,7 +85,14 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         return xmlRole;
     }
     
-    @PotentialReaderMethod(UnivariateDistrPotential.class)
+    @Override
+    protected Map<Class<? extends Potential>, PotentialParser> buildPotentialParsers() {
+        Map<Class<? extends Potential>, PotentialParser> map = super.buildPotentialParsers();
+        map.put(UnivariateDistrPotential.class,    PGMXReader_1_0::getUnivariateDistrPotential);
+        map.put(AugmentedProbTablePotential.class, PGMXReader_1_0::getAugmentedProbTablePotential);
+        return map;
+    }
+
     protected static Potential getUnivariateDistrPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                            List<Variable> variables) {
         String univariateName = xmlPotential.getAttributeValue(XMLAttributes.DISTRIBUTION.toString());
@@ -103,7 +112,7 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         }
         
         List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
-        vDistributionTable.add(0, potential.getPseudoVariableDistribution());
+        vDistributionTable.addFirst(potential.getPseudoVariableDistribution());
         potential.getAugmentedProbTable().setValues(table);
         if (xmlPotential.getChild(XMLTags.FUNCTIONS.toString()) != null) {
             potential.setDistributionTable(
@@ -115,7 +124,6 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
     
     // TODO Remove?
     // Answer: Why? Are we getting rid of AugmentedProbTablePotentials?
-    @PotentialReaderMethod(AugmentedProbTablePotential.class)
     protected static Potential getAugmentedProbTablePotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                               List<Variable> variables) {
         
