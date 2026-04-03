@@ -10,7 +10,7 @@ package org.openmarkov.io.elvira;
 import java.io.Serializable;
 
 /**
- * @author marias
+ * @author Manuel Arias
  */
 public enum ReservedWord implements Serializable {
 

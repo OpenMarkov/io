@@ -10,7 +10,7 @@ package org.openmarkov.io.elvira;
 /**
  * A token represents an identifier or a reserved word or a number.
  *
- * @author marias
+ * @author Manuel Arias
  */
 public class ElviraToken {
 

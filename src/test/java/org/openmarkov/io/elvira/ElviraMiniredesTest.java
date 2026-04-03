@@ -26,7 +26,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @vesion 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)

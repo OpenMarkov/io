@@ -28,7 +28,7 @@ import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
 import org.openmarkov.core.testTags.TestSpeed;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @vesion 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)

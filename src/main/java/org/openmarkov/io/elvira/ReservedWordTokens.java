@@ -10,7 +10,7 @@ package org.openmarkov.io.elvira;
 import java.util.Hashtable;
 
 /**
- * @author marias
+ * @author Manuel Arias
  */
 public class ReservedWordTokens {
 

@@ -17,7 +17,7 @@ import org.openmarkov.core.exception.ParserException;
 /**
  * Reads a Elvira file and generates tokens.
  *
- * @author marias
+ * @author Manuel Arias
  */
 public class ElviraScanner {
     // Attributes

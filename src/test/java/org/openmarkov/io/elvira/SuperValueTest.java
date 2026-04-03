@@ -27,7 +27,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.SumPotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  */
 public class SuperValueTest {
 

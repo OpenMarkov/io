@@ -27,7 +27,7 @@ import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
 import org.openmarkov.core.model.network.type.BayesianNetworkType;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @version 1.1 carmenyago fixed the way mechaVitreaPotential is located
  * After reading a Bayesian network coded in Elvira format, tests the allocation of the general info, the nodes, links and potentials in the ProbNet
  * Test two networks, the first with binary variables and the second with a variable with three states

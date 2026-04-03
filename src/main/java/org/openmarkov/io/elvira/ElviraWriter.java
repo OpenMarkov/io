@@ -37,7 +37,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 /**
  * This class writes a {@code ProbNet} in elvira format.
  *
- * @author marias
+ * @author Manuel Arias
  */
 @FormatType(name = "ElviraWriter", version = "0.1", extension = "elv", description = "Elvira")
 public class ElviraWriter implements ProbNetWriter {

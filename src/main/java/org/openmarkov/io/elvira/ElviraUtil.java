@@ -16,7 +16,7 @@ import org.openmarkov.core.model.network.Node;
 import org.openmarkov.core.model.network.Variable;
 
 /**
- * @author marias
+ * @author Manuel Arias
  */
 public class ElviraUtil {
 

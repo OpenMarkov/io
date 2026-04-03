@@ -31,7 +31,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class Cromosomopatia2Test {

@@ -27,7 +27,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @version 1.1 carmenyago changed the number for finding the TablePotential of U3 from 0 to 1 due to getPotentials put first the potential of the children
  * After reading an influence diagram with super value nodes coded in Elvira format, test general information, links and TablePotential
  */
