@@ -35,7 +35,7 @@ import org.openmarkov.core.testTags.TestSpeed;
 public class ElviraReaderCanonicModelsTest {
 
 	// Constants
-	double maxError = 1E-5;
+    final double maxError = 1E-5;
 	private ElviraParser elviraParser;
 	// Attributes
 	/*private final String[] cataratasVariables = {"agudeza_vis_sin_catar", 

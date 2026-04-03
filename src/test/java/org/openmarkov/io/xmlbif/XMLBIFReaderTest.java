@@ -28,7 +28,7 @@ public class XMLBIFReaderTest {
 	   private String rootPath;
 	    private XMLBIFReader reader;
 	    
-		private String networkTestName = "netAB.xml";
+		private final String networkTestName = "netAB.xml";
 
 		@BeforeEach
 	    public void setUp() {

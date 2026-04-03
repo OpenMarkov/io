@@ -33,9 +33,9 @@ import org.openmarkov.core.model.network.potential.TablePotential;
 public class ElviraMiniredesTest {
 
 	// Attributes
-	private static String testFile = "peque.elv";
+	private static final String testFile = "peque.elv";
 	// Constants
-	private double maxError = 1E-5;
+	private final double maxError = 1E-5;
 	private ProbNet probNet;
 
 	private Node nodeA;

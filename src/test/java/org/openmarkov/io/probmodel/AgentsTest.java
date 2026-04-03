@@ -31,11 +31,9 @@ public class AgentsTest {
 
     private static String rootPath;
     
-	private static String probNetManualName = "test-decpomdp-manual.pgmx";
-	
-	private static ProbNet manualProbNet;
-	
-	/**
+	private static final String probNetManualName = "test-decpomdp-manual.pgmx";
+
+    /**
 	 */
 	@BeforeEach
 	public void setUp() {
@@ -48,7 +46,7 @@ public class AgentsTest {
 	@Tag(TestSpeed.MEDIUM)
 	@Test
     public void testAgentsNumber() throws ParserException, IOException {
-        manualProbNet = ((ProbNetReader) new PGMXReader_0_2()).loadProbNet(rootPath + probNetManualName, new FileInputStream(rootPath + probNetManualName));
+        ProbNet manualProbNet = ((ProbNetReader) new PGMXReader_0_2()).loadProbNet(rootPath + probNetManualName, new FileInputStream(rootPath + probNetManualName));
 		List<StringWithProperties> agents = manualProbNet.getAgents();
 		assertEquals(2, agents.size());
 		StringWithProperties agent1 = agents.get(0);

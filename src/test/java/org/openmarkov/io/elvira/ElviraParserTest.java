@@ -36,9 +36,9 @@ import org.openmarkov.core.model.network.type.BayesianNetworkType;
 public class ElviraParserTest {
 
 	// Attributes
-	private static String testFile = "cataratas-escenarios-091123.elv";
+	private static final String testFile = "cataratas-escenarios-091123.elv";
 	// Constants
-	double maxError = 1E-5;
+    final double maxError = 1E-5;
 	private ProbNet probNet;
 	private ElviraParser elviraParser;
 

@@ -22,7 +22,7 @@ import org.openmarkov.io.probmodel.writer.PGMXWriter_0_2;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ImposedPolicyTest {
 
-	private String networkTestName = "ImposedPolicy.pgmx";
+	private final String networkTestName = "ImposedPolicy.pgmx";
 	
 	private String absolutePath;
 	

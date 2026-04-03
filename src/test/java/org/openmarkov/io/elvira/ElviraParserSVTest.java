@@ -35,9 +35,9 @@ import org.openmarkov.core.model.network.potential.TablePotential;
 public class ElviraParserSVTest {
 
 	// Attributes
-	private static String testFile = "ejemplo_Tatman_y_Shachter.elv";
+	private static final String testFile = "ejemplo_Tatman_y_Shachter.elv";
 	// Constants
-	private double maxError = 1E-5;
+	private final double maxError = 1E-5;
 	private ProbNet probNet;
 
 	@BeforeEach

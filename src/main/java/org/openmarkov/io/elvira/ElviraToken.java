@@ -43,7 +43,7 @@ public class ElviraToken {
 
 	private boolean isBoolean;
 
-	private TokenType tokenType;
+	private final TokenType tokenType;
 
 	// Constructors
 

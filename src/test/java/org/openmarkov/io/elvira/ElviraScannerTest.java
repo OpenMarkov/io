@@ -28,9 +28,9 @@ import java.net.URL;
 public class ElviraScannerTest {
 
 	// Attributes
-	private static String testFile = "catarnet1.elv";
+	private static final String testFile = "catarnet1.elv";
 	// Constants
-	private double maxError = 1E-5;
+	private final double maxError = 1E-5;
 	private ElviraScanner elviraScanner;
 	private ElviraToken token;
 

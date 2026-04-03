@@ -36,7 +36,7 @@ import org.openmarkov.core.model.network.potential.TablePotential;
 public class ElviraMiniIDTest {
 
 	// Attributes
-	private static String testFile = "trivial3jensen.elv";
+	private static final String testFile = "trivial3jensen.elv";
 
 	private ProbNet probNet;
 

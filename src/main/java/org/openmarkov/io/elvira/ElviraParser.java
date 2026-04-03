@@ -52,14 +52,14 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	// Attributes
 	private ProbNet probNet;
 
-	private ElviraScanner scanner;
+	private final ElviraScanner scanner;
 
 	private String fileName;
 
 	/**
 	 * Store in this variable all the ICIPotentials.
 	 */
-	private ArrayList<ICIPotential> iciPotentials;
+	private final ArrayList<ICIPotential> iciPotentials;
 
 	/**
 	 * Store in this variable all the sub-potentials corresponding to
@@ -70,11 +70,11 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
      * {@code name-of-relation}s and this variable is used to locate its
 	 * sub-potentials.
 	 */
-	private HashMap<String, TablePotential> subPotentials;
+	private final HashMap<String, TablePotential> subPotentials;
 
 	private boolean continuousVariable;
 
-	private Criterion decisionCriterion;
+	private final Criterion decisionCriterion;
 
 	// Constructor
 
