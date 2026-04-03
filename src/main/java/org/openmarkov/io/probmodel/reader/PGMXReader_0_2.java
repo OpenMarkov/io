@@ -54,7 +54,7 @@ import java.util.*;
 @FormatType(name = "PGMXReader", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2")
 public class PGMXReader_0_2 implements ProbNetReader {
     
-    protected final Map<Class<? extends Potential>, PotentialParser> potentialParsers;
+    public final Map<Class<? extends Potential>, PotentialParser> potentialParsers;
 
     public PGMXReader_0_2() {
         this.potentialParsers = buildPotentialParsers();
