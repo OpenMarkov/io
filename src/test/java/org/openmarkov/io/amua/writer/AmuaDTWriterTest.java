@@ -4,7 +4,6 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.Test;
-import org.openmarkov.io.amua.adatper.*;
 import org.openmarkov.io.amua.model.*;
 
 import java.io.File;

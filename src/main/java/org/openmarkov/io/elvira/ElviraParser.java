@@ -7,7 +7,6 @@
 
 package org.openmarkov.io.elvira;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
