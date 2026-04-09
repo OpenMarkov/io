@@ -66,7 +66,7 @@ public class AmuaDTAssignDimensions {
                 break;
 
             default:
-                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaModel);
+                throw new IllegalStateException("Unsupported Amua Model: " + amuaModel);
         }
 
         String baseScenario = (amuaModel == AmuaModel.COST_EFFECTIVENESS_DT) ? calcBaseScenario(amuaModel, tree) : null;
@@ -105,7 +105,7 @@ public class AmuaDTAssignDimensions {
             case UNICRITERIA_DT:
                 return 0;
             default:
-                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaModel);
+                throw new IllegalStateException("Unsupported Amua Model: " + amuaModel);
         }
     }
 
@@ -144,7 +144,7 @@ public class AmuaDTAssignDimensions {
                 return null;
 
             default:
-                throw new IllegalStateException("Unsupported AmuaDTType: " + amuaModel);
+                throw new IllegalStateException("Unsupported Amua model:: " + amuaModel);
         }
     }
 
