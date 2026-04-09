@@ -21,7 +21,7 @@ import org.openmarkov.core.model.network.ProbNet;
 public class ElviraIDsTest {
 
 	// Attributes
-	private static String testFile = "IDU1-mediastinet.elv";
+	private static final String testFile = "IDU1-mediastinet.elv";
 
 	private ProbNet probNet;
 

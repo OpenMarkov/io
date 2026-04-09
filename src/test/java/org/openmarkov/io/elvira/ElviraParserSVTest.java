@@ -27,7 +27,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @version 1.1 carmenyago changed the number for finding the TablePotential of U3 from 0 to 1 due to getPotentials put first the potential of the children
  * After reading an influence diagram with super value nodes coded in Elvira format, test general information, links and TablePotential
  */
@@ -35,9 +35,9 @@ import org.openmarkov.core.model.network.potential.TablePotential;
 public class ElviraParserSVTest {
 
 	// Attributes
-	private static String testFile = "ejemplo_Tatman_y_Shachter.elv";
+	private static final String testFile = "ejemplo_Tatman_y_Shachter.elv";
 	// Constants
-	private double maxError = 1E-5;
+	private final double maxError = 1E-5;
 	private ProbNet probNet;
 
 	@BeforeEach
@@ -108,10 +108,10 @@ public class ElviraParserSVTest {
 				assertEquals(U1Variable, variables.get(0));*/
 		// Test potential table
 		//System.out.println(U1Potential.table[1]);
-		assertEquals(0.0, U1Potential.values[0], maxError);
-		assertEquals(1.0, U1Potential.values[1], maxError);
-		assertEquals(3.0, U1Potential.values[2], maxError);
-		assertEquals(2.0, U1Potential.values[3], maxError);
+		assertEquals(0.0, U1Potential.getValues()[0], maxError);
+		assertEquals(1.0, U1Potential.getValues()[1], maxError);
+		assertEquals(3.0, U1Potential.getValues()[2], maxError);
+		assertEquals(2.0, U1Potential.getValues()[3], maxError);
 		//			}
 	}
 }

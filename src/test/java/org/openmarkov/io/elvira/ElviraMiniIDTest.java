@@ -27,7 +27,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @version 1.1 carmenyago changed to include the node variable inside the utility potential
  * After reading an influence diagram coded in Elvira format,
  * tests the allocation and type of Decision and Utility variables and the allocation of variables in utility potential
@@ -36,7 +36,7 @@ import org.openmarkov.core.model.network.potential.TablePotential;
 public class ElviraMiniIDTest {
 
 	// Attributes
-	private static String testFile = "trivial3jensen.elv";
+	private static final String testFile = "trivial3jensen.elv";
 
 	private ProbNet probNet;
 

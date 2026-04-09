@@ -21,7 +21,7 @@ import org.openmarkov.core.testTags.TestSpeed;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraNameAndTitleTest {
 
-	private static String testFile = "BNU2-NasoNet.elv";
+	private static final String testFile = "BNU2-NasoNet.elv";
 
 	private ProbNet probNet;
 

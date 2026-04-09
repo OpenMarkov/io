@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,16 +20,16 @@ import java.net.URL;
 
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @vesion 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraScannerTest {
 
 	// Attributes
-	private static String testFile = "catarnet1.elv";
+	private static final String testFile = "catarnet1.elv";
 	// Constants
-	private double maxError = 1E-5;
+	private final double maxError = 1E-5;
 	private ElviraScanner elviraScanner;
 	private ElviraToken token;
 

@@ -34,7 +34,7 @@ public class PGMXReaderWriterTest {
     private PGMXWriter_0_2 writer;
     private PGMXReader_0_2 reader;
     
-    private String networkTestName = "HPV-model-0.2.0.pgmx";
+    private final String networkTestName = "HPV-model-0.2.0.pgmx";
     
     @BeforeEach
     public void setUp() {

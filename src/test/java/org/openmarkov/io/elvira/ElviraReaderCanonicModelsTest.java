@@ -28,14 +28,14 @@ import org.openmarkov.core.model.network.potential.canonical.ICIPotential;
 import org.openmarkov.core.testTags.TestSpeed;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @vesion 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraReaderCanonicModelsTest {
 
 	// Constants
-	double maxError = 1E-5;
+    final double maxError = 1E-5;
 	private ElviraParser elviraParser;
 	// Attributes
 	/*private final String[] cataratasVariables = {"agudeza_vis_sin_catar", 

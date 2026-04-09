@@ -7,7 +7,6 @@
 
 package org.openmarkov.io.elvira;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
  * Reads a probabilistic network in Elvira format and builds a
  * {@code ProbNet}
  *
- * @author marias
+ * @author Manuel Arias
  * @version 1.1 carmenyago - adapted parser to new IO methods for OpenMarkov 0.3.x by filling loadProbNetInfo(String netName, InputStream... file)
  */
 @FormatType(name = "ElviraParser", version = "0.1", extension = "elv", description = "Elvira") public class ElviraParser
@@ -52,14 +51,14 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	// Attributes
 	private ProbNet probNet;
 
-	private ElviraScanner scanner;
+	private final ElviraScanner scanner;
 
 	private String fileName;
 
 	/**
 	 * Store in this variable all the ICIPotentials.
 	 */
-	private ArrayList<ICIPotential> iciPotentials;
+	private final ArrayList<ICIPotential> iciPotentials;
 
 	/**
 	 * Store in this variable all the sub-potentials corresponding to
@@ -70,16 +69,18 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
      * {@code name-of-relation}s and this variable is used to locate its
 	 * sub-potentials.
 	 */
-	private HashMap<String, TablePotential> subPotentials;
+	private final HashMap<String, TablePotential> subPotentials;
 
 	private boolean continuousVariable;
 
-	private Criterion decisionCriterion;
+	private final Criterion decisionCriterion;
 
 	// Constructor
 
 	/**
-     * @param scanner {@code ElviraScanner}
+	 * Creates a parser using the specified scanner.
+	 *
+     * @param scanner the Elvira lexical scanner to use
 	 */
 	public ElviraParser(ElviraScanner scanner) {
 		this.scanner = scanner;
@@ -90,6 +91,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		decisionCriterion = new Criterion("Effectiveness", "Eff-Unit");
 	}
 
+	/** Creates a parser with a default scanner instance. */
 	public ElviraParser() {
 		this(ElviraScanner.getUniqueInstance());
 	}
@@ -108,7 +110,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		List<Variable> auxVariables = elvira2OpenMarkovVariables(elviraVariables);
 
 		// Invert potential values
-		double[] table = elviraPotential.values;
+		double[] table = elviraPotential.getValues();
 		double aux;
 		int sizePotential = table.length, halfPotential = sizePotential / 2;
 		for (int i = 0; i < halfPotential; i++) {
@@ -153,6 +155,13 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		return openMarkovPotential;
 	}
 
+	/**
+	 * Reverses the order of variables from Elvira convention (conditioned variable last)
+	 * to OpenMarkov convention (conditioned variable first).
+	 *
+	 * @param elviraVariables the variables in Elvira order
+	 * @return the variables in OpenMarkov order
+	 */
 	static List<Variable> elvira2OpenMarkovVariables(List<Variable> elviraVariables) {
 		int numVariables = elviraVariables.size();
 		List<Variable> auxVariables = new ArrayList<Variable>();
@@ -197,7 +206,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * Reads the probNet type, creates the right compound constraint and
      * associate that constraint to {@code probNet}
 	 *
-	 * @throws ParserException
+	 * @throws ParserException if parser occurs
 	 */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private void getConstraints() throws ParserException {
@@ -234,7 +243,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
 	 * @return Next token corresponding to a node (end of general information).
      * {@code ElviraToken}
-	 * @throws ParserException
+	 * @throws ParserException if parser occurs
 	 */
 	private ElviraToken getGeneralInfo() throws IOException, ParserException {
 
@@ -274,8 +283,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * Reads nodes (variables)
 	 *
      * @param token {@code ElviraToken}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private ElviraToken getNodes(ElviraToken token) throws IOException, ParserException {
 		do {
@@ -287,8 +296,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	/**
      * @param token {@code ElviraToken}
      * @return token. {@code ElviraToken}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private ElviraToken getNode(ElviraToken token) throws IOException, ParserException {
 		Node node = null;
@@ -402,8 +411,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
      * @param token {@code ElviraToken}
      * @return token. {@code ElviraToken}
-	 * @throws IOException
-	 * @throws ParserException
+	 * @throws IOException if an I/O error occurs
+	 * @throws ParserException if parser occurs
 	 */
 	private ElviraToken getLinks(ElviraToken token) throws IOException, ParserException {
 		do {
@@ -423,8 +432,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 * Reads potentials information and create potentials.
 	 *
      * @param token {@code ElviraToken}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private void getPotentials(ElviraToken token) throws IOException, ParserException {
 		do {
@@ -447,8 +456,8 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 	 *
      * @param variables {@code ArrayList} of {@code Variable}
      * @return potential. {@code Potential}
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException if parser occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private Potential getPotential(List<Variable> variables) throws IOException, ParserException {
         boolean isUtilityPotential = variables.get(0).getVariableType() == VariableType.NUMERIC;
@@ -511,7 +520,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 				}
 				variables = elvira2OpenMarkovVariables(variables);
 				TablePotential tablePotential = new TablePotential(variables, role);
-				tablePotential.values = token.getDoublesTableValue();
+				tablePotential.setValues(token.getDoublesTableValue());
 				tablePotential = elvira2OpenMarkovPotential(tablePotential);
 
 				tablePotential.properties = properties;
@@ -552,9 +561,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
                 }
                 if (subPotential.getVariables().size() > 1) {
                     potential.setNoisyParameters(subPotential.getVariable(1), //parent
-                                                 subPotential.values);
+                                                 subPotential.getValues());
                 } else {
-                    potential.setLeakyParameters(subPotential.values);
+                    potential.setLeakyParameters(subPotential.getValues());
                 }
                 subPotentials.remove(relation);
                 

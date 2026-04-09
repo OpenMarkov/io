@@ -100,10 +100,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     /**
      * Removes from {@code evidence} the variables that are no longer
-     * present in {@code probNet}
+     * present in {@code probNet}.
      *
-     * @param probNet  . {@code ProbNet}
-     * @param evidence . {@code EvidenceCase}
+     * @param probNet  the probabilistic network to check variables against
+     * @param evidence the list of evidence cases to clean up
      */
     protected static void removeMissingVariablesFromEvidence(ProbNet probNet, List<EvidenceCase> evidence) {
         HashSet<Variable> probNetVariables = new HashSet<Variable>(probNet.getVariables());
@@ -131,8 +131,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Writes Inference Options in the PGMX
      *
-     * @param probNet
-     * @param root
+     * @param probNet the prob net
+     * @param root the root
      */
     protected static void writeInferenceOptions(ProbNet probNet, Element root) {
         Element inferenceOptionsElement = new Element(XMLTags.INFERENCE_OPTIONS.toString());
@@ -267,9 +267,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param probNetElement
-     * @param decisionCriteriaElement
+     * @param probNet the prob net
+     * @param probNetElement the prob net element
+     * @param decisionCriteriaElement the decision criteria element
      */
     protected static void getDecisionCriteria(ProbNet probNet, Element probNetElement, Element decisionCriteriaElement) {
         List<Criterion> decisionCritera = probNet.getDecisionCriteria();
@@ -287,10 +287,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param decisionCriteriaElement
-     * @param criterionElement
-     * @param criterionName
-     * @param criterionUnit
+     * @param decisionCriteriaElement the decision criteria element
+     * @param criterionElement the criterion element
+     * @param criterionName the criterion name
+     * @param criterionUnit the criterion unit
      */
     protected static void getCriterion(Element decisionCriteriaElement, Element criterionElement,
                                        String criterionName, String criterionUnit) {
@@ -302,7 +302,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param properties
+     * @param properties the properties
      *
      * @return Element
      */
@@ -318,9 +318,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param probNetElement
-     * @param constraintsElement
+     * @param probNet the prob net
+     * @param probNetElement the prob net element
+     * @param constraintsElement the constraints element
      */
     protected static void getAdditionalConstraints(ProbNet probNet, Element probNetElement, Element constraintsElement) {
         List<PNConstraint> constraints = probNet.getAdditionalConstraints();
@@ -360,9 +360,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param probNetElement
-     * @param languageElement
+     * @param probNet the prob net
+     * @param probNetElement the prob net element
+     * @param languageElement the language element
      */
     protected static void getLanguage(ProbNet probNet, Element probNetElement, Element languageElement) {
         if (probNet.getAdditionalProperties().get(XMLTags.LANGUAGE.toString()) != null)
@@ -371,9 +371,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param probNetElement
-     * @param variablesElement
+     * @param probNet the prob net
+     * @param probNetElement the prob net element
+     * @param variablesElement the variables element
      */
     protected static void getVariables(ProbNet probNet, Element probNetElement, Element variablesElement) {
         if (probNet.getNumNodes() > 0) {
@@ -385,9 +385,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variablesElement
-     * @param variableElement
-     * @param node
+     * @param variablesElement the variables element
+     * @param variableElement the variable element
+     * @param node the node
      */
     protected static void getVariable(Element variablesElement, Element variableElement, Node node) {
         writeVariableName(node.getVariable(), variableElement);
@@ -405,8 +405,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param node
+     * @param variableElement the variable element
+     * @param node the node
      */
     protected static void getVariableChildren(Element variableElement, Node node) {
         getCommment(variableElement, node);
@@ -449,9 +449,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param thresholdsElement
-     * @param partitionedInterval
+     * @param variableElement the variable element
+     * @param thresholdsElement the thresholds element
+     * @param partitionedInterval the partitioned interval
      */
     protected static void getThresholds(Element variableElement, Element thresholdsElement,
                                         PartitionedInterval partitionedInterval) {
@@ -467,10 +467,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Creates a threshold that belongs to a partitioned interval.
      *
-     * @param limit
-     * @param thresholdsElement
-     * @param partitionedInterval
-     * @param i
+     * @param limit the limit
+     * @param thresholdsElement the thresholds element
+     * @param partitionedInterval the partitioned interval
+     * @param i the index
      */
     protected static void getThresholdElement(double limit, Element thresholdsElement, PartitionedInterval partitionedInterval, int i) {
         Element thresholdElement = new Element(XMLTags.THRESHOLD.toString());
@@ -480,9 +480,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param statesElement
-     * @param node
+     * @param variableElement the variable element
+     * @param statesElement the states element
+     * @param node the node
      */
     protected static void getStates(Element variableElement, Element statesElement, Node node) {
         // TODO revisar el caso para variables numéricas
@@ -496,9 +496,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Writes Decision Criterion in the PGMX
      *
-     * @param variableElement
-     * @param decisionCriterion
-     * @param node
+     * @param variableElement the variable element
+     * @param decisionCriterion the decision criterion
+     * @param node the node
      */
     protected static void getDecisionCriterion(Element variableElement, Element decisionCriterion, Node node) {
         if (node.getVariable().getDecisionCriterion() != null) {
@@ -509,9 +509,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param additionalElement
-     * @param node
+     * @param variableElement the variable element
+     * @param additionalElement the additional element
+     * @param node the node
      */
     protected static void getAdditionalProperties(Element variableElement, Element additionalElement, Node node) {
         if (!node.getPurpose().isEmpty()) {
@@ -538,8 +538,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param node
+     * @param variableElement the variable element
+     * @param node the node
      */
     protected static void getCoordinates(Element variableElement, Node node) {
         Element coordinatesElement = new Element(XMLTags.COORDINATES.toString());
@@ -551,8 +551,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param node
+     * @param variableElement the variable element
+     * @param node the node
      */
     protected static void getCommment(Element variableElement, Node node) {
         if (node.getComment() != null && !node.getComment().isEmpty()) {
@@ -562,8 +562,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param variableElement
-     * @param node
+     * @param variableElement the variable element
+     * @param node the node
      */
     protected static void getAlwaysObservedAttribute(Element variableElement, Node node) {
         if (node.isAlwaysObserved()) {
@@ -572,9 +572,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param probNetElement
-     * @param linksElement
+     * @param probNet the prob net
+     * @param probNetElement the prob net element
+     * @param linksElement the links element
      */
     protected void getLinks(ProbNet probNet, Element probNetElement, Element linksElement) {
         List<Link<Node>> links = probNet.getLinks();
@@ -615,8 +615,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /****
      * Writes the revelation conditions for the link.
      *
-     * @param link
-     * @param linkElement
+     * @param link the link
+     * @param linkElement the link element
      */
     protected static void getRevelationConditions(Link<Node> link, Element linkElement) {
         Node node = link.getFrom();
@@ -647,11 +647,11 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /*****
      * Writes the link restriction
      *
-     * @param link
-     * @param linkElement
+     * @param link the link
+     * @param linkElement the link element
      */
     protected void getLinkRestriction(Link<Node> link, Element linkElement) {
-        double[] table = ((TablePotential) link.getRestrictionsPotential()).values;
+        double[] table = ((TablePotential) link.getRestrictionsPotential()).getValues();
         
         boolean hasRestriction = false;
         for (int i = 0; i < table.length; i++) {
@@ -675,7 +675,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             variables.addContent(variable1);
             variables.addContent(variable2);
             Element valuesElement = new Element(XMLTags.VALUES.toString())
-                    .setText(getValuesInAString(((TablePotential) link.getRestrictionsPotential()).values));
+                    .setText(getValuesInAString(((TablePotential) link.getRestrictionsPotential()).getValues()));
             restrictionPotential.addContent(variables);
             restrictionPotential.addContent(valuesElement);
             linkElement.addContent(restrictionPotential);
@@ -683,9 +683,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param probNetElement
-     * @param potentialsElement
+     * @param probNet the prob net
+     * @param probNetElement the prob net element
+     * @param potentialsElement the potentials element
      */
     protected void getPotentials(ProbNet probNet, Element probNetElement, Element potentialsElement) {
         // HashMap of declared TablePotentials
@@ -707,8 +707,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Writes potential role in PGMX description.
      *
-     * @param potentialElement
-     * @param potential
+     * @param potentialElement the potential element
+     * @param potential the potential
      */
     protected static void setPotentialRole(Element potentialElement, Potential potential) {
         PotentialRole potentialRole = potential.getPotentialRole();
@@ -720,9 +720,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param potential
-     * @param potentialElement
+     * @param probNet the prob net
+     * @param potential the potential
+     * @param potentialElement the potential element
      */
     protected void getPotential(ProbNet probNet, Potential potential, Element potentialElement) {
         getPotentialAttributesAndVariables(probNet, potential, potentialElement);
@@ -730,9 +730,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param potential
-     * @param potentialElement
+     * @param probNet the prob net
+     * @param potential the potential
+     * @param potentialElement the potential element
      */
     protected static void getPotentialAttributesAndVariables(ProbNet probNet, Potential potential, Element potentialElement) {
         // TODO - Change in new version. compatibility with this version of pgmx  format
@@ -767,8 +767,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Adds an utility element when utility the utility variable exists.
      *
-     * @param potentialElement
-     * @param utilityVariable
+     * @param potentialElement the potential element
+     * @param utilityVariable the utility variable
      */
     protected static void getUtilityElement(Element potentialElement, Variable utilityVariable) {
         if (utilityVariable != null) {
@@ -779,8 +779,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param potential
-     * @param potentialElement
+     * @param potential the potential
+     * @param potentialElement the potential element
      */
     protected static void getPotentialComment(Potential potential, Element potentialElement) {
         if (potential.getComment() != null && !potential.getComment().isEmpty()) {
@@ -793,9 +793,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Add the variables to the potentialElement and, whether it exists, the utility variable
      *
-     * @param potential
-     * @param potentialElement
-     * @param probNet
+     * @param potential the potential
+     * @param potentialElement the potential element
+     * @param probNet the prob net
      */
     protected static void getPotentialVariables(Potential potential, Element potentialElement, ProbNet probNet) {
         List<Variable> potentialVariables = potential.getVariables();
@@ -818,9 +818,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param potential
-     * @param potentialElement
+     * @param probNet the prob net
+     * @param potential the potential
+     * @param potentialElement the potential element
      */
     protected void getPotentialBody(ProbNet probNet, Potential potential, Element potentialElement) {
         if (potential instanceof ExactDistrPotential) {
@@ -854,12 +854,12 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     
     /**
-     * @param potential
-     * @param potentialElement
+     * @param potential the potential
+     * @param potentialElement the potential element
      */
     protected static void getValuesTablePotential(TablePotential potential, Element potentialElement) {
         Element valuesElement = new Element(XMLTags.VALUES.toString());
-        valuesElement.setText(getValuesInAString(potential.values));
+        valuesElement.setText(getValuesInAString(potential.getValues()));
         // Write table values to the XML file
         potentialElement.addContent(valuesElement);
         if (potential.getUncertainValues() != null) {
@@ -869,9 +869,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param treeADDPotential
-     * @param potentialElement
-     * @param probNet
+     * @param treeADDPotential the tree add potential
+     * @param potentialElement the potential element
+     * @param probNet the prob net
      */
     protected void getTreeAddPotential(TreeADDPotential treeADDPotential, Element potentialElement, ProbNet probNet) {
         // Root variable
@@ -889,8 +889,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param iciPotential
-     * @param potentialElement
+     * @param iciPotential the ici potential
+     * @param potentialElement the potential element
      */
     protected static void getICIPotential(ICIPotential iciPotential, Element potentialElement) {
         potentialElement.setAttribute(XMLAttributes.TYPE.toString(), "ICIModel");
@@ -935,8 +935,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param weibullPotential
-     * @param potentialElement
+     * @param weibullPotential the weibull potential
+     * @param potentialElement the potential element
      */
     protected static void getWeibullHazardPotential(WeibullHazardPotential weibullPotential, Element potentialElement) {
         Variable timeVariable = weibullPotential.getTimeVariable();
@@ -954,8 +954,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param potentialElement
-     * @param exponentialHazardPotential
+     * @param potentialElement the potential element
+     * @param exponentialHazardPotential the exponential hazard potential
      */
     protected static void getLogHazardPotential(Element potentialElement, ExponentialHazardPotential exponentialHazardPotential) {
         if (!exponentialHazardPotential.isLog()) {
@@ -966,8 +966,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param potentialElement
-     * @param potential
+     * @param potentialElement the potential element
+     * @param potential the potential
      */
     protected static void getDeltaPotential(Element potentialElement, Potential potential) {
         DeltaPotential deltaPotential = (DeltaPotential) potential;
@@ -1008,7 +1008,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     
     
     /**
-     * @param coefficients
+     * @param coefficients the coefficients
      *
      * @return new Element
      */
@@ -1019,7 +1019,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param covariates
+     * @param covariates the covariates
      *
      * @return new Element
      */
@@ -1034,7 +1034,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param function
+     * @param function the function
      *
      * @return new Element
      */
@@ -1045,9 +1045,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param covarianceMatrix
+     * @param covarianceMatrix the covariance matrix
      *
-     * @return
+     * @return the result
      */
     protected static Element getCovarianceMatrixElement(double[] covarianceMatrix) {
         Element covarianceMatrixElement = new Element(XMLTags.COVARIANCE_MATRIX.toString());
@@ -1056,9 +1056,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param choleskyDecomposition
+     * @param choleskyDecomposition the cholesky decomposition
      *
-     * @return
+     * @return the result
      */
     protected static Element getCholeskyDecompositionElement(double[] choleskyDecomposition) {
         Element choleskyDecompositionElement = new Element(XMLTags.CHOLESKY_DECOMPOSITION.toString());
@@ -1067,8 +1067,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param xmlElement
-     * @param potential
+     * @param xmlElement the xml element
+     * @param potential the potential
      */
     protected static void getGLMPotential(Element xmlElement, GLMPotential potential) {
         xmlElement.addContent(getCoefficientsElement(potential.getCoefficients()));
@@ -1081,7 +1081,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param potential
+     * @param potential the potential
      *
      * @return Element
      */
@@ -1098,7 +1098,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param uncertainValue
+     * @param uncertainValue the uncertain value
      *
      * @return Element
      */
@@ -1118,8 +1118,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param potentialVariables
-     * @param targetElement
+     * @param potentialVariables the potential variables
+     * @param targetElement the target element
      */
     protected static void writePotentialVariables(List<Variable> potentialVariables, Element targetElement) {
         if (!potentialVariables.isEmpty()) {
@@ -1137,8 +1137,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Sets variable information in xmlElement
      *
-     * @param variable
-     * @param xmlElement
+     * @param variable the variable
+     * @param xmlElement the xml element
      */
     protected static void writeVariableName(Variable variable, Element xmlElement) {
         xmlElement.setAttribute(XMLAttributes.NAME.toString(), variable.getName());
@@ -1148,8 +1148,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param branch
-     * @param topVariable
+     * @param branch the branch
+     * @param topVariable the top variable
      *
      * @return Element
      */
@@ -1216,8 +1216,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param inferenceOptionsElement
+     * @param probNet the prob net
+     * @param inferenceOptionsElement the inference options element
      */
     protected static void getMulticriteriaOptions(ProbNet probNet, Element inferenceOptionsElement) {
         if (probNet.getInferenceOptions().getMultiCriteriaOptions() != null) {
@@ -1235,8 +1235,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
-     * @param multicriteriaOptions
+     * @param probNet the prob net
+     * @param multicriteriaOptions the multicriteria options
      */
     protected static void getUnicriterionOptions(ProbNet probNet, Element multicriteriaOptions) {
         boolean haveSomeData = false;
@@ -1268,8 +1268,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Writes Cost-Effectivenes Options of the Multricriteria Analysys
      *
-     * @param probNet
-     * @param multicriteriaOptions
+     * @param probNet the prob net
+     * @param multicriteriaOptions the multicriteria options
      */
     protected static void getCostEffectivenessOptions(ProbNet probNet, Element multicriteriaOptions) {
         if (probNet.getDecisionCriteria() != null && !probNet.getDecisionCriteria().isEmpty()) {
@@ -1303,8 +1303,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     /**
      * Writes Temporal Options in the PGMX
      *
-     * @param probNet
-     * @param inferenceOptionsElement
+     * @param probNet the prob net
+     * @param inferenceOptionsElement the inference options element
      */
     protected static void getTemporalOptions(ProbNet probNet, Element inferenceOptionsElement) {
         Element temporalOptions = new Element(XMLTags.TEMPORAL_OPTIONS.toString());
@@ -1344,7 +1344,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     }
     
     /**
-     * @param probNet
+     * @param probNet the prob net
      *
      * @return String
      */

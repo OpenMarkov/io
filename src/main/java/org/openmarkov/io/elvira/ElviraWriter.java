@@ -37,7 +37,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
 /**
  * This class writes a {@code ProbNet} in elvira format.
  *
- * @author marias
+ * @author Manuel Arias
  */
 @FormatType(name = "ElviraWriter", version = "0.1", extension = "elv", description = "Elvira")
 public class ElviraWriter implements ProbNetWriter {
@@ -69,7 +69,7 @@ public class ElviraWriter implements ProbNetWriter {
         TablePotential elviraPotential = (TablePotential) openMarkovPotential.reorder(elviraVariables);
         
         // Invert potential values
-        double[] table = elviraPotential.values;
+        double[] table = elviraPotential.getValues();
         double aux;
         int sizePotential = table.length, halfPotential = sizePotential / 2;
         for (int i = 0; i < halfPotential; i++) {
@@ -82,10 +82,11 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param netName = path + network name + extension.
-     * @param probNet . {@code ProbNet} {@code String}
+     * Writes the probabilistic network to a file in Elvira format.
      *
-     * @throws WriterException WriterException
+     * @param netName path + network name + extension
+     * @param probNet the probabilistic network to write
+     * @throws WriterException if the file cannot be created or the network type is unknown
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override
@@ -103,12 +104,11 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * This method writes the {@code BayesNet} in a file
+     * Writes the complete Elvira network (preamble, nodes, links, relations) to the output.
      *
-     * @param out     {@code PrintWriter}
-     * @param probNet {@code InfoNet}
-     *
-     * @throws WriterException
+     * @param out     the writer to output to
+     * @param probNet the probabilistic network to serialize
+     * @throws WriterException if the network type is unknown or an ICI model is unsupported
      */
     private static void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
         writeElviraPreamble(out, probNet);
@@ -118,10 +118,11 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param out     {@code PrintWriter}
-     * @param probNet {@code InfoNet}
+     * Writes the Elvira file header: network type, name, and general properties.
      *
-     * @throws WriterException
+     * @param out     the writer to output to
+     * @param probNet the probabilistic network
+     * @throws WriterException if the network type is not recognized
      */
     private static void writeElviraPreamble(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType {
         // preamble comment
@@ -230,8 +231,10 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param out     {@code PrintWriter}
-     * @param probNet {@code InfoNet}
+     * Writes all variable (node) definitions in Elvira format.
+     *
+     * @param out     the writer to output to
+     * @param probNet the probabilistic network whose nodes are written
      */
     private static void writeElviraNodes(PrintWriter out, ProbNet probNet) {
         // write coment
@@ -385,8 +388,10 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param out     {@code PrintWriter}
-     * @param probNet {@code InfoNet}
+     * Writes all directed links between nodes in Elvira format.
+     *
+     * @param out     the writer to output to
+     * @param probNet the probabilistic network whose links are written
      */
     private static void writeElviraLinks(PrintWriter out, ProbNet probNet) {
         // links comment
@@ -413,10 +418,11 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param out     {@code PrintWriter}
-     * @param probNet {@code InfoNet}
+     * Writes all potential (relation) definitions in Elvira format.
      *
-     * @throws WriterException
+     * @param out     the writer to output to
+     * @param probNet the probabilistic network whose potentials are written
+     * @throws WriterException if an ICI model type is not supported by Elvira
      */
     private static void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira {
         // relations comment
@@ -433,10 +439,11 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param out       {@code PrintWriter}
-     * @param potential {@code Potential}
+     * Writes a single potential (table or ICI) in Elvira format.
      *
-     * @throws WriterException
+     * @param out       the writer to output to
+     * @param potential the potential to serialize
+     * @throws WriterException if an ICI model type is not supported by Elvira
      */
     private static void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira {
         writeCommonElviraPotentialPreamble(out, potential);
@@ -455,8 +462,10 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param out       {@code PrintWriter}
-     * @param variables {@code ArrayList} of {@code Variable}
+     * Writes boilerplate metadata for a canonical model sub-potential.
+     *
+     * @param out       the writer to output to
+     * @param variables the variables of the sub-potential
      */
     private static void writeSubPotentialTrash(PrintWriter out, List<Variable> variables) {
         out.println("comment = \"new\";");
@@ -528,7 +537,7 @@ public class ElviraWriter implements ProbNetWriter {
         }
         
         // write table
-        writeElviraTable(out, null, elviraPotential.values);
+        writeElviraTable(out, null, elviraPotential.getValues());
         out.println();
     }
     
@@ -537,7 +546,7 @@ public class ElviraWriter implements ProbNetWriter {
             TablePotential openMarkovPotential = new TablePotential(variables, PotentialRole.CONDITIONAL_PROBABILITY,
                                                                     values);
             TablePotential elviraPotential = openMarkov2ElviraPotential(openMarkovPotential);
-            values = elviraPotential.values;
+            values = elviraPotential.getValues();
         }
         out.print("values = table(");
         for (int i = 0; i < values.length; i++) {
@@ -662,9 +671,10 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * @param string with an integer or something else.
+     * Checks whether the given string represents an integer value.
      *
-     * @return {@code true} if {@code string} contains an integer.
+     * @param string the string to test
+     * @return {@code true} if the string contains an integer
      */
     private static boolean isInteger(String string) {
         try {

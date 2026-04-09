@@ -10,7 +10,6 @@ package org.openmarkov.io.xmlbif;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +27,7 @@ public class XMLBIFReaderTest {
 	   private String rootPath;
 	    private XMLBIFReader reader;
 	    
-		private String networkTestName = "netAB.xml";
+		private final String networkTestName = "netAB.xml";
 
 		@BeforeEach
 	    public void setUp() {

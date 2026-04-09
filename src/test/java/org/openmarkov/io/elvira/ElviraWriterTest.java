@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @vesion 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)

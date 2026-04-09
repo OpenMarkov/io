@@ -31,7 +31,7 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class Cromosomopatia2Test {
@@ -77,8 +77,8 @@ public class Cromosomopatia2Test {
 		List<Potential> diagnosticoPotentials = probNet.getNode(diagnostico).getPotentials();
 		assertEquals(1, diagnosticoPotentials.size());
 		TablePotential diagnosticoPotential = (TablePotential) diagnosticoPotentials.get(0);
-		assertEquals(3, diagnosticoPotential.values.length);
-		assertEquals(0.9975, diagnosticoPotential.values[0], epsilon);
+		assertEquals(3, diagnosticoPotential.getValues().length);
+		assertEquals(0.9975, diagnosticoPotential.getValues()[0], epsilon);
 	}
 
 	/**

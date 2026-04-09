@@ -82,16 +82,15 @@ public class AmuaDTValidator {
      * @param node current node.
      * @param maxDecisionNodes maximum allowed decision nodes.
      * @param isCE whether CE structure is expected.
-     * @return true if subtree is valid.
+     * @throws IllegalStateException if the subtree is invalid.
      */
-    private boolean hasValidStructure(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE){
+    private void hasValidStructure(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE){
         isValidNode(node, maxDecisionNodes, isCE);
         for (DecisionTreeElement child : node.getChildren()) {
             if (child instanceof DecisionTreeBranch branch) {
                 hasValidStructure(branch.getChild(), maxDecisionNodes, isCE);
             }
         }
-        return true;
     }
 
 
@@ -101,9 +100,9 @@ public class AmuaDTValidator {
      * @param node current node.
      * @param maxDecisionNodes maximum allowed decision nodes.
      * @param isCE whether CE structure is expected.
-     * @return true if node is valid.
+     * @throws IllegalStateException if the node is invalid.
      */
-    private boolean isValidNode(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE) {
+    private void isValidNode(DecisionTreeNode<?> node, int maxDecisionNodes, boolean isCE) {
         // validate node class type
         if (isCE && !(node instanceof CEADecisionTreeNode)) {
             throw new IllegalStateException("Invalid node type for Cost-Effectiveness tree.");
@@ -125,7 +124,6 @@ public class AmuaDTValidator {
                 throw new IllegalStateException("Amua supports only one decision node.");
             }
         }
-        return true;
     }
 
 

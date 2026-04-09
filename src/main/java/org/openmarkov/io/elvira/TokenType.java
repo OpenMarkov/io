@@ -18,7 +18,7 @@ import java.io.Serializable;
  * <li>DOUBLE
  * </ol>
  *
- * @author marias
+ * @author Manuel Arias
  */
 public enum TokenType implements Serializable {
     IDENTIFIER,

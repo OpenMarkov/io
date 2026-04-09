@@ -26,16 +26,16 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.core.model.network.potential.TablePotential;
 
 /**
- * @author marias
+ * @author Manuel Arias
  * @vesion 1.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ElviraMiniredesTest {
 
 	// Attributes
-	private static String testFile = "peque.elv";
+	private static final String testFile = "peque.elv";
 	// Constants
-	private double maxError = 1E-5;
+	private final double maxError = 1E-5;
 	private ProbNet probNet;
 
 	private Node nodeA;
@@ -102,9 +102,9 @@ public class ElviraMiniredesTest {
 		assertEquals(1, variablesA.size());
 		assertEquals(variableA, variablesA.get(0));
 		// A probabilities
-		assertEquals(2, probA.values.length);
-		assertEquals(0.2, probA.values[0], maxError);
-		assertEquals(0.8, probA.values[1], maxError);
+		assertEquals(2, probA.getValues().length);
+		assertEquals(0.2, probA.getValues()[0], maxError);
+		assertEquals(0.8, probA.getValues()[1], maxError);
 		// Potential P(B|A)
 		TablePotential probBA = (TablePotential) potentialsWithB.get(0);
 		List<Variable> variablesBA = probBA.getVariables();
@@ -112,11 +112,11 @@ public class ElviraMiniredesTest {
 		assertEquals(variableB, variablesBA.get(0));
 		assertEquals(variableA, variablesBA.get(1));
 		// A probabilities
-		assertEquals(4, probBA.values.length);
-		assertEquals(0.7, probBA.values[0], maxError);
-		assertEquals(0.3, probBA.values[1], maxError);
-		assertEquals(0.9, probBA.values[2], maxError);
-		assertEquals(0.1, probBA.values[3], maxError);
+		assertEquals(4, probBA.getValues().length);
+		assertEquals(0.7, probBA.getValues()[0], maxError);
+		assertEquals(0.3, probBA.getValues()[1], maxError);
+		assertEquals(0.9, probBA.getValues()[2], maxError);
+		assertEquals(0.1, probBA.getValues()[3], maxError);
 		// Potential P(C|B,A)
 		TablePotential probCBA = (TablePotential) potentialsWithC.get(0);
 		List<Variable> variablesCBA = probCBA.getVariables();
@@ -125,15 +125,15 @@ public class ElviraMiniredesTest {
 		assertEquals(variableA, variablesCBA.get(1));
 		assertEquals(variableB, variablesCBA.get(2));
 		// A probabilities
-		assertEquals(8, probCBA.values.length);
-		assertEquals(0.15, probCBA.values[0], maxError);
-		assertEquals(0.85, probCBA.values[1], maxError);
-		assertEquals(0.84, probCBA.values[2], maxError);
-		assertEquals(0.16, probCBA.values[3], maxError);
-		assertEquals(0.29, probCBA.values[4], maxError);
-		assertEquals(0.71, probCBA.values[5], maxError);
-		assertEquals(0.98, probCBA.values[6], maxError);
-		assertEquals(0.02, probCBA.values[7], maxError);
+		assertEquals(8, probCBA.getValues().length);
+		assertEquals(0.15, probCBA.getValues()[0], maxError);
+		assertEquals(0.85, probCBA.getValues()[1], maxError);
+		assertEquals(0.84, probCBA.getValues()[2], maxError);
+		assertEquals(0.16, probCBA.getValues()[3], maxError);
+		assertEquals(0.29, probCBA.getValues()[4], maxError);
+		assertEquals(0.71, probCBA.getValues()[5], maxError);
+		assertEquals(0.98, probCBA.getValues()[6], maxError);
+		assertEquals(0.02, probCBA.getValues()[7], maxError);
 	}
 
 }

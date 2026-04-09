@@ -17,7 +17,7 @@ import org.openmarkov.core.exception.ParserException;
 /**
  * Reads a Elvira file and generates tokens.
  *
- * @author marias
+ * @author Manuel Arias
  */
 public class ElviraScanner {
     // Attributes
@@ -44,6 +44,11 @@ public class ElviraScanner {
     }
     
     // Methods
+    /**
+     * Returns a new scanner instance (slight modification of the singleton pattern).
+     *
+     * @return a fresh {@code ElviraScanner} instance
+     */
     public static ElviraScanner getUniqueInstance() {
         // Without worrying about whether there is a scanner, it creates a new
         // one (slight modification of singleton pattern).
@@ -51,6 +56,13 @@ public class ElviraScanner {
         return elviraScanner;
     }
     
+    /**
+     * Initializes the scanner with the given file name and input stream,
+     * configuring the stream tokenizer for Elvira syntax.
+     *
+     * @param fileName        the name of the file being scanned
+     * @param fileInputStream the input stream to read from
+     */
     public void initializeScanner(String fileName, InputStream fileInputStream) {
         this.fileName = fileName;
         streamTokenizer = new StreamTokenizer(
@@ -74,9 +86,11 @@ public class ElviraScanner {
     }
     
     /**
-     * @return {@code ElviraToken}
+     * Reads and returns the next token from the input stream.
      *
-     * @throws IOException
+     * @return the next {@code ElviraToken}
+     * @throws ParserException if a parsing error occurs
+     * @throws IOException     if an I/O error occurs
      */
     public ElviraToken getNextToken() throws ParserException, IOException {
         ReservedWord reservedWord = readNextToken(streamTokenizer);
@@ -332,7 +346,7 @@ public class ElviraScanner {
      *
      * @param streamTokenizer {@code StreamTokenizer}
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     private void readToken(StreamTokenizer streamTokenizer) throws IOException {
         if (readNextToken) {
@@ -347,7 +361,7 @@ public class ElviraScanner {
      * @param streamTokenizer      {@code StreamTokenizer}
      * @param reservedWordExpected {@code ReservedWord}
      *
-     * @throws ParserException
+     * @throws ParserException if parser occurs
      */
     private static void checkToken(StreamTokenizer streamTokenizer, ReservedWord reservedWordExpected)
             throws IOException, ParserException.MismatchedToken {
@@ -391,7 +405,7 @@ public class ElviraScanner {
      *
      * @return Readed double. {@code double}
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     private static double readDouble(StreamTokenizer streamTokenizer, boolean skipNextToken) throws IOException {
         streamTokenizer.nextToken();
@@ -410,7 +424,7 @@ public class ElviraScanner {
      *
      * @return Readed int. {@code int}
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     private static int readInt(StreamTokenizer streamTokenizer, boolean skipNextToken) throws IOException {
         streamTokenizer.nextToken();
@@ -421,6 +435,11 @@ public class ElviraScanner {
         return value;
     }
     
+    /**
+     * Returns the current line number being read by the scanner.
+     *
+     * @return the current line number
+     */
     public int lineno() {
         return streamTokenizer.lineno();
     }
