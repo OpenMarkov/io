@@ -26,6 +26,23 @@ public class AmuaExporterTest {
     }
 
     @Test
+    void writeInvalidTree() throws Exception {
+        EvaluationDecisionTreeNode ddtuRootInvalid = buildDTDUTreeInvalid();
+        amuaExporter = new AmuaExporter(ddtuRootInvalid);
+
+        File file = File.createTempFile("InvalidTree", ".amua");
+        file.deleteOnExit();
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {amuaExporter.writeAmuaDT(file);});
+
+        assertTrue(amuaExporter.getHasBeenValidatedDT());
+        assertFalse(amuaExporter.getIsValidDT());
+        assertNotNull(amuaExporter.getValidationErrorMessage());
+        assertEquals("NOT VALID: \nTree type not supported by Amua.", ex.getMessage());
+    }
+
+
+    @Test
     void writeIDUnicriteriaDTDUTest() throws Exception {
         EvaluationDecisionTreeNode ddtuRoot = buildDTDUTree();
         amuaExporter = new AmuaExporter(ddtuRoot);
@@ -35,7 +52,6 @@ public class AmuaExporterTest {
         amuaExporter.writeAmuaDT(file);
         assertTrue(file.exists());
         assertTrue(file.length() > 0);
-
     }
 
     @Test
@@ -84,6 +100,73 @@ public class AmuaExporterTest {
         probNet.addNode(U2, NodeType.UTILITY);
         probNet.addNode(U3, NodeType.UTILITY);
         probNet.addNode(U4, NodeType.UTILITY);
+
+        EvaluationDecisionTreeNode decisionNode = new EvaluationDecisionTreeNode(D, probNet);
+        EvaluationDecisionTreeNode chanceYes = new EvaluationDecisionTreeNode(C_yes, probNet);
+        EvaluationDecisionTreeNode chanceNo = new EvaluationDecisionTreeNode(C_no, probNet);
+        EvaluationDecisionTreeNode utilityNode1 = new EvaluationDecisionTreeNode(U1, probNet);
+        EvaluationDecisionTreeNode utilityNode2 = new EvaluationDecisionTreeNode(U2, probNet);
+        EvaluationDecisionTreeNode utilityNode3 = new EvaluationDecisionTreeNode(U3, probNet);
+        EvaluationDecisionTreeNode utilityNode4 = new EvaluationDecisionTreeNode(U4, probNet);
+
+        utilityNode1.setUtility(8.0);
+        utilityNode2.setUtility(9.0);
+        utilityNode3.setUtility(3.0);
+        utilityNode4.setUtility(10.0);
+
+        State cYes1 = C_yes.getStates()[0];
+        cYes1.setName("absent");
+        State cYes2 = C_yes.getStates()[1];
+        cYes2.setName("present");
+        State cNo1 = C_no.getStates()[0];
+        cNo1.setName("absent");
+        State cNo2 = C_no.getStates()[1];
+        cNo2.setName("present");
+
+        chanceYes.setScenarioProbability(1);
+        chanceNo.setScenarioProbability(1);
+
+        DecisionTreeBranch branchYes_U1 = createBranch(probNet, C_yes, cYes1, 0.14, utilityNode1);
+        DecisionTreeBranch branchYes_U2 = createBranch(probNet, C_yes, cYes2, 0.86, utilityNode2);
+        DecisionTreeBranch branchNo_U3 = createBranch(probNet, C_no, cNo1, 0.14, utilityNode3);
+        DecisionTreeBranch branchNo_U4 = createBranch(probNet, C_no, cNo2, 0.86, utilityNode4);
+
+        chanceYes.addChild(branchYes_U1);
+        chanceYes.addChild(branchYes_U2);
+        chanceNo.addChild(branchNo_U3);
+        chanceNo.addChild(branchNo_U4);
+
+        DecisionTreeBranch branchYes = createBranch(probNet, D, dYes, 1.0, chanceYes);
+        DecisionTreeBranch branchNo = createBranch(probNet, D, dNo, 1.0, chanceNo);
+        decisionNode.addChild(branchYes);
+        decisionNode.addChild(branchNo);
+
+        return decisionNode;
+    }
+
+    private EvaluationDecisionTreeNode buildDTDUTreeInvalid() {
+        Variable D = new Variable("Decision", 2);
+        State dYes = D.getStates()[0]; dYes.setName("yes");
+        State dNo = D.getStates()[1]; dNo.setName("no");
+
+        Variable C_yes = new Variable("C_yes", 2);
+        Variable C_no = new Variable("C_no", 2);
+
+        Variable U1 = new Variable("U1");
+        Variable U2 = new Variable("U2");
+        Variable U3 = new Variable("U3");
+        Variable U4 = new Variable("U4");
+
+        probNet = new ProbNet();
+        probNet.addNode(D, NodeType.DECISION);
+        probNet.addNode(C_yes, NodeType.CHANCE);
+        probNet.addNode(C_no, NodeType.CHANCE);
+        probNet.addNode(U1, NodeType.UTILITY);
+        probNet.addNode(U2, NodeType.UTILITY);
+        probNet.addNode(U3, NodeType.UTILITY);
+        probNet.addNode(U4, NodeType.UTILITY);
+
+        probNet.setDecisionCriteria(assignInvalidCriteriaList(0.0));
 
         EvaluationDecisionTreeNode decisionNode = new EvaluationDecisionTreeNode(D, probNet);
         EvaluationDecisionTreeNode chanceYes = new EvaluationDecisionTreeNode(C_yes, probNet);
@@ -331,6 +414,17 @@ public class AmuaExporterTest {
         Criterion effectivenessCriterion = new Criterion("Effectiveness", "QALY");
         effectivenessCriterion.setCECriterion(Criterion.CECriterion.Effectiveness);
         return List.of(costCriterion, effectivenessCriterion);
+    }
+
+
+    private List<Criterion> assignInvalidCriteriaList(double wtp){
+        Criterion costCriterion = new Criterion("Cost", "$");
+        costCriterion.setCECriterion(Criterion.CECriterion.Cost);
+        costCriterion.setUnicriterizationScale(wtp);
+
+        Criterion costCriterionB = new Criterion("Cost", "$");
+        costCriterionB.setCECriterion(Criterion.CECriterion.Cost);
+        return List.of(costCriterion, costCriterionB);
     }
 
 
