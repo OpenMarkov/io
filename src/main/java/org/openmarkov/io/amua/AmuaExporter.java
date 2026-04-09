@@ -108,4 +108,8 @@ public class AmuaExporter {
     public String getValidationErrorMessage() {
         return validationErrorMessage;
     }
+
+    public boolean getIsValidDT() {return isValidDT;}
+
+    public boolean getHasBeenValidatedDT() {return hasBeenValidatedDT;}
 }
