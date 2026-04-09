@@ -19,4 +19,5 @@ open module org.openmarkov.io {
     
     exports org.openmarkov.io.xmlbif.strings;
     exports org.openmarkov.io.xmlbif;
+    exports org.openmarkov.io.amua;
 }
