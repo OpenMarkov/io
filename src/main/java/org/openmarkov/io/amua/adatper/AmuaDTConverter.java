@@ -44,7 +44,7 @@ public class AmuaDTConverter {
      */
     public AmuaDTNode<?> convertToAmuaTree(DecisionTreeNode<?> root) {
         if (root == null) {
-            throw new IllegalArgumentException("Root node cannot be null.");
+            throw new IllegalArgumentException("Tree cannot be null.");
         }
 
         this.index = 0;
@@ -146,7 +146,7 @@ public class AmuaDTConverter {
         return switch (amuaModel) {
             case COST_EFFECTIVENESS_DT -> new AmuaDTCENode();
             case UNICRITERIA_DT -> new AmuaDTUnicriteriaNode();
-            default -> throw new IllegalStateException("Unsupported AMUA model: " + amuaModel + " during tree conversion.");
+            default -> throw new IllegalStateException("Unsupported Amua model: " + amuaModel + " during tree conversion.");
         };
     }
 
@@ -264,7 +264,7 @@ public class AmuaDTConverter {
      */
     private double getCEACost(DecisionTreeNode<?> node) {
         CEP cep = getCEAUtility(node);
-        return (cep != null) ? cep.getEffectiveness(0) : 0.0;
+        return (cep != null) ? cep.getCost(0) : 0.0;
     }
 
 
@@ -276,7 +276,7 @@ public class AmuaDTConverter {
      */
     private double getCEAEffectiveness(DecisionTreeNode<?> node) {
         CEP cep = getCEAUtility(node);
-        return (cep != null) ? cep.getCost(0) : 0.0;
+        return (cep != null) ? cep.getEffectiveness(0) : 0.0;
     }
 
 
