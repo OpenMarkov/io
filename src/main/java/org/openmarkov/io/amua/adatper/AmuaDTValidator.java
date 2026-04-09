@@ -46,7 +46,10 @@ public class AmuaDTValidator {
                 hasValidStructure(treeNode, 1, true);
                 return AmuaModel.COST_EFFECTIVENESS_DT;
             } catch (IllegalStateException e) {
-                ceError = e;
+                if (isCriticalError(e)) { // critical error
+                    throw e;
+                }
+                ceError = e; // non-critical error
             }
         }
 
@@ -59,7 +62,10 @@ public class AmuaDTValidator {
                 hasValidStructure(treeNode, 1, false);
                 return AmuaModel.UNICRITERIA_DT;
             } catch (IllegalStateException e) {
-                if (ceError != null) {
+                if (isCriticalError(e)) {
+                    throw e;
+                }
+                if (ceError != null && (treeNode instanceof CEADecisionTreeNode)){
                     throw ceError;
                 }
                 throw e;
@@ -133,6 +139,17 @@ public class AmuaDTValidator {
         EnumSet<Criterion.CECriterion> types = EnumSet.noneOf(Criterion.CECriterion.class);
         for (Criterion c : criteria) types.add(c.getCECriterion());
         return types.contains(Criterion.CECriterion.Cost) && types.contains(Criterion.CECriterion.Effectiveness);
+    }
+
+
+    /**
+     * Determines whether an IllegalStateException is considered a critical error
+     *
+     * @return true if the exception represents a critical error that should not be suppressed or deferred; false otherwise
+     */
+    private boolean isCriticalError(IllegalStateException e) {
+        String msg = e.getMessage();
+        return msg != null && (msg.contains("Unsupported node type") || msg.contains("Amua supports only one decision node."));
     }
 
 }
