@@ -8,6 +8,7 @@ import org.openmarkov.io.amua.adatper.*;
 import org.openmarkov.io.amua.model.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +23,12 @@ class AmuaDTWriterTest {
     private static final AmuaDimensionInfo dimCost = new AmuaDimensionInfo("Cost", "C", 4);
     private static final AmuaDimensionInfo dimEffectiveness = new AmuaDimensionInfo("Effectiveness", "E", 4);
 
+    @Test
+    void writeToInvalidFileThrowsIOException() {
+        AmuaDTUnicriteriaNode node = unicriteriaNode("Root", DECISION, 0);
+        File file = new File("/invalid_path/tree.amua");
+        assertThrows(IOException.class, () -> writeTree(node, unicriteriaDimensions(), file));
+    }
 
     @Test
     void unicriteriaSingleNodeTest() throws Exception {
