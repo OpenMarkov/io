@@ -63,15 +63,15 @@ public class AmuaDTAssignDimensionsTest {
         int extendedDim = 0;
 
         AmuaDTDimensions result = new AmuaDTDimensions(
-            dimensions,
-            analysisType,
-            objective,
-            objectiveDim,
-            costDim,
-            effectDim,
-            baseScenario,
-            WTP,
-            extendedDim
+                dimensions,
+                analysisType,
+                objective,
+                objectiveDim,
+                costDim,
+                effectDim,
+                baseScenario,
+                WTP,
+                extendedDim
         );
 
         assertEquals(dimensions, result.getDimensions());
