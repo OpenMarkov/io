@@ -38,6 +38,7 @@ import org.openmarkov.io.probmodel.strings.XMLValues;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Manuel Arias
@@ -1336,11 +1337,9 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @return String
      */
     protected static String getValuesInAString(double[] table) {
-        StringBuilder stringBuffer = new StringBuilder();
-        for (double value : table) {
-            stringBuffer.append(String.valueOf(value) + " ");
-        }
-        return stringBuffer.toString();
+        return Arrays.stream(table)
+                     .mapToObj(value -> String.valueOf(value) + " ")
+                     .collect(Collectors.joining());
     }
     
     /**
