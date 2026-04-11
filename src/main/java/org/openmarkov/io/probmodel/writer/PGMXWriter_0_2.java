@@ -745,7 +745,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         } else if (potential instanceof SumPotential || potential instanceof ProductPotential) {
             if (potential.getPotentialRole() != PotentialRole.CONDITIONAL_PROBABILITY) {
                 Variable utilityVariable = potential.getVariable(0); // it could be null in Branches potentials
-                potential.removeVariable(utilityVariable);
+                potential = potential.removeVariable(utilityVariable);
                 getUtilityElement(potentialElement, utilityVariable);
             }
         }
