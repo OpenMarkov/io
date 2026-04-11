@@ -441,7 +441,9 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			String[] variablesListNames = token.getStringListValue();
 			List<Variable> variables = new ArrayList<Variable>();
 			for (String variableName : variablesListNames) {
-				variables.add(probNet.getVariable(variableName));
+				Variable variable = probNet.getVariable(variableName);
+				if (variable == null) throw new ParserException.MissingVariable(variableName);
+				variables.add(variable);
 			}
 			Potential potential = getPotential(variables);
 			if (potential != null) { // null->sub-potential of a canonical model
