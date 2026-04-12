@@ -165,8 +165,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param netName Network name
      *
      * @return root Element
-     *
-     * @throws ParserException if parser occurs
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private static Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
@@ -190,8 +188,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param inputStream InputStream
      *
      * @return InputStream of the network
-     *
-     * @throws ParserException if the file is not found
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     private static InputStream getStream(String netName, InputStream inputStream) throws ParserException.CannotOpenFile {
@@ -1113,7 +1109,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
                         Potential potential = getPotential(xmlPotential, probNet);
                         Link<Node> link = probNet.getLink(node1, node2, directed);
                         link.initializesRestrictionsPotential();
-                        link.setRestrictionsPotential(potential);
+                        link.setRestrictionsPotential((TablePotential) potential);
                     }
                     Element xmlRevelationCondition = xmlLink.getChild(XMLTags.REVELATION_CONDITIONS.toString());
                     if (xmlRevelationCondition != null) {
