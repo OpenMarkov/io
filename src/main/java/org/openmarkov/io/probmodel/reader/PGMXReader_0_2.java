@@ -98,7 +98,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException if the PGMX file cannot be parsed
      */
     @Override
-    public ProbNet loadProbNet(String netName, InputStream inputStream) throws ParserException, FileNotFoundException {
+    public ProbNet loadProbNet(String netName, InputStream inputStream) throws ParserException {
         FormatManager formatManager = FormatManager.getInstance();
         try {
             formatManager.checkVersion(netName);
@@ -124,7 +124,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @throws PGMXParserException if there is an error parsing the XML
      */
     @Override
-    public ProbNetInfo loadProbNetInfo(String netName, InputStream inputStream) throws FileNotFoundException, ParserException {
+    public ProbNetInfo loadProbNetInfo(String netName, InputStream inputStream) throws ParserException {
         Element root = getRootElement(inputStream, netName);
         return loadProbNetInfo(root, netName);
     }
@@ -137,7 +137,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @throws PGMXParserException if there is an error parsing the XML
      */
-    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws FileNotFoundException, ParserException {
+    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws ParserException {
         String formatVersion = root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
         PGMXReader_0_2 reader = ReaderFactory.getReader(formatVersion);
         ProbNet probNet = reader.getProbNet(root, netName);
@@ -209,7 +209,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @throws PGMXParserException if the PGMX file cannot be parsed
      */
-    public ProbNet getProbNet(Element root, String netName) throws FileNotFoundException, ParserException {
+    public ProbNet getProbNet(Element root, String netName) throws ParserException {
         return getProbNet(root, netName, new HashMap<>());
     }
     
@@ -222,7 +222,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @throws PGMXParserException if the PGMX file cannot be parsed
      */
-    protected ProbNet getProbNet(Element root, String netName, Map<String, ProbNet> classes) throws FileNotFoundException, ParserException {
+    protected ProbNet getProbNet(Element root, String netName, Map<String, ProbNet> classes) throws ParserException {
         Element xMLProbNet = root.getChild(getStringTagNetwork());
         ProbNet probNet = null;
         if (xMLProbNet != null) { // Read prob net if the xml file exists

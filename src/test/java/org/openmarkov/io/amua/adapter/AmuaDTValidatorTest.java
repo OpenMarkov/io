@@ -22,7 +22,7 @@ public class AmuaDTValidatorTest {
     private EvaluationDecisionTreeNode unicriteriaRoot;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         simpleNet = createSimpleNet();
         ceaRoot = createCEATree();
         unicriteriaRoot = createUnicriteriaTree();
@@ -148,9 +148,9 @@ public class AmuaDTValidatorTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validator.determineAmuaDTType(unicriteriaRoot));
         assertEquals("Invalid node type for Unicriteria tree.", exception.getMessage());
     }
-
-
-    private ProbNet createSimpleNet() throws Exception {
+    
+    
+    private ProbNet createSimpleNet() {
         ProbNet net = new ProbNet();
 
         Variable D = new Variable("Decision", 3);

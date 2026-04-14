@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openmarkov.core.exception.NonProjectablePotentialException;
 import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
@@ -97,7 +98,7 @@ public class ElviraWriter implements ProbNetWriter {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(netName), Charset.forName("windows-1252"))))) {
             ElviraUtil.swapNameAndTitle(probNet);
             writeElviraNetwork(out, probNet);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | NonProjectablePotentialException e) {
             throw new WriterException.CannotCreateFile(netName);
         }
         ElviraUtil.swapNameAndTitle(probNet); // Restore previous version
@@ -110,7 +111,7 @@ public class ElviraWriter implements ProbNetWriter {
      * @param probNet the probabilistic network to serialize
      * @throws WriterException if the network type is unknown or an ICI model is unsupported
      */
-    private static void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
+    private static void writeElviraNetwork(PrintWriter out, ProbNet probNet) throws WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira, NonProjectablePotentialException {
         writeElviraPreamble(out, probNet);
         writeElviraNodes(out, probNet);
         writeElviraLinks(out, probNet);
@@ -424,7 +425,7 @@ public class ElviraWriter implements ProbNetWriter {
      * @param probNet the probabilistic network whose potentials are written
      * @throws WriterException if an ICI model type is not supported by Elvira
      */
-    private static void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira {
+    private static void writeElviraRelations(PrintWriter out, ProbNet probNet) throws WriterException.ICIModelNotSupportedByElvira, NonProjectablePotentialException {
         // relations comment
         out.println("//		Network Relationships:");
         out.println();
@@ -445,7 +446,7 @@ public class ElviraWriter implements ProbNetWriter {
      * @param potential the potential to serialize
      * @throws WriterException if an ICI model type is not supported by Elvira
      */
-    private static void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira {
+    private static void writeElviraTablePotential(PrintWriter out, Potential potential) throws WriterException.ICIModelNotSupportedByElvira, NonProjectablePotentialException {
         writeCommonElviraPotentialPreamble(out, potential);
         TablePotential elviraPotential;
         if (potential.getClass() != TablePotential.class) {
