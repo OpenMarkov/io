@@ -340,7 +340,6 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
                 }
                 // To be extended here when the arguments of the restrictions
                 // are available
-                // TODO Eliminar XMLBasicConstraints y XMLCompoundConstraints
                 // TODO revisar que el toString de cada constraint sea correcto
             }
             probNetElement.addContent(constraintsElement);
