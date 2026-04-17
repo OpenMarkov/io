@@ -1421,7 +1421,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
             variables.addFirst(utilityVariable);
             utilityVariableElement = true;
         }
-        if (sXmlPotentialType.equals(PotentialUtils.getPotentialName(TablePotential.class)) && utilityVariableElement) {
+        if (PotentialUtils.getNames(TablePotential.class).contains(sXmlPotentialType) && utilityVariableElement) {
             // Compatibility with old utility variable use
             potential = PGMXPotentialParsers.getExactDistrPotential(xmlPotential, probNet, potentialRole, variables);
         } else {
