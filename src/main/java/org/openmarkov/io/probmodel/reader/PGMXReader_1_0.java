@@ -26,34 +26,52 @@ import org.openmarkov.io.probmodel.strings.XMLAttributes;
 import org.openmarkov.io.probmodel.strings.XMLTags;
 
 /**
+ * Reader for the PGMX format version 1.0. Extends {@link PGMXReader_0_2} and
+ * redefines the minimum set of hooks where the 1.0 format diverges from 0.2.
+ *
+ * <p>Divergencias respecto a {@code PGMXReader_0_2} (ver
+ * {@code docs/rediseno-io/pgmx-readers-diff.md}):</p>
+ * <ul>
+ *   <li>{@link #getPotential(Element, ProbNet)}: el formato 1.0 no requiere
+ *       derivar el rol del atributo XML y asume {@code CONDITIONAL_PROBABILITY}
+ *       por construcción (los potenciales de utilidad usan otra ruta).</li>
+ *   <li>{@link #getPotential(Element, ProbNet, PotentialRole)}: se elimina la
+ *       rama de compatibilidad {@code <UtilityVariable>} y el caso especial
+ *       {@code Table + utilityVariable → ExactDistrPotential}. El formato 1.0
+ *       ya no produce esa forma heredada.</li>
+ *   <li>{@link #buildPotentialParsers()}: añade los parsers de
+ *       {@link UnivariateDistrPotential} y {@link AugmentedProbTablePotential},
+ *       exclusivos del formato 1.0.</li>
+ * </ul>
+ *
+ * <p>No se introduce una clase base abstracta porque el delta es pequeño
+ * (3 overrides sustanciales + 3 helpers nuevos). Si crece la divergencia,
+ * reevaluar la opción β del plan de refactorización.</p>
+ *
  * @author Manuel Arias
  */
 @FormatType(name = "PGMXReader", version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0")
 public class PGMXReader_1_0 extends PGMXReader_0_2 {
-    
+
     public PGMXReader_1_0() {
         super();
     }
-    
+
     /**
-     * @param probNet      {@code ProbNet}
-     * @param xmlPotential {@code Element}
-     *
-     * @return {@code Potential} read from the XML element
-     *
-     * @throws PGMXParserException if the potential type is not supported
+     * En 1.0 el rol se fija a {@link PotentialRole#CONDITIONAL_PROBABILITY} en
+     * lugar de derivarlo del atributo XML {@code role} (diferencia respecto a
+     * {@code PGMXReader_0_2#getPotential(Element, ProbNet)}).
      */
     @Override protected Potential getPotential(Element xmlPotential, ProbNet probNet) throws PGMXParserException {
         return getPotential(xmlPotential, probNet, PotentialRole.CONDITIONAL_PROBABILITY);
     }
-    
+
     /**
-     * @param probNet       {@code ProbNet}
-     * @param eXMLPotential {@code Element}
-     *
-     * @return {@code Potential} read from the XML element
-     *
-     * @throws PGMXParserException if the potential type is not supported
+     * Variante 1.0 sin la rama de compatibilidad heredada: no se interpreta el
+     * elemento {@code <UtilityVariable>} ni se reescribe {@code Table +
+     * utilityVariable} como {@link org.openmarkov.core.model.network.potential.ExactDistrPotential}
+     * (véase {@code PGMXReader_0_2#getPotential(Element, ProbNet, PotentialRole)}).
+     * El formato 1.0 ya no emite esa forma.
      */
     @Override protected Potential getPotential(Element eXMLPotential, ProbNet probNet, PotentialRole potentialRole)
             throws PGMXParserException {
@@ -67,24 +85,11 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         }
         return potential;
     }
-    
-    
+
     /**
-     * @param xmlPotential {@code Element}
-     *
-     * @return PotentialRole read from the XML element
+     * Añade al mapa heredado los parsers específicos del formato 1.0:
+     * {@link UnivariateDistrPotential} y {@link AugmentedProbTablePotential}.
      */
-    @Override protected PotentialRole getPotentialRole(Element xmlPotential) {
-        String xmlPotentialRole = xmlPotential.getAttributeValue(XMLAttributes.ROLE.toString());
-        PotentialRole xmlRole;
-        if (xmlPotentialRole.equalsIgnoreCase("utility")) {
-            xmlRole = PotentialRole.UNSPECIFIED;
-        } else {
-            xmlRole = PGMXReader_0_2.getPotentialRolByLabel(xmlPotentialRole);
-        }
-        return xmlRole;
-    }
-    
     @Override
     protected Map<Class<? extends Potential>, PotentialParser> buildPotentialParsers() {
         Map<Class<? extends Potential>, PotentialParser> map = super.buildPotentialParsers();
