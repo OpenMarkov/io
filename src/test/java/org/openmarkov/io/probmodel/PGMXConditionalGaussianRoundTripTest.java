@@ -6,7 +6,6 @@
  */
 package org.openmarkov.io.probmodel;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.potential.ConditionalGaussianPotential;
@@ -21,9 +20,8 @@ import java.net.URL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Round-trip fixtures for the ConditionalGaussian and DiscretizedCauchy parsers.
- * Both tests stay {@link Disabled} until refactors A.1 and A.2 implement the
- * corresponding entries in {@code PGMXPotentialParsers}.
+ * Round-trip fixtures for the ConditionalGaussian and DiscretizedCauchy parsers
+ * introduced by refactors A.1 and A.2.
  */
 class PGMXConditionalGaussianRoundTripTest {
 
@@ -34,7 +32,6 @@ class PGMXConditionalGaussianRoundTripTest {
         assertThat(potential).isInstanceOf(ConditionalGaussianPotential.class);
     }
 
-    @Disabled("Pending A.2: getDiscretizedCauchyPotential implementation")
     @Test
     void discretizedCauchyNetworkLoadsIntoExpectedPotential() throws Exception {
         ProbNet probNet = loadFixture("BN-discretized-cauchy.pgmx");

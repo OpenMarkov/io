@@ -319,10 +319,32 @@ public class PGMXPotentialParsers {
         return getTablePotential(nestedPotential, probNet, PotentialRole.CONDITIONAL_PROBABILITY, nestedVariables);
     }
 
-    /** @deprecated Not yet implemented — returns {@code null}. */
+    /**
+     * Parses a {@code <Potential type="Discretized Cauchy">} element into a
+     * {@link DiscretizedCauchyPotential}.
+     * <p>
+     * Implemented as part of refactor A.2 so the paper describing continuous
+     * extensions can be reproduced end-to-end: the stub this replaces returned
+     * {@code null}, which produced silent {@code NullPointerException}s
+     * downstream of {@code PGMXReader_1_0} and blocked the fixture
+     * {@code BN-discretized-cauchy.pgmx} from round-tripping.
+     * <p>
+     * Expected XML shape (see {@code src/test/resources/BN-discretized-cauchy.pgmx}):
+     * <pre>
+     *   &lt;Potential type="Discretized Cauchy" role="conditionalProbability"&gt;
+     *     &lt;Variables&gt;...&lt;/Variables&gt;
+     *     &lt;Median&gt;&lt;Potential type="Table"&gt;...&lt;/Potential&gt;&lt;/Median&gt;
+     *     &lt;Scale&gt;&lt;Potential type="Table"&gt;...&lt;/Potential&gt;&lt;/Scale&gt;
+     *   &lt;/Potential&gt;
+     * </pre>
+     * Nested sub-potentials are read as {@link TablePotential} to match the
+     * defaults used by {@link DiscretizedCauchyPotential}'s main constructor.
+     */
     public static Potential getDiscretizedCauchyPotential(Element xmlPotential, ProbNet probNet, PotentialRole xmlRole,
                                                            List<Variable> variables) {
-        // TODO - Descomentar
-        return null;
+        DiscretizedCauchyPotential dc = new DiscretizedCauchyPotential(variables, xmlRole);
+        dc.setMedian(readNestedTablePotential(xmlPotential, XMLTags.MEDIAN, probNet));
+        dc.setScale(readNestedTablePotential(xmlPotential, XMLTags.SCALE, probNet));
+        return dc;
     }
 }
