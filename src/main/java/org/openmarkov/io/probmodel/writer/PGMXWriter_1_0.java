@@ -187,7 +187,7 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
         
         String potentialType = PotentialUtils.getPotentialName(potential.getClass());
         if (potential.getClass() == ExactDistrPotential.class) {
-			potentialType = "UnivariateDistr";
+			potentialType = PotentialUtils.getPotentialName(UnivariateDistrPotential.class);
 			String distribution = "Exact";
 			potentialElement.setAttribute(XMLAttributes.TYPE.toString(), potentialType);
 			potentialElement.setAttribute(XMLAttributes.DISTRIBUTION.toString(), distribution);
