@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class PGMXConditionalGaussianRoundTripTest {
 
-    @Disabled("Pending A.1: getConditionalGaussianPotential implementation")
     @Test
     void conditionalGaussianNetworkLoadsIntoExpectedPotential() throws Exception {
         ProbNet probNet = loadFixture("BN-conditional-gaussian.pgmx");

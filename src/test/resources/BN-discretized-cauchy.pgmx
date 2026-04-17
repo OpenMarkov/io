@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ProbModelXML formatVersion="1.0">
+<ProbModelXML formatVersion="1.0.0">
   <ProbNet type="BayesianNetwork">
     <Comment><![CDATA[A.0 fixture: BayesianNetwork with a DiscretizedCauchyPotential.
 The XML below is the shape the A.2 parser will be implemented against.
@@ -14,7 +14,7 @@ and <Scale> holding TablePotentials over the parents.]]></Comment>
           <State name="warm" />
         </States>
       </Variable>
-      <Variable name="Rainfall" type="discretized" role="chance" isInput="false">
+      <Variable name="Rainfall" type="finiteStates" role="chance" isInput="false">
         <Coordinates x="300" y="100" />
         <Precision>0.01</Precision>
         <States>
@@ -22,12 +22,6 @@ and <Scale> holding TablePotentials over the parents.]]></Comment>
           <State name="wet" />
           <State name="flood" />
         </States>
-        <Thresholds>
-          <Threshold value="-Infinity" />
-          <Threshold value="50" />
-          <Threshold value="150" />
-          <Threshold value="Infinity" />
-        </Thresholds>
       </Variable>
     </Variables>
     <Links>

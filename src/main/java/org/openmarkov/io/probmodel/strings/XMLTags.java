@@ -49,6 +49,8 @@ public enum XMLTags implements Serializable {
 	LINK("Link"),
 	LINKS("Links"),
 	LOG("Log"),
+	MEAN("Mean"),
+	MEDIAN("Median"),
 	MODEL("Model"),
 	MULTICRITERIA_OPTIONS("MulticriteriaOptions"),
 	NUMBER_OF_CASES("NumberOfCases"),
@@ -98,6 +100,7 @@ public enum XMLTags implements Serializable {
 	UTILITY_VARIABLE("UtilityVariable"),
 	VALUE("Value"),
 	VALUES("Values"),
+	VARIANCE("Variance"),
 	VARIABLE("Variable"),
     VARIABLES("Variables"),
 	FUNCTIONS("Functions")
