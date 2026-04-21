@@ -239,8 +239,10 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         List<StringWithProperties> agents = probNet.getAgents();
         if (agents != null && !agents.isEmpty()) {
             for (int i = 0; i < agents.size(); i++) {
-                getAgent(agentsElement, new Element(XMLTags.AGENT.toString()), agents.get(i).getString(),
+                Element agentElement = new Element(XMLTags.AGENT.toString());
+                getAgent(agentsElement, agentElement, agents.get(i).getString(),
                          agents.get(i).getAdditionalProperties());
+                agentsElement.addContent(agentElement);
             }
             
             /*
