@@ -16,10 +16,13 @@ import org.openmarkov.core.exception.WriterException;
 import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.io.ProbNetWriter;
 import org.openmarkov.core.io.format.annotation.FormatType;
+import org.openmarkov.core.localize.StringDatabase;
 import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.network.Properties;
 import org.openmarkov.core.model.network.constraint.OnlyAtemporalVariables;
+import org.openmarkov.core.model.network.constraint.OnlyContinuousVariables;
+import org.openmarkov.core.model.network.constraint.OnlyDiscreteVariables;
 import org.openmarkov.core.model.network.constraint.PNConstraint;
 import org.openmarkov.core.model.network.modelUncertainty.ProbDensFunction;
 import org.openmarkov.core.model.network.modelUncertainty.ProbDensFunctionType;
@@ -88,6 +91,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         writeXMLProbNet(probNet, root);
         writeInferenceOptions(probNet, root);
         writeEvidence(probNet, evidences, root);
+        writeVariableType(probNet, root);
+        writeDefaultStates(probNet,root);
         Document document = new Document(root);
         XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
         
@@ -1364,6 +1369,43 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
         result = result.replaceAll("<", "SymbolLT");
         result = result.replaceAll(">", "SymbolGT");
         return result;
+    }
+    protected static void writeVariableType(ProbNet probNet, Element root){
+        Element variableTypeElement = new Element(XMLTags.VARIABLE_TYPE.toString());
+        StringDatabase stringDatabase = StringDatabase.getUniqueInstance();
+        String variableType = null;
+
+        List<PNConstraint> constraints = probNet.getConstraints().stream()
+                .filter(o -> o.equals(new OnlyDiscreteVariables()) || o.equals(new OnlyContinuousVariables()))
+                .toList();
+
+        for (PNConstraint p : constraints) {
+            if (p instanceof OnlyDiscreteVariables) {
+                variableType = stringDatabase .getString("NetworkVariablesPanel.ConstraintVariableType." + "Items.onlydiscrete");
+            } else if (p instanceof OnlyContinuousVariables) {
+                variableType = stringDatabase.getString("NetworkVariablesPanel.ConstraintVariableType." + "Items.onlycontinuous");
+            }
+        }
+
+        if(variableType != null){
+            variableTypeElement.addContent(variableType);
+            root.addContent(variableTypeElement);
+        }
+
+    }
+    protected static void writeDefaultStates(ProbNet probNet, Element root){
+        Element defaultStatesElement = new Element(XMLTags.DEFAULT_STATES.toString());
+
+        State[] states = probNet.getDefaultStates();
+
+        for (State state : states) {
+            Element stateElement = new Element(XMLTags.STATE.toString());
+            stateElement.setAttribute(XMLAttributes.NAME.toString(), state.getName());
+            defaultStatesElement.addContent(stateElement);
+        }
+
+        root.addContent(defaultStatesElement);
+
     }
     
 }

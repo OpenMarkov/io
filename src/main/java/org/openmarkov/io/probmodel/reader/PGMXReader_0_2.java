@@ -17,6 +17,9 @@ import org.jdom2.located.LocatedJDOMFactory;
 import org.openmarkov.core.exception.*;
 import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.inference.TemporalOptions;
+import org.openmarkov.core.localize.StringDatabase;
+import org.openmarkov.core.model.network.constraint.OnlyContinuousVariables;
+import org.openmarkov.core.model.network.constraint.OnlyDiscreteVariables;
 import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
@@ -144,6 +147,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
         reader.getInferenceOptions(root, probNet);
         List<EvidenceCase> evidence = reader.getEvidence(root, probNet);
         reader.getPolicies(root, probNet);
+        reader.setVariableType(root, probNet);
+        reader.setDefaultStates(root, probNet);
         return new ProbNetInfo(probNet, evidence);
     }
     
@@ -1583,5 +1588,48 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
         return null;
     }
+
+    protected void setVariableType(Element root, ProbNet probNet) {
+        Element variableTypeElement = root.getChild(XMLTags.VARIABLE_TYPE.toString());
+        if (variableTypeElement == null) return;
+
+        String variableTypeText = variableTypeElement.getText();
+        if (variableTypeText == null) return;
+
+        StringDatabase stringDatabase = StringDatabase.getUniqueInstance();
+
+        PNConstraint variableTypeC = null;
+
+        if (variableTypeText.equals(
+                stringDatabase.getString("NetworkVariablesPanel.ConstraintVariableType.Items.onlydiscrete"))) {
+            variableTypeC = new OnlyDiscreteVariables();
+        } else if (variableTypeText.equals(
+                stringDatabase.getString("NetworkVariablesPanel.ConstraintVariableType.Items.onlycontinuous"))) {
+            variableTypeC = new OnlyContinuousVariables();
+        }
+
+        if (variableTypeC != null) {
+            probNet.addConstraint(variableTypeC);
+        }
+    }
+
+    protected void setDefaultStates(Element root, ProbNet probNet) {
+        Element defaultStatesElement = root.getChild(XMLTags.DEFAULT_STATES.toString());
+        if (defaultStatesElement == null) return;
+
+        List<Element> XMLStates = defaultStatesElement.getChildren();
+        State[] defaultStates = new State[XMLStates.size()];
+        int i = 0;
+
+        for (Element state : XMLStates) {
+            assert false;
+            defaultStates[i] = new State(state.getAttributeValue(XMLAttributes.NAME.toString()));
+            i++;
+        }
+
+        probNet.setDefaultStates(defaultStates);
+
+    }
+
     
 }

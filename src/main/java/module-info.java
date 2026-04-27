@@ -8,7 +8,8 @@ open module org.openmarkov.io {
     requires org.jetbrains.annotations;
     requires org.openmarkov.annotation_processing;
     requires org.openmarkov.inference;
-    
+    requires org.apache.poi.poi;
+
     uses javax.swing.event.UndoableEditListener;
     uses org.xml.sax.InputSource;
     

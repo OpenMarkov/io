@@ -103,8 +103,9 @@ public enum XMLTags implements Serializable {
 	VARIANCE("Variance"),
 	VARIABLE("Variable"),
     VARIABLES("Variables"),
-	FUNCTIONS("Functions")
-	;
+	FUNCTIONS("Functions"),
+	VARIABLE_TYPE("VariableType"),
+	DEFAULT_STATES("DefaultStates");
     
     private final String name;
 	
