@@ -1622,7 +1622,6 @@ public class PGMXReader_0_2 implements ProbNetReader {
         int i = 0;
 
         for (Element state : XMLStates) {
-            assert false;
             defaultStates[i] = new State(state.getAttributeValue(XMLAttributes.NAME.toString()));
             i++;
         }
