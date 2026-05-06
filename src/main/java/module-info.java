@@ -23,4 +23,9 @@ open module org.openmarkov.io {
     exports org.openmarkov.io.xmlbif.strings;
     exports org.openmarkov.io.xmlbif;
     exports org.openmarkov.io.amua;
+    exports org.openmarkov.core.io.format.annotation;
+    exports org.openmarkov.core.io;
+    exports org.openmarkov.core.io.database;
+    exports org.openmarkov.core.io.database.plugin;
+    exports org.openmarkov.core.io.exception;
 }

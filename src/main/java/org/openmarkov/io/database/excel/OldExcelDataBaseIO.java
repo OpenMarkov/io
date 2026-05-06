@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.jetbrains.annotations.NotNull;
 import org.openmarkov.core.exception.EmptyDatabaseException;
-import org.openmarkov.core.io.database.CaseDatabase;
+import org.openmarkov.core.model.database.CaseDatabase;
 import org.openmarkov.core.io.database.plugin.CaseDatabaseFormat;
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.network.type.BayesianNetworkType;
