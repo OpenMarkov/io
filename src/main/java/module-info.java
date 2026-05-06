@@ -9,6 +9,9 @@ open module org.openmarkov.io {
     requires org.openmarkov.inference;
     requires org.apache.poi.poi;
     requires java.xml;
+    requires antlr;
+    requires org.apache.logging.log4j;
+    requires org.apache.poi.ooxml;
     
     uses org.xml.sax.InputSource;
     
