@@ -8,8 +8,7 @@
 package org.openmarkov.io.probmodel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 
 import org.junit.jupiter.api.*;
@@ -43,11 +42,11 @@ public class ImposedPolicyTest {
     }
     
 	@Test
-	public final void test() throws ParserException, FileNotFoundException {
+	public final void test() throws ParserException, IOException {
 		String rootPath = 
 				absolutePath.substring(0, absolutePath.length() - networkTestName.length());
 		String pathAndName = rootPath + networkTestName;
-        ProbNet probNet1 = reader.loadProbNet(pathAndName, new FileInputStream(pathAndName));
+		ProbNet probNet1 = reader.read(new File(pathAndName).toURI().toURL()).getProbNet();
 
 		ProbNet imposedPolicyNet = Util.createTrivialID();
 	}

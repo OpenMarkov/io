@@ -26,15 +26,7 @@ import java.util.List;
  *   <li>role, it can be either "Writer" or "Reader"</li>
  * </ul>
  */
-public interface ProbNetWriter {
-    
-    /**
-     * @param netName = path + network name + extension.
-     * @param probNet {@code ProbNet} {@code String}
-     *
-     * @throws WriterException WriterException
-     */
-    void writeProbNet(String netName, ProbNet probNet) throws WriterException;
+@FunctionalInterface public interface ProbNetWriter {
     
     /**
      * @param netName  = path + network name + extension.
@@ -43,5 +35,5 @@ public interface ProbNetWriter {
      *
      * @throws WriterException WriterException
      */
-    void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException;
+    void write(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException;
 }

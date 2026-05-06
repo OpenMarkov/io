@@ -192,12 +192,12 @@ public class FormatManager {
         return FormatManager.INSTANCE.writerInstances.stream();
     }
     
-    public void checkVersion(String name) throws SAXException, IOException, ParserConfigurationException {
+    public void checkVersion(InputStream input) throws SAXException, IOException, ParserConfigurationException {
         
         InputStream xsd = getClass().getClassLoader().getResourceAsStream("version.xsd");
         
         DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        org.w3c.dom.Document document = parser.parse(new File(name));
+        org.w3c.dom.Document document = parser.parse(input);
         
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         
@@ -225,16 +225,16 @@ public class FormatManager {
     }
     
     
-    public void checkStructure(String name) throws SAXException, IOException, ParserException.BadlyStructuredFile {
+    public void checkStructure(String name, InputStream inputStream) throws SAXException, IOException, ParserException.BadlyStructuredFile {
         InputStream xsd = getClass().getClassLoader().getResourceAsStream("val_v4.xsd");
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Source schemaFile = new StreamSource(xsd);
         Schema schema = factory.newSchema(schemaFile);
         Validator validator = schema.newValidator();
-        URL url = new File(name).toURI().toURL();
         try {
-            validator.validate(new StreamSource(url.openStream()));
+            validator.validate(new StreamSource(inputStream));
         } catch (SAXParseException e) {
+            URL url = new File(name).toURI().toURL();
             throw new ParserException.BadlyStructuredFile(url, e);
         }
     }

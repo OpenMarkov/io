@@ -9,7 +9,6 @@ package org.openmarkov.io.elvira;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -29,8 +28,7 @@ public class ElviraNameAndTitleTest {
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
         ProbNetReader probNetReader = new ElviraParser();
-        String netName = url.getFile();
-        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
+		probNet = probNetReader.read(url).getProbNet();
 	}
 	
 	@Tag(TestSpeed.MEDIUM)

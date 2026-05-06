@@ -47,8 +47,8 @@ import org.openmarkov.io.probmodel.strings.XMLTags;
 import org.openmarkov.io.probmodel.strings.XMLValues;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -93,57 +93,27 @@ public class PGMXReader_0_2 implements ProbNetReader {
     }
     
     /**
-     * Loads a ProbNet from a PGMX file.
-     *
-     * @param netName     = path + network name + extension. {@code String}
-     * @param inputStream InputStream[]
-     *
-     * @throws PGMXParserException if the PGMX file cannot be parsed
-     */
-    @Override
-    public ProbNet loadProbNet(String netName, InputStream inputStream) throws ParserException {
-        FormatManager formatManager = FormatManager.getInstance();
-        try {
-            formatManager.checkVersion(netName);
-            formatManager.checkStructure(netName);
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            throw new ParserException.PGMXInvalid(e.getMessage());
-        }
-        ProbNetInfo probNetInfo = loadProbNetInfo(netName, inputStream);
-        if (probNetInfo == null) {
-            throw new ParserException.MissingProbabilisticNetworkInformation();
-        }
-        return probNetInfo.getProbNet();
-    }
-    
-    
-    /**
      * Loads a ProbNetInfo from a PGMX file given by netName.
      *
-     * @param netName = path + network name + extension. {@code String}
+     * @param networkSource = path + network name + extension. {@code String}
      *
      * @return The {@code ProbNet} readed or {@code null}
      *
      * @throws PGMXParserException if there is an error parsing the XML
      */
     @Override
-    public ProbNetInfo loadProbNetInfo(String netName, InputStream inputStream) throws ParserException {
-        Element root = getRootElement(inputStream, netName);
-        return loadProbNetInfo(root, netName);
-    }
-    
-    /**
-     * @param root    Root element
-     * @param netName Network name
-     *
-     * @return ProbNetInfo with the ProbNet and the evidence
-     *
-     * @throws PGMXParserException if there is an error parsing the XML
-     */
-    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws ParserException {
+    public ProbNetInfo read(URL networkSource) throws ParserException {
+        FormatManager formatManager = FormatManager.getInstance();
+        try {
+            formatManager.checkVersion(networkSource);
+            formatManager.checkStructure(networkSource);
+        } catch (SAXException | IOException e) {
+            throw new ParserException.PGMXInvalid(e.getMessage());
+        }
+        Element root = getRootElement(networkSource);
         String formatVersion = root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
         PGMXReader_0_2 reader = ReaderFactory.getReader(formatVersion);
-        ProbNet probNet = reader.getProbNet(root, netName);
+        ProbNet probNet = reader.getProbNet(root, networkSource.getFile());
         reader.getInferenceOptions(root, probNet);
         List<EvidenceCase> evidence = reader.getEvidence(root, probNet);
         reader.getPolicies(root, probNet);
@@ -158,8 +128,8 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @return network version in a String
      */
-    public static String getVersion(String netName, InputStream inputStream) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
-        Element root = getRootElement(getStream(netName, inputStream), netName);
+    public static String getVersion(URL networkSource) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
+        Element root = getRootElement(networkSource);
         return root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
     }
     
@@ -172,38 +142,18 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @return root Element
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
-    private static Element getRootElement(InputStream stream, String netName) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
+    public static Element getRootElement(URL networkSource) throws ParserException.XMLInvalid, ParserException.CannotOpenFile {
         SAXBuilder builder = new SAXBuilder();
         builder.setJDOMFactory(new LocatedJDOMFactory());
         Document document;
         try {
-            document = builder.build(stream);
+            document = builder.build(networkSource);
         } catch (JDOMException e) {
-            throw new ParserException.XMLInvalid(netName, e);
+            throw new ParserException.XMLInvalid(networkSource.getFile(), e);
         } catch (IOException e) {
-            throw new ParserException.CannotOpenFile(netName);
+            throw new ParserException.CannotOpenFile(networkSource.getFile());
         }
         return document.getRootElement();
-    }
-    
-    /**
-     * Get file if not included
-     *
-     * @param netName     Network name
-     * @param inputStream InputStream
-     *
-     * @return InputStream of the network
-     */
-    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
-    private static InputStream getStream(String netName, InputStream inputStream) throws ParserException.CannotOpenFile {
-        if (inputStream == null) {
-            try {
-                return new FileInputStream(netName);
-            } catch (FileNotFoundException e) {
-                throw new ParserException.CannotOpenFile(netName);
-            }
-        }
-        return inputStream;
     }
     
     /**

@@ -12,9 +12,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
@@ -62,9 +60,7 @@ public class ElviraReaderCanonicModelsTest {
 	@Tag(TestSpeed.SLOW)
 	@Test public void testLoadElviraOr() throws ParserException, IOException {
 		String testFile = "puerta-or.elv";
-		URL url = this.getClass().getClassLoader().getResource(testFile);
-        String netName = url.getFile();
-        ProbNet probNet = elviraParser.loadProbNet(netName, new FileInputStream(netName));
+		ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
 
 		// Test probNet
 		assertNotNull(probNet);
@@ -108,9 +104,7 @@ public class ElviraReaderCanonicModelsTest {
 	 */
 	@Test public void testNaN() throws ParserException, IOException {
 		String testFile = "cataratas-NaN.elv";
-		URL url = this.getClass().getClassLoader().getResource(testFile);
-		String file = url.getFile();
-        ProbNet probNet = elviraParser.loadProbNet(file, new FileInputStream(file));
+		ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
 		// Test a canonical potential
 		assertNotNull(probNet); // Test NaN readed
 		Node nodeFPC = probNet.getNode("fv-pre-catar");
@@ -127,9 +121,7 @@ public class ElviraReaderCanonicModelsTest {
 	 */
 	@Test public void testCataratas() throws ParserException, IOException {
 		String testFile = "cataratas-escenarios-091123.elv";
-		URL url = this.getClass().getClassLoader().getResource(testFile);
-        String netName = url.getFile();
-        ProbNet probNet = elviraParser.loadProbNet(netName, new FileInputStream(netName));
+		ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
 		// Test a normal node potential
 		Node nodeDCF = probNet.getNode("av_sin_catar");
 		assertEquals(1, nodeDCF.getPotentials().size());

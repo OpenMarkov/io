@@ -63,22 +63,13 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
     // Methods
     
     /**
-     * @param netName = path + network name + extension {@code String}
-     * @param probNet {@code ProbNet}
-     */
-    @Override
-    public void writeProbNet(String netName, ProbNet probNet) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
-        writeProbNet(netName, probNet, null);
-    }
-    
-    /**
      * @param netName   = path + network name + extension.
      * @param probNet   {@code ProbNet} {@code String}
      * @param evidences list of evidence cases. {@code ArrayList} of {@code EvidenceCase}
      */
     @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override
-    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
+    public void write(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.TryingToWriteANullProbNet, WriterException.TryingToWriteAProbNetWithoutName, WriterException.CannotCreateFile {
         if (probNet == null) {
             throw new WriterException.TryingToWriteANullProbNet();
         }

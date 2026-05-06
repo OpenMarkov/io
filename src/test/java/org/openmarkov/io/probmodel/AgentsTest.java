@@ -13,13 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
-import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.model.network.ProbNet;
 import org.openmarkov.core.model.network.StringWithProperties;
 import org.openmarkov.core.testTags.TestSpeed;
@@ -45,7 +43,8 @@ public class AgentsTest {
 	@Tag(TestSpeed.MEDIUM)
 	@Test
     public void testAgentsNumber() throws ParserException, IOException {
-        ProbNet manualProbNet = ((ProbNetReader) new PGMXReader_0_2()).loadProbNet(rootPath + probNetManualName, new FileInputStream(rootPath + probNetManualName));
+		ProbNet manualProbNet = new PGMXReader_0_2().read(new File(rootPath + probNetManualName).toURI().toURL())
+		                                            .getProbNet();
 		List<StringWithProperties> agents = manualProbNet.getAgents();
 		assertEquals(2, agents.size());
 		StringWithProperties agent1 = agents.get(0);

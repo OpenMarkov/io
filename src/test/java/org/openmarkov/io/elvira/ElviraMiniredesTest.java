@@ -13,9 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.io.ProbNetReader;
@@ -58,10 +56,8 @@ public class ElviraMiniredesTest {
 
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
-		URL url = this.getClass().getClassLoader().getResource(testFile);
         ProbNetReader probNetReader = new ElviraParser();
-        String netName = url.getFile();
-        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
+		probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
 		nodeA = probNet.getNode("A");
 		nodeB = probNet.getNode("B");
 		nodeC = probNet.getNode("C");

@@ -14,7 +14,6 @@ import org.openmarkov.core.model.network.potential.Potential;
 import org.openmarkov.io.probmodel.reader.PGMXReader_1_0;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,8 +42,6 @@ class PGMXConditionalGaussianRoundTripTest {
         URL url = getClass().getClassLoader().getResource(fileName);
         assertThat(url).as("fixture %s on test classpath", fileName).isNotNull();
         File file = new File(url.toURI());
-        try (FileInputStream in = new FileInputStream(file)) {
-            return new PGMXReader_1_0().loadProbNet(file.getAbsolutePath(), in);
-        }
+        return new PGMXReader_1_0().read(file.toURI().toURL()).getProbNet();
     }
 }

@@ -19,6 +19,7 @@ public class ProbNetInfo {
     private final ProbNet probNet;
     private final List<EvidenceCase> evidence;
     
+    
     /**
      * Constructor for ProbNetInfo.
      *

@@ -28,18 +28,6 @@ import org.jdom2.Element;
 @FormatType(name = "PGMXWriter0_5",  version = "1.0", extension = "pgmx", description = "OpenMarkov.1.0")
 public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 
-	// Methods
-	/**
-	 * Writes the probabilistic network in PGMX 1.0 format.
-	 *
-	 * @param netName path + network name + extension
-	 * @param probNet the probabilistic network to write
-	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
-		formatVersion= "1.0.0";
-		super.writeProbNet(netName, probNet);
-	}
-
 	/**
 	 * Writes the probabilistic network with evidence in PGMX 1.0 format.
 	 *
@@ -47,9 +35,10 @@ public class PGMXWriter_1_0 extends PGMXWriter_0_2 {
 	 * @param probNet   the probabilistic network to write
 	 * @param evidences list of evidence cases to include
 	 */
-	@Override public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
+	@Override
+	public void write(String netName, ProbNet probNet, List<EvidenceCase> evidences) throws WriterException.CannotCreateFile, WriterException.TryingToWriteAProbNetWithoutName, WriterException.TryingToWriteANullProbNet {
 		formatVersion= "1.0.0";
-		super.writeProbNet(netName, probNet, evidences);
+		super.write(netName, probNet, evidences);
 	}
 	
 	/**

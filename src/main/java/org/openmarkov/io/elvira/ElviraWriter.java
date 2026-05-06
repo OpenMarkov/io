@@ -83,15 +83,10 @@ public class ElviraWriter implements ProbNetWriter {
     }
     
     /**
-     * Writes the probabilistic network to a file in Elvira format.
-     *
-     * @param netName path + network name + extension
-     * @param probNet the probabilistic network to write
-     * @throws WriterException if the file cannot be created or the network type is unknown
+     * Ignores evidence, as evidence is stores in another file in Elvira
      */
-    @SuppressWarnings("ThrowInsideCatchBlockWhichIgnoresCaughtException")
     @Override
-    public void writeProbNet(String netName, ProbNet probNet) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
+    public void write(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
         if (probNet.getAdditionalProperties().get("hasElviraProperties") == null) {
             generateElviraProperties(probNet);
         }
@@ -692,14 +687,6 @@ public class ElviraWriter implements ProbNetWriter {
             return false;
         }
         return true;
-    }
-    
-    /**
-     * Ignores evidence, as evidence is stores in another file in Elvira
-     */
-    @Override
-    public void writeProbNet(String netName, ProbNet probNet, List<EvidenceCase> evidence) throws WriterException.CannotCreateFile, WriterException.UnknownNetworkType, WriterException.ICIModelNotSupportedByElvira {
-        writeProbNet(netName, probNet);
     }
     
 }

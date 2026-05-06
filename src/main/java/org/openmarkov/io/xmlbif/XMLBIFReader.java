@@ -21,6 +21,8 @@ import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.xmlbif.strings.XMLBIFTags;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +36,11 @@ public class XMLBIFReader extends PGMXReader_0_2 {
 	}
 
 	@Override
-    public ProbNetInfo loadProbNetInfo(Element root, String netName) throws ParserException {
-        return new ProbNetInfo(getProbNet(root, netName), null);
+	public ProbNetInfo read(URL networkSource) throws ParserException {
+		return new ProbNetInfo(this.getProbNet(getRootElement(networkSource), networkSource.getFile()), null);
 	}
-
-    @Override
+	
+	@Override
 	protected String getStringTagNetwork() {
 		return XMLBIFTags.NETWORK.toString();
 	}

@@ -13,9 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
@@ -34,10 +32,8 @@ public class SuperValueTest {
 	private ProbNet probNet;
 
 	@Test public void test1() throws ParserException, IOException {
-			URL url = this.getClass().getClassLoader().getResource("IDE4-decide-test.elv");
         ProbNetReader probNetReader = new ElviraParser();
-        String netName = url.getFile();
-        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
+		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDE4-decide-test.elv")).getProbNet();
 		Node node = probNet.getNode("Global utility", NodeType.UTILITY);
 		assertNotNull(node);
 		List<Potential> potentials = node.getPotentials();
@@ -48,18 +44,14 @@ public class SuperValueTest {
 	}
 
 	@Test public void test2() throws ParserException, IOException {
-			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla.elv");
         ProbNetReader probNetReader = new ElviraParser();
-        String netName = url.getFile();
-        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
+		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDU2-rodilla.elv")).getProbNet();
 		assertNotNull(probNet);
 	}
 
 	@Test public void test3() throws ParserException, IOException {
-			URL url = this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv");
         ProbNetReader probNetReader = new ElviraParser();
-        String netName = url.getFile();
-        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
+		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv")).getProbNet();
 		assertNotNull(probNet);
 	}
 }

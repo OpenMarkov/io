@@ -13,9 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.model.network.Node;
@@ -44,10 +42,8 @@ public class ElviraParserTest {
 
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
-		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();
-        String netName = url.getFile();
-        probNet = elviraParser.loadProbNet(netName, new FileInputStream(netName));
+		probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
 	}
 
 	// Unit tests
@@ -133,10 +129,9 @@ public class ElviraParserTest {
 	 */
 	@Test public void loadANodeThreeState() throws org.openmarkov.core.exception.ParserException, IOException {
 		String testFile = "UnNodoTresEstados.elv";
-		URL url = this.getClass().getClassLoader().getResource(testFile);
 		elviraParser = new ElviraParser();
-        String netName = url.getFile();
-        ProbNet unNodoTresEstados = elviraParser.loadProbNet(netName, new FileInputStream(netName));
+		ProbNet unNodoTresEstados = elviraParser.read(this.getClass().getClassLoader().getResource(testFile))
+		                                        .getProbNet();
 		Node uniqueNode = unNodoTresEstados.getNode("Tres_estados");
 		Variable uniqueVariable = uniqueNode.getVariable();
 		assertEquals(3, uniqueVariable.getNumStates());

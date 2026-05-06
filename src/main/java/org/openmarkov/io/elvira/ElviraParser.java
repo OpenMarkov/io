@@ -9,6 +9,7 @@ package org.openmarkov.io.elvira;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -171,37 +172,31 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 		}
 		return auxVariables;
 	}
-
-	@Override
-    public ProbNetInfo loadProbNetInfo(String netName, InputStream file) throws ParserException, IOException {
-        this.fileName = netName;
-        scanner.initializeScanner(netName, file);
-        // Load probNet
-        probNet = new ProbNet();
-        getConstraints();
-        ElviraToken token;
-        try {
-            token = getGeneralInfo();
-            token = getNodes(token);
-            if (token.getReservedWord() == ReservedWord.LINK) {
-                token = getLinks(token);
-            }
-            getPotentials(token);
-            ElviraUtil.swapNameAndTitle(probNet);
-        } catch (ParserException e) {
-            e.setFilename(netName);
-            e.setLineNumber(scanner.lineno());
-            throw e;
-        }
-        addSubPotentials(); // Only for canonical models
-        return new ProbNetInfo(probNet, null);
+	
+	@Override public ProbNetInfo read(URL networkSource) throws IOException, ParserException {
+		this.fileName = networkSource.getFile();
+		scanner.initializeScanner(fileName, networkSource.openStream());
+		// Load probNet
+		probNet = new ProbNet();
+		getConstraints();
+		ElviraToken token;
+		try {
+			token = getGeneralInfo();
+			token = getNodes(token);
+			if (token.getReservedWord() == ReservedWord.LINK) {
+				token = getLinks(token);
+			}
+			getPotentials(token);
+			ElviraUtil.swapNameAndTitle(probNet);
+		} catch (ParserException e) {
+			e.setFilename(fileName);
+			e.setLineNumber(scanner.lineno());
+			throw e;
+		}
+		addSubPotentials(); // Only for canonical models
+		return new ProbNetInfo(probNet, null);
 	}
-    
-    
-    @Override public ProbNet loadProbNet(String netName, InputStream file) throws ParserException, IOException {
-		return loadProbNetInfo(netName, file).getProbNet();
-	}
-
+	
 	/**
 	 * Reads the probNet type, creates the right compound constraint and
      * associate that constraint to {@code probNet}

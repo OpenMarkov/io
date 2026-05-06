@@ -16,9 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.openmarkov.core.exception.ParserException;
@@ -41,10 +39,9 @@ public class Cromosomopatia2Test {
 
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws ParserException, IOException {
-			URL url = this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv");
         ProbNetReader probNetReader = new ElviraParser();
-        String netName = url.getFile();
-        probNet = probNetReader.loadProbNet(netName, new FileInputStream(netName));
+		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv"))
+		                       .getProbNet();
 	}
 
 	@Test public void testCromosopatia() {
