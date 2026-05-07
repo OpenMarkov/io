@@ -43,7 +43,7 @@ public class ElviraParserTest {
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		elviraParser = new ElviraParser();
-		probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 	}
 
 	// Unit tests
@@ -131,7 +131,7 @@ public class ElviraParserTest {
 		String testFile = "UnNodoTresEstados.elv";
 		elviraParser = new ElviraParser();
 		ProbNet unNodoTresEstados = elviraParser.read(this.getClass().getClassLoader().getResource(testFile))
-		                                        .getProbNet();
+                                                .probNet();
 		Node uniqueNode = unNodoTresEstados.getNode("Tres_estados");
 		Variable uniqueVariable = uniqueNode.getVariable();
 		assertEquals(3, uniqueVariable.getNumStates());

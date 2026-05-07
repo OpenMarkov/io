@@ -40,7 +40,7 @@ import org.openmarkov.core.model.network.type.NetworkType;
  *
  * @author Manuel Arias
  */
-@FormatType(name = "ElviraWriter", version = "0.1", extension = "elv", description = "Elvira")
+@FormatType(name = "ElviraWriter", extensions = "elv", description = "Elvira")
 public class ElviraWriter implements ProbNetWriter {
     
     // Attributes

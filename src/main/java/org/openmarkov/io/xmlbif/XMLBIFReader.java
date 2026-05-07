@@ -18,6 +18,7 @@ import org.openmarkov.core.model.network.VariableType;
 import org.openmarkov.core.model.network.potential.PotentialRole;
 import org.openmarkov.core.model.network.potential.TablePotential;
 import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
+import org.openmarkov.io.probmodel.reader.PGMXReader;
 import org.openmarkov.io.probmodel.reader.PGMXReader_0_2;
 import org.openmarkov.io.xmlbif.strings.XMLBIFTags;
 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@FormatType(name = "XMLBIFReader", version = "", extension = "xml", description = "Weka")
+//@FormatType(name = "XMLBIFReader", version = "", extension = "xml", description = "Weka")
 public class XMLBIFReader extends PGMXReader_0_2 {
 
     @Override
@@ -36,8 +37,8 @@ public class XMLBIFReader extends PGMXReader_0_2 {
 	}
 
 	@Override
-	public ProbNetInfo read(URL networkSource) throws ParserException {
-		return new ProbNetInfo(this.getProbNet(getRootElement(networkSource), networkSource.getFile()), null);
+	public PGMXReader.NetworkAndEvidence read(URL networkSource) throws ParserException {
+		return new PGMXReader.NetworkAndEvidence(this.getProbNet(getRootElement(networkSource), networkSource.getFile()), null);
 	}
 	
 	@Override

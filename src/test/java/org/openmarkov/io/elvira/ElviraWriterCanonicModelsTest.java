@@ -137,7 +137,7 @@ public class ElviraWriterCanonicModelsTest {
         System.out.println(fullNetworkName);
         new ElviraWriter().write(fullNetworkName, miniICI, null);
         ProbNetReader probNetReader = new ElviraParser();
-        probNetReader.read(new File(fullNetworkName).toURI().toURL()).getProbNet();
+        probNetReader.read(new File(fullNetworkName).toURI().toURL()).probNet();
     }
     
 }

@@ -44,7 +44,7 @@ public class AgentsTest {
 	@Test
     public void testAgentsNumber() throws ParserException, IOException {
 		ProbNet manualProbNet = new PGMXReader_0_2().read(new File(rootPath + probNetManualName).toURI().toURL())
-		                                            .getProbNet();
+                                                    .probNet();
 		List<StringWithProperties> agents = manualProbNet.getAgents();
 		assertEquals(2, agents.size());
 		StringWithProperties agent1 = agents.get(0);

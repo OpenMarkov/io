@@ -8,6 +8,7 @@
 package org.openmarkov.core.io.format.annotation;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.openmarkov.core.exception.ParserException;
 import org.openmarkov.core.exception.UnreachableException;
 import org.openmarkov.core.exception.UnrecoverableException;
@@ -123,7 +124,7 @@ public class FormatManager {
             checkStructure(url);
         }
         String fileVersion = getFileVersion(url, fileExtension);
-        ProbNetReader reader = getProbNetReaderInstanceFor(fileExtension, fileVersion);
+        ProbNetReader reader = getProbNetReaderInstanceFor(fileExtension);
         if (reader == null) {
             throw new NoReaderForFileException(fileExtension, fileVersion, url);
         }
@@ -162,16 +163,13 @@ public class FormatManager {
      * Gets the plugin corresponding to the "Reader" role, the extension and the version
      *
      * @param extension - the extension required
-     * @param version   - the version of the ProbModel required
      *
      * @return a probNetReader object
      */
-    public ProbNetReader getProbNetReaderInstanceFor(String extension, String version) {
+    public @Nullable ProbNetReader getProbNetReaderInstanceFor(String extension) {
         return this.readerInstances
                 .stream()
-                .filter(plugin -> FormatManager.info(plugin).extension().equals(extension) && FormatManager.info(plugin)
-                                                                                                           .version()
-                                                                                                           .startsWith(version))
+                .filter(plugin -> Arrays.asList(FormatManager.info(plugin).extensions()).contains(extension))
                 .findFirst().orElse(null);
     }
     
@@ -258,9 +256,8 @@ public class FormatManager {
     }
     
     public static boolean formatEquals(FormatType format1, FormatType format2) {
-        return format1.extension().equals(format2.extension())
-                && format1.description().equals(format2.description())
-                && format1.version().equals(format2.version());
+        return Arrays.equals(format1.extensions(), format2.extensions())
+                && format1.description().equals(format2.description());
     }
 }
 

@@ -46,7 +46,7 @@ public class ImposedPolicyTest {
 		String rootPath = 
 				absolutePath.substring(0, absolutePath.length() - networkTestName.length());
 		String pathAndName = rootPath + networkTestName;
-		ProbNet probNet1 = reader.read(new File(pathAndName).toURI().toURL()).getProbNet();
+        ProbNet probNet1 = reader.read(new File(pathAndName).toURI().toURL()).probNet();
 
 		ProbNet imposedPolicyNet = Util.createTrivialID();
 	}

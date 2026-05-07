@@ -29,7 +29,7 @@ public class ElviraIDsTest {
 		System.out.println("-------------------------------------");
 		System.out.println();
         ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 	}
 
 	@Test public void test() {

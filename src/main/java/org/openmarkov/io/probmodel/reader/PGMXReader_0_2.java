@@ -51,18 +51,14 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-/**
- * @author Manuel Arias
- */
-@FormatType(name = "PGMXReader", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2")
-public class PGMXReader_0_2 implements ProbNetReader {
+public class PGMXReader_0_2 {
     
     public final Map<Class<? extends Potential>, PotentialParser> potentialParsers;
-
+    
     public PGMXReader_0_2() {
         this.potentialParsers = buildPotentialParsers();
     }
-
+    
     /**
      * Builds the map from potential class to its {@link PotentialParser}.
      * Subclasses override this method to add or replace parsers for a new format version.
@@ -71,24 +67,24 @@ public class PGMXReader_0_2 implements ProbNetReader {
      */
     protected Map<Class<? extends Potential>, PotentialParser> buildPotentialParsers() {
         Map<Class<? extends Potential>, PotentialParser> map = new LinkedHashMap<>();
-        map.put(UniformPotential.class,             PGMXPotentialParsers::getUniformPotential);
-        map.put(ProductPotential.class,             PGMXPotentialParsers::getProductPotential);
-        map.put(TablePotential.class,               PGMXPotentialParsers::getTablePotential);
-        map.put(ExactDistrPotential.class,          PGMXPotentialParsers::getExactDistrPotential);
-        map.put(TreeADDPotential.class,             this::getTreeADDPotential);
-        map.put(ICIPotential.class,                 PGMXPotentialParsers::getICIPotential);
-        map.put(WeibullHazardPotential.class,       PGMXPotentialParsers::getWeibullPotential);
-        map.put(ExponentialHazardPotential.class,   PGMXPotentialParsers::getExponentialHazardPotential);
-        map.put(ExponentialPotential.class,         PGMXPotentialParsers::getExponentialPotential);
-        map.put(LinearCombinationPotential.class,   PGMXPotentialParsers::getLinearRegressionPotential);
-        map.put(FunctionPotential.class,            PGMXPotentialParsers::getFunctionPotential);
-        map.put(DeltaPotential.class,               PGMXPotentialParsers::getDeltaPotential);
-        map.put(BinomialPotential.class,            PGMXPotentialParsers::getBinomialPotential);
-        map.put(SumPotential.class,                 PGMXPotentialParsers::getSumPotential);
-        map.put(SameAsPrevious.class,               PGMXPotentialParsers::getSameAsPrevious);
-        map.put(CycleLengthShift.class,             PGMXPotentialParsers::getCycleLengthShiftPotential);
+        map.put(UniformPotential.class, PGMXPotentialParsers::getUniformPotential);
+        map.put(ProductPotential.class, PGMXPotentialParsers::getProductPotential);
+        map.put(TablePotential.class, PGMXPotentialParsers::getTablePotential);
+        map.put(ExactDistrPotential.class, PGMXPotentialParsers::getExactDistrPotential);
+        map.put(TreeADDPotential.class, this::getTreeADDPotential);
+        map.put(ICIPotential.class, PGMXPotentialParsers::getICIPotential);
+        map.put(WeibullHazardPotential.class, PGMXPotentialParsers::getWeibullPotential);
+        map.put(ExponentialHazardPotential.class, PGMXPotentialParsers::getExponentialHazardPotential);
+        map.put(ExponentialPotential.class, PGMXPotentialParsers::getExponentialPotential);
+        map.put(LinearCombinationPotential.class, PGMXPotentialParsers::getLinearRegressionPotential);
+        map.put(FunctionPotential.class, PGMXPotentialParsers::getFunctionPotential);
+        map.put(DeltaPotential.class, PGMXPotentialParsers::getDeltaPotential);
+        map.put(BinomialPotential.class, PGMXPotentialParsers::getBinomialPotential);
+        map.put(SumPotential.class, PGMXPotentialParsers::getSumPotential);
+        map.put(SameAsPrevious.class, PGMXPotentialParsers::getSameAsPrevious);
+        map.put(CycleLengthShift.class, PGMXPotentialParsers::getCycleLengthShiftPotential);
         map.put(ConditionalGaussianPotential.class, PGMXPotentialParsers::getConditionalGaussianPotential);
-        map.put(DiscretizedCauchyPotential.class,   PGMXPotentialParsers::getDiscretizedCauchyPotential);
+        map.put(DiscretizedCauchyPotential.class, PGMXPotentialParsers::getDiscretizedCauchyPotential);
         return map;
     }
     
@@ -101,8 +97,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      *
      * @throws PGMXParserException if there is an error parsing the XML
      */
-    @Override
-    public ProbNetInfo read(URL networkSource) throws ParserException {
+    public PGMXReader.NetworkAndEvidence read(URL networkSource) throws ParserException {
         FormatManager formatManager = FormatManager.getInstance();
         try {
             formatManager.checkVersion(networkSource);
@@ -111,15 +106,13 @@ public class PGMXReader_0_2 implements ProbNetReader {
             throw new ParserException.PGMXInvalid(e.getMessage());
         }
         Element root = getRootElement(networkSource);
-        String formatVersion = root.getAttributeValue(XMLAttributes.FORMAT_VERSION.toString());
-        PGMXReader_0_2 reader = ReaderFactory.getReader(formatVersion);
-        ProbNet probNet = reader.getProbNet(root, networkSource.getFile());
-        reader.getInferenceOptions(root, probNet);
-        List<EvidenceCase> evidence = reader.getEvidence(root, probNet);
-        reader.getPolicies(root, probNet);
-        reader.setVariableType(root, probNet);
-        reader.setDefaultStates(root, probNet);
-        return new ProbNetInfo(probNet, evidence);
+        ProbNet probNet = this.getProbNet(root, networkSource.getFile());
+        this.getInferenceOptions(root, probNet);
+        List<EvidenceCase> evidence = this.getEvidence(root, probNet);
+        this.getPolicies(root, probNet);
+        this.setVariableType(root, probNet);
+        this.setDefaultStates(root, probNet);
+        return new PGMXReader.NetworkAndEvidence(probNet, evidence);
     }
     
     /**
@@ -194,7 +187,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
      * @param xMLProbNet Root element
      * @param probNet    ProbNet
      * @param netName    Network name
-     * @param classes the classes
+     * @param classes    the classes
      *
      */
     protected void getNetworkAdvancedInformation(Element xMLProbNet, ProbNet probNet, String netName,
@@ -633,10 +626,10 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     /**
      * @param variableElement the variable element
-     * @param probNet the prob net
-     * @param variableType the variable type
-     * @param nodeType the node type
-     * @param variableName the variable name
+     * @param probNet         the prob net
+     * @param variableType    the variable type
+     * @param nodeType        the node type
+     * @param variableName    the variable name
      */
     @SuppressWarnings("unlikely-arg-type")
     protected void loadVariableAdvancedInformation(
@@ -985,12 +978,12 @@ public class PGMXReader_0_2 implements ProbNetReader {
         // Precision
         Element xMLPrecision = variableElement.getChild(XMLTags.PRECISION.toString());
         double precision = xMLPrecision != null ? Double.parseDouble(xMLPrecision.getText()) : 0.0;
-
+        
         return new Variable(variableName, leftClosed, min, max, rightClosed, precision);
     }
     
     /**
-     * @param states the states
+     * @param states          the states
      * @param variableElement . {@code Element}
      * @param variableName    . {@code String}
      *
@@ -1158,7 +1151,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
     
     /**
      * @param xmlPotential the xml potential
-     * @param probNet the prob net
+     * @param probNet      the prob net
      *
      * @return the result
      *
@@ -1206,9 +1199,9 @@ public class PGMXReader_0_2 implements ProbNetReader {
                     List<Threshold> thresholds = getThresholds(xmlBranch);
                     branch = (potential != null)
                             ? new TreeADDBranch(thresholds.get(0), thresholds.get(1), rootVariable,
-                            potential, parentVariables)
+                                                potential, parentVariables)
                             : new TreeADDBranch(thresholds.get(0), thresholds.get(1), rootVariable,
-                            reference, parentVariables);
+                                                reference, parentVariables);
                 }
                 if (xmlLabel != null) {
                     branch.setLabel(xmlLabel.getText());
@@ -1432,7 +1425,7 @@ public class PGMXReader_0_2 implements ProbNetReader {
         // Recursive reading of tree structure
         List<TreeADDBranch> branches = getTreeADDBranches(xmlPotential, probNet, topVariable, xmlRole, variables);
         // Builds the tree potential from the graph
-
+        
         return new TreeADDPotential(variables, topVariable, xmlRole, branches);
     }
     
@@ -1538,18 +1531,18 @@ public class PGMXReader_0_2 implements ProbNetReader {
         }
         return null;
     }
-
+    
     protected void setVariableType(Element root, ProbNet probNet) {
         Element variableTypeElement = root.getChild(XMLTags.VARIABLE_TYPE.toString());
         if (variableTypeElement == null) return;
-
+        
         String variableTypeText = variableTypeElement.getText();
         if (variableTypeText == null) return;
-
+        
         StringDatabase stringDatabase = StringDatabase.getUniqueInstance();
-
+        
         PNConstraint variableTypeC = null;
-
+        
         if (variableTypeText.equals(
                 stringDatabase.getString("NetworkVariablesPanel.ConstraintVariableType.Items.onlydiscrete"))) {
             variableTypeC = new OnlyDiscreteVariables();
@@ -1557,28 +1550,28 @@ public class PGMXReader_0_2 implements ProbNetReader {
                 stringDatabase.getString("NetworkVariablesPanel.ConstraintVariableType.Items.onlycontinuous"))) {
             variableTypeC = new OnlyContinuousVariables();
         }
-
+        
         if (variableTypeC != null) {
             probNet.addConstraint(variableTypeC);
         }
     }
-
+    
     protected void setDefaultStates(Element root, ProbNet probNet) {
         Element defaultStatesElement = root.getChild(XMLTags.DEFAULT_STATES.toString());
         if (defaultStatesElement == null) return;
-
+        
         List<Element> XMLStates = defaultStatesElement.getChildren();
         State[] defaultStates = new State[XMLStates.size()];
         int i = 0;
-
+        
         for (Element state : XMLStates) {
             defaultStates[i] = new State(state.getAttributeValue(XMLAttributes.NAME.toString()));
             i++;
         }
-
+        
         probNet.setDefaultStates(defaultStates);
-
+        
     }
-
+    
     
 }

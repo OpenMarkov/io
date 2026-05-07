@@ -86,7 +86,7 @@ public class PGMXReaderWriterTest {
         // Read test network
         String testNetworkName = rootPath + "/test-ici-reading.pgmx";
         
-        ProbNet readProbNet = reader.read(new File(testNetworkName).toURI().toURL()).getProbNet();
+        ProbNet readProbNet = reader.read(new File(testNetworkName).toURI().toURL()).probNet();
         
         Assertions.assertNotNull(readProbNet);
         Assertions.assertEquals(9, readProbNet.getNumNodes());

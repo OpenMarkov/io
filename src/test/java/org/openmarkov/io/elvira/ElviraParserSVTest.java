@@ -41,7 +41,7 @@ public class ElviraParserSVTest {
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
         ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 	}
 
 	// Unit tests

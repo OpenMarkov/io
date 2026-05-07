@@ -31,20 +31,11 @@ import java.lang.annotation.Target;
     
     
     /**
-     * Gets the version of the class. Sometimes as in the case of the PGMXReader/Writer
-     * there are several classes representing several versions of something as, for example,
-     * the ProbModelXML
-     *
-     * @return The version of the format
-     */
-    String version();
-    
-    /**
      * Gets the file extension that write/read the class
      *
      * @return The format extension
      */
-    String extension();
+    String[] extensions();
     
     /**
      * Gets the file description that writes/reads the class.

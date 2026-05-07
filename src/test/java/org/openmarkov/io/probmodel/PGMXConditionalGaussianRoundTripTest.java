@@ -42,6 +42,6 @@ class PGMXConditionalGaussianRoundTripTest {
         URL url = getClass().getClassLoader().getResource(fileName);
         assertThat(url).as("fixture %s on test classpath", fileName).isNotNull();
         File file = new File(url.toURI());
-        return new PGMXReader_1_0().read(file.toURI().toURL()).getProbNet();
+        return new PGMXReader_1_0().read(file.toURI().toURL()).probNet();
     }
 }

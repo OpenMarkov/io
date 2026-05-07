@@ -8,7 +8,6 @@
 package org.openmarkov.io.elvira;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
  * @author Manuel Arias
  * @version 1.1 carmenyago - adapted parser to new IO methods for OpenMarkov 0.3.x by filling loadProbNetInfo(String netName, InputStream... file)
  */
-@FormatType(name = "ElviraParser", version = "0.1", extension = "elv", description = "Elvira") public class ElviraParser
+@FormatType(name = "ElviraParser", extensions = "elv", description = "Elvira") public class ElviraParser
 		implements ProbNetReader {
 
 	// Attributes
@@ -194,7 +193,7 @@ import org.openmarkov.core.model.network.type.InfluenceDiagramType;
 			throw e;
 		}
 		addSubPotentials(); // Only for canonical models
-		return new ProbNetInfo(probNet, null);
+		return new ProbNetInfo(probNet, null, this, new ElviraWriter());
 	}
 	
 	/**

@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * @author Manuel Arias
  * @version 1.0
  */
-@FormatType(name = "PGMXWriter0_2", version = "0.2", extension = "pgmx", description = "OpenMarkov.0.2")
+@FormatType(name = "PGMXWriter0_2", extensions = {"pgmx", "xml"}, description = "OpenMarkov.0.2")
 public class PGMXWriter_0_2 implements ProbNetWriter {
     
     // Attributes

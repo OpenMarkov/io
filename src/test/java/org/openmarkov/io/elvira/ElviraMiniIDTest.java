@@ -57,7 +57,7 @@ public class ElviraMiniIDTest {
 	@BeforeEach
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        probNet = probNetReader.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 		nodeA = probNet.getNode("A");
 		nodeD1 = probNet.getNode("D1");
 		nodeD2 = probNet.getNode("D2");

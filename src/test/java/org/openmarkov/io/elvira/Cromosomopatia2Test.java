@@ -41,7 +41,7 @@ public class Cromosomopatia2Test {
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws ParserException, IOException {
         ProbNetReader probNetReader = new ElviraParser();
 		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("RedCromosomopatia2.elv"))
-		                       .getProbNet();
+                               .probNet();
 	}
 
 	@Test public void testCromosopatia() {

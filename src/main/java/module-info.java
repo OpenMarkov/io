@@ -28,4 +28,5 @@ open module org.openmarkov.io {
     exports org.openmarkov.core.io.database;
     exports org.openmarkov.core.io.database.plugin;
     exports org.openmarkov.core.io.exception;
+    exports org.openmarkov.io.elvira;
 }

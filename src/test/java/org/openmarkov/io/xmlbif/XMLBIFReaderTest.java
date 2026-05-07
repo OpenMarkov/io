@@ -41,7 +41,7 @@ public class XMLBIFReaderTest {
 		public void readNetworkTest() throws ParserException, IOException {
 			ProbNet probNet1;
 				String pathAndName = rootPath + networkTestName;
-			probNet1 = reader.read(new File(pathAndName).toURI().toURL()).getProbNet();
+            probNet1 = reader.read(new File(pathAndName).toURI().toURL()).probNet();
 				assertNotNull(probNet1);
 				// TODO: Once the ProbNetTest class is available, remove the next line
 				//ProbNetTest.compareNetworks(probNet1,BNFactory.createBN_XY("class","Symptom",0.34375,0.75,0.681818181818));

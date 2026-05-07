@@ -60,7 +60,7 @@ public class ElviraReaderCanonicModelsTest {
 	@Tag(TestSpeed.SLOW)
 	@Test public void testLoadElviraOr() throws ParserException, IOException {
 		String testFile = "puerta-or.elv";
-		ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 
 		// Test probNet
 		assertNotNull(probNet);
@@ -104,7 +104,7 @@ public class ElviraReaderCanonicModelsTest {
 	 */
 	@Test public void testNaN() throws ParserException, IOException {
 		String testFile = "cataratas-NaN.elv";
-		ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 		// Test a canonical potential
 		assertNotNull(probNet); // Test NaN readed
 		Node nodeFPC = probNet.getNode("fv-pre-catar");
@@ -121,7 +121,7 @@ public class ElviraReaderCanonicModelsTest {
 	 */
 	@Test public void testCataratas() throws ParserException, IOException {
 		String testFile = "cataratas-escenarios-091123.elv";
-		ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).getProbNet();
+        ProbNet probNet = elviraParser.read(this.getClass().getClassLoader().getResource(testFile)).probNet();
 		// Test a normal node potential
 		Node nodeDCF = probNet.getNode("av_sin_catar");
 		assertEquals(1, nodeDCF.getPotentials().size());

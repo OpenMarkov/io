@@ -33,7 +33,7 @@ public class SuperValueTest {
 
 	@Test public void test1() throws ParserException, IOException {
         ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDE4-decide-test.elv")).getProbNet();
+        probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDE4-decide-test.elv")).probNet();
 		Node node = probNet.getNode("Global utility", NodeType.UTILITY);
 		assertNotNull(node);
 		List<Potential> potentials = node.getPotentials();
@@ -45,13 +45,13 @@ public class SuperValueTest {
 
 	@Test public void test2() throws ParserException, IOException {
         ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDU2-rodilla.elv")).getProbNet();
+        probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDU2-rodilla.elv")).probNet();
 		assertNotNull(probNet);
 	}
 
 	@Test public void test3() throws ParserException, IOException {
         ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv")).getProbNet();
+        probNet = probNetReader.read(this.getClass().getClassLoader().getResource("IDU2-rodilla-ce.elv")).probNet();
 		assertNotNull(probNet);
 	}
 }

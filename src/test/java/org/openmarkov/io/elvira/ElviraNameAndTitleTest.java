@@ -28,7 +28,7 @@ public class ElviraNameAndTitleTest {
 	/** Create a ElviraScanner and opens a file for tests */ public void setUp() throws org.openmarkov.core.exception.ParserException, IOException {
 		URL url = this.getClass().getClassLoader().getResource(testFile);
         ProbNetReader probNetReader = new ElviraParser();
-		probNet = probNetReader.read(url).getProbNet();
+        probNet = probNetReader.read(url).probNet();
 	}
 	
 	@Tag(TestSpeed.MEDIUM)
