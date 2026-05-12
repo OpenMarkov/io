@@ -1084,7 +1084,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @return Element
      */
     protected static Element getUncertainValuesElement(Potential potential) {
-        Element uncertainValuesElement = new Element(XMLTags.UNCERTAIN_PARAMETERS.toString());
+        Element uncertainValuesElement = new Element(XMLTags.UNCERTAIN_VALUES.toString());
         UncertainValue[] table = ((TablePotential) potential).getUncertainValues();
         int size = table.length;
         for (int i = 0; i < size; i++) {
