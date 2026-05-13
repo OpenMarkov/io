@@ -200,6 +200,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
             temporalUnitElement.setAttribute(XMLTags.VALUE.toString(),
                                              String.valueOf(probNet.getCycleLength().getValue()));
             probNetElement.addContent(temporalUnitElement);
+
         }
         
     }
