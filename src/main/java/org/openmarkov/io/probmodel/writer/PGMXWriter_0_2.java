@@ -131,7 +131,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param probNet the prob net
      * @param root the root
      */
-    protected static void writeInferenceOptions(ProbNet probNet, Element root) {
+    protected void writeInferenceOptions(ProbNet probNet, Element root) {
         Element inferenceOptionsElement = new Element(XMLTags.INFERENCE_OPTIONS.toString());
         
         if (probNet.getInferenceOptions().getMultiCriteriaOptions().getMulticriteriaType() != null) {
@@ -373,7 +373,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param probNetElement the prob net element
      * @param variablesElement the variables element
      */
-    protected static void getVariables(ProbNet probNet, Element probNetElement, Element variablesElement) {
+    protected void getVariables(ProbNet probNet, Element probNetElement, Element variablesElement) {
         if (probNet.getNumNodes() > 0) {
             for (Node node : probNet.getNodes()) {
                 getVariable(variablesElement, new Element(XMLTags.VARIABLE.toString()), node);
@@ -387,7 +387,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param variableElement the variable element
      * @param node the node
      */
-    protected static void getVariable(Element variablesElement, Element variableElement, Node node) {
+    protected void getVariable(Element variablesElement, Element variableElement, Node node) {
         writeVariableName(node.getVariable(), variableElement);
         String variableType = node.getVariable().getVariableType().toString();
         variableElement.setAttribute(XMLAttributes.TYPE.toString(), variableType);
@@ -406,7 +406,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param variableElement the variable element
      * @param node the node
      */
-    protected static void getVariableChildren(Element variableElement, Node node) {
+    protected void getVariableChildren(Element variableElement, Node node) {
         getCommment(variableElement, node);
         // TODO verificar que las coordenadas sean validas no null
         getCoordinates(variableElement, node);
@@ -511,7 +511,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      * @param additionalElement the additional element
      * @param node the node
      */
-    protected static void getAdditionalProperties(Element variableElement, Element additionalElement, Node node) {
+    protected void getAdditionalProperties(Element variableElement, Element additionalElement, Node node) {
         if (!node.getPurpose().isEmpty()) {
             Element propertyElement = new Element(XMLTags.PROPERTY.toString());
             propertyElement.setAttribute(XMLAttributes.NAME.toString(), XMLTags.PURPOSE.toString());
@@ -969,7 +969,8 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      */
     protected static void getDeltaPotential(Element potentialElement, Potential potential) {
         DeltaPotential deltaPotential = (DeltaPotential) potential;
-        if (deltaPotential.getConditionedVariable().getVariableType() == VariableType.NUMERIC) {
+        if (deltaPotential.getConditionedVariable().getVariableType() == VariableType.NUMERIC
+                || deltaPotential.getConditionedVariable().getVariableType() == VariableType.EVENT) {
             Element numericValueElement = new Element(XMLTags.NUMERIC_VALUE.toString());
             numericValueElement.setText(String.valueOf(deltaPotential.getNumericValue()));
             potentialElement.addContent(numericValueElement);

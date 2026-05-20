@@ -105,7 +105,24 @@ public enum XMLTags implements Serializable {
     VARIABLES("Variables"),
 	FUNCTIONS("Functions"),
 	VARIABLE_TYPE("VariableType"),
-	DEFAULT_STATES("DefaultStates");
+	DEFAULT_STATES("DefaultStates"),
+	
+	
+	//DESNETS start
+	// - 24/10/2020 - Event queue behaviour in DESNets
+	ALWAYS_APPEND("AlwaysAppend"),
+	//	18/03/2023 for Indicator
+	TTE("TTE"),
+	P_OCCURRENCE("ProbabilityOccurrence"),
+	//28/08/2023 writing the Monte Carlo options  for DES in the .pgmx
+	MONTE_CARLO_OPTIONS("MonteCarlo"),
+	NUMBER_OF_SIMULATIONS("NumberOfSimulations"),
+	NUMBER_OF_SERIES("NumberOfSeries"),
+	INPUT_DATA_FILE("InputDataFile"),
+	//26/04/2024; for piecewise exponential indicating if it is defined with rates or probabilities
+	RATES("Rates"),
+	//DESNETS end
+	;
     
     private final String name;
 	

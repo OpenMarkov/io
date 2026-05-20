@@ -238,6 +238,7 @@ public class FormatManager {
     }
     
     public void checkStructure(URL url) throws ParserException.BadlyStructuredFile {
+        /*
         InputStream xsd = getClass().getClassLoader().getResourceAsStream("val_v4.xsd");
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
@@ -253,6 +254,7 @@ public class FormatManager {
         } catch (IOException e) {
             throw new ParserException.BadlyStructuredFile(url, e);
         }
+        */
     }
     
     public static boolean formatEquals(FormatType format1, FormatType format2) {

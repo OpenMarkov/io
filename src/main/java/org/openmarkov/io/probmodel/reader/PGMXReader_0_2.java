@@ -20,6 +20,7 @@ import org.openmarkov.core.inference.TemporalOptions;
 import org.openmarkov.core.localize.StringDatabase;
 import org.openmarkov.core.model.network.constraint.OnlyContinuousVariables;
 import org.openmarkov.core.model.network.constraint.OnlyDiscreteVariables;
+import org.openmarkov.core.model.network.constraint.OnlySelfLoopsWithEventAndChanceNodes;
 import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
@@ -1140,7 +1141,7 @@ public class PGMXReader_0_2 {
             int numVariables = xmlVariables.size();
             for (Element xmlVariable : xmlVariables) {
                 Variable variable = getVariable(xmlVariable, probNet);
-                if (!variables.contains(variable)) {
+                if (!variables.contains(variable) || probNet.hasConstraintOfClass(OnlySelfLoopsWithEventAndChanceNodes.class)) {
                     variables.add(variable);
                 }
             }
@@ -1202,6 +1203,13 @@ public class PGMXReader_0_2 {
                                                 potential, parentVariables)
                             : new TreeADDBranch(thresholds.get(0), thresholds.get(1), rootVariable,
                                                 reference, parentVariables);
+                } else if (rootVariable.getVariableType() == VariableType.EVENT){
+                    // - 18/04/2020 - added type event for be used in TreeWithEventsPotential
+                    List<State> states = new ArrayList<>();
+                    states.add(new State("event"));
+                    branch =
+                            ( potential != null ) ? new TreeADDBranch( Arrays.asList(rootVariable.getStates()), rootVariable, potential, parentVariables )
+                                    : new TreeADDBranch( states, rootVariable, reference, parentVariables );
                 }
                 if (xmlLabel != null) {
                     branch.setLabel(xmlLabel.getText());
