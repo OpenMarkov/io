@@ -137,7 +137,11 @@ public class PGMXReader_1_0 extends PGMXReader_0_2 {
         } else {
             var probDensFunctionClass = ProbDensFunctionManager.getUniqueInstance()
                                                                .getProbDensFunctionClass(univariateName);
-            potential = new UnivariateDistrPotential(variables, probDensFunctionClass, xmlRole);
+            if(probDensFunctionClass == null) {
+                potential = new UnivariateDistrPotential(variables,xmlRole);
+            }else{
+                potential = new UnivariateDistrPotential(variables, probDensFunctionClass, xmlRole);
+            }
         }
         
         List<Variable> vDistributionTable = new ArrayList<>(potential.getFiniteStatesVariables());
