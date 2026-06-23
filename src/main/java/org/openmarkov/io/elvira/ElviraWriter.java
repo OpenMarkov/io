@@ -658,9 +658,9 @@ public class ElviraWriter implements ProbNetWriter {
             NodeType nodeType = node.getNodeType();
             infoNode.put("NodeType", nodeType.toString());
             if (nodeType == NodeType.UTILITY) {
-                infoNode.put("TypeOfVariable", VariableType.NUMERIC.toString());
+                infoNode.put("TypeOfVariable", VariableType.NUMERIC.toXMLTag());
             } else {
-                infoNode.put("TypeOfVariable", VariableType.FINITE_STATES.toString());
+                infoNode.put("TypeOfVariable", VariableType.FINITE_STATES.toXMLTag());
             }
             node.setAdditionalProperties(infoNode);
         }

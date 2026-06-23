@@ -14,6 +14,7 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.located.LocatedJDOMFactory;
+import org.jetbrains.annotations.Nullable;
 import org.openmarkov.core.exception.*;
 import org.openmarkov.core.expression.VariableExpression;
 import org.openmarkov.core.inference.TemporalOptions;
@@ -24,10 +25,7 @@ import org.openmarkov.core.model.network.constraint.OnlySelfLoopsWithEventAndCha
 import org.openmarkov.core.model.network.potential.plugin.PotentialUtils;
 import org.openmarkov.io.probmodel.exception.PGMXParserException;
 import org.openmarkov.core.inference.MulticriteriaOptions;
-import org.openmarkov.core.io.ProbNetInfo;
-import org.openmarkov.core.io.ProbNetReader;
 import org.openmarkov.core.io.format.annotation.FormatManager;
-import org.openmarkov.core.io.format.annotation.FormatType;
 import org.openmarkov.core.model.graph.Link;
 import org.openmarkov.core.model.network.*;
 import org.openmarkov.core.model.network.Properties;
@@ -851,17 +849,11 @@ public class PGMXReader_0_2 {
      *
      * @return variable type. {@code VariableType}
      */
-    protected VariableType getXMLVariableType(Element variableElement) {
-        VariableType variableType = null;
+    protected @Nullable VariableType getXMLVariableType(Element variableElement) {
         String role = getStringXMLPotentialType(variableElement);
-        if (role.contentEquals(VariableType.FINITE_STATES.toString())) {
-            variableType = VariableType.FINITE_STATES;
-        } else if (role.contentEquals(VariableType.NUMERIC.toString())) {
-            variableType = VariableType.NUMERIC;
-        } else if (role.contentEquals(VariableType.DISCRETIZED.toString())) {
-            variableType = VariableType.DISCRETIZED;
-        }
-        return variableType;
+        return Arrays.stream(VariableType.values()).filter(variableType -> role.contentEquals( variableType.toXMLTag()))
+                .findFirst()
+                .orElse(null);
     }
     
     /**

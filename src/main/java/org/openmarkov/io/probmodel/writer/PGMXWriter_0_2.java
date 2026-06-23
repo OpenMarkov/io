@@ -389,7 +389,7 @@ public class PGMXWriter_0_2 implements ProbNetWriter {
      */
     protected void getVariable(Element variablesElement, Element variableElement, Node node) {
         writeVariableName(node.getVariable(), variableElement);
-        String variableType = node.getVariable().getVariableType().toString();
+        String variableType = node.getVariable().getVariableType().toXMLTag();
         variableElement.setAttribute(XMLAttributes.TYPE.toString(), variableType);
         String nodeType = node.getNodeType().toString();
         variableElement.setAttribute(XMLAttributes.ROLE.toString(), nodeType);
